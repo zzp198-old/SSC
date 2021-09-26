@@ -1,8 +1,8 @@
 displayName = Server Side Character
 author = zzp198
-version = 0.0.1
+version = 1.0.0
 noCompile = false
-homepage = https://github.com/zzp198/TronMod
+homepage = https://github.com/zzp198/SSC
 hideCode = true
 hideResources = false
 includeSource = false  # Exclude .csproj, .cs, .sln

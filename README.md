@@ -1,62 +1,62 @@
-|           字段名            |       类型        |               原版同步频率               |                  备注                  |
-| :-------------------------: | :---------------: | :--------------------------------------: | :------------------------------------: |
-|            name             |      string       |                 进入世界                 |                无需保存                |
-|         difficulty          |        int        |                 进入世界                 |                无需保存                |
-|            hair             |        int        |             进入世界，发型师             |             存储格式为byte             |
-|    hideVisibleAccessory     |      bool[]       |                   实时                   |                                        |
-|          hideMisc           |     BitsByte      |             进入世界，梳妆台             |             存储格式为byte             |
-|         skinVariant         |        int        |             进入世界，梳妆台             |                                        |
-|          statLife           |        int        |                   实时                   |                                        |
-|         statLifeMax         |        int        |                   实时                   |                                        |
-|          statMana           |        int        |                   实时                   |                                        |
-|         statManaMax         |        int        |                   实时                   |                                        |
-|       extraAccessory        |       bool        |            进入世界，恶魔之心            |                                        |
-|    unlockedBiomeTorches     |       bool        |           进入世界，火把神徽章           |                                        |
-|      UsingBiomeTorches      |       bool        |           进入世界，火把神徽章           |                                        |
-| downedDD2EventAnyDifficulty |       bool        |            进入世界，旧日军团            |                                        |
-|          taxMoney           |        int        |                                          |                                        |
-|          hairColor          |       Color       |             进入世界，发型师             |             存储格式为int              |
-|          skinColor          |       Color       |          进入世界，梳妆台(bug)           |             存储格式为int              |
-|          eyeColor           |       Color       |          进入世界，梳妆台(bug)           |             存储格式为int              |
-|         shirtColor          |       Color       | 进入世界，发型师(bug,但确实是发型师修改) |             存储格式为int              |
-|       underShirtColor       |       Color       |          进入世界，梳妆台(bug)           |             存储格式为int              |
-|         pantsColor          |       Color       |          进入世界，梳妆台(bug)           |             存储格式为int              |
-|          shoeColor          |       Color       |          进入世界，梳妆台(bug)           |             存储格式为int              |
-|            armor            |      Item[]       |                   实时                   | 需额外保存,存储格式为List<TagCompound> |
-|             dye             |      Item[]       |                   实时                   | 需额外保存,存储格式为List<TagCompound> |
-|         miscEquips          |      Item[]       |                   实时                   | 需额外保存,存储格式为List<TagCompound> |
-|          miscDyes           |      Item[]       |                   实时                   | 需额外保存,存储格式为List<TagCompound> |
-|          inventory          |      Item[]       |                   实时                   | 需额外保存,存储格式为List<TagCompound> |
-|            bank             |      Item[]       |                   实时                   | 需额外保存,存储格式为List<TagCompound> |
-|            bank2            |      Item[]       |                   实时                   | 需额外保存,存储格式为List<TagCompound> |
-|            bank3            |      Item[]       |                   实时                   | 需额外保存,存储格式为List<TagCompound> |
-|            bank4            |      Item[]       |                   实时                   | 需额外保存,存储格式为List<TagCompound> |
-|          taxMoney           |        int        |                  不同步                  |                                        |
-|        voidVaultInfo        |     BitsByte      |                   实时                   |             存储格式为byte             |
-|             spX             |       int[]       |                  不同步                  |                                        |
-|             spY             |       int[]       |                  不同步                  |                                        |
-|             spI             |       int[]       |                  不同步                  |                                        |
-|             spN             |     string[]      |                  不同步                  |                                        |
-|          hbLocked           |       bool        |                  不同步                  |                                        |
-|          hideInfo           |      bool[]       |                  不同步                  |                                        |
-|    anglerQuestsFinished     |        int        |                  不同步                  |                                        |
-|         DpadRadial          |       int[]       |             未知(当作不同步)             |                                        |
-|      builderAccStatus       |       int[]       |                  不同步                  |                                        |
-|      bartenderQuestLog      |        int        |                  不同步                  |                                        |
-|            dead             |       bool        |                   实时                   |                                        |
-|        respawnTimer         |        int        |                   实时                   |                                        |
-|   lastTimePlayerWasSaved    |       long        |                  不同步                  |                                        |
-|   golferScoreAccumulated    |        int        |                  不同步                  |                                        |
-|       creativeTracker       |      byte[]       |                  不同步                  |                                        |
-|       Main.mouseItem        |       Item        |                  不同步                  |                                        |
-|       Main.guideItem        |       Item        |                  不同步                  |                                        |
-|      Main.reforgeItem       |       Item        |                  不同步                  |                                        |
-|      Main.CreativeMenu      |       Item        |                  不同步                  |                                        |
-|    CreativePowerManager     |      byte[]       |                  不同步                  |                                        |
-|           hairDye           |      string       |                  不同步                  |                                        |
-|          research           | List<TagCompound> |                  不同步                  |                                        |
-|           modData           | List<TagCompound> |                  不同步                  |                                        |
-|          modBuffs           | List<TagCompound> |                  不同步                  |                                        |
-|        infoDisplays         |   List<string>    |                  不同步                  |                                        |
-|          usedMods           |   List<string>    |                  不同步                  |                                        |
+|           字段名            |               原版同步频率               |  构建方式  |
+| :-------------------------: | :--------------------------------------: | :--------: |
+|            name             |                 进入世界                 |    跳过    |
+|         difficulty          |                 进入世界                 |    跳过    |
+|            hair             |             进入世界，发型师             |   服务端   |
+|           hairDye           |            进入世界，发型染料            |   服务端   |
+|    hideVisibleAccessory     |                   实时                   |   服务端   |
+|          hideMisc           |             进入世界，梳妆台             |   服务端   |
+|         skinVariant         |             进入世界，梳妆台             |   服务端   |
+|          statLife           |                   实时                   |   服务端   |
+|         statLifeMax         |                   实时                   |   服务端   |
+|          statMana           |                   实时                   |   服务端   |
+|         statManaMax         |                   实时                   |   服务端   |
+|       extraAccessory        |            进入世界，恶魔之心            |   服务端   |
+|    unlockedBiomeTorches     |           进入世界，火把神徽章           |   服务端   |
+|      UsingBiomeTorches      |           进入世界，火把神徽章           |   服务端   |
+| downedDD2EventAnyDifficulty |            进入世界，旧日军团            |   服务端   |
+|          taxMoney           |                  不同步                  |   客户端   |
+|          hairColor          |             进入世界，发型师             |   服务端   |
+|          skinColor          |          进入世界，梳妆台(bug)           |   服务端   |
+|          eyeColor           |          进入世界，梳妆台(bug)           |   服务端   |
+|         shirtColor          | 进入世界，发型师(bug,但确实是发型师修改) |   服务端   |
+|       underShirtColor       |          进入世界，梳妆台(bug)           |   服务端   |
+|         pantsColor          |          进入世界，梳妆台(bug)           |   服务端   |
+|          shoeColor          |          进入世界，梳妆台(bug)           |   服务端   |
+|            armor            |                   实时                   |   客户端   |
+|             dye             |                   实时                   |   客户端   |
+|         miscEquips          |                   实时                   |   客户端   |
+|          miscDyes           |                   实时                   |   客户端   |
+|          inventory          |                   实时                   |   客户端   |
+|            bank             |                   实时                   |   客户端   |
+|            bank2            |                   实时                   |   客户端   |
+|            bank3            |                   实时                   |   客户端   |
+|            bank4            |                   实时                   |   客户端   |
+|        voidVaultInfo        |                   实时                   |   服务端   |
+|             spX             |                  不同步                  | 改为SpawnX |
+|             spY             |                  不同步                  | 改为SpawnY |
+|             spI             |                  不同步                  |    跳过    |
+|             spN             |                  不同步                  |    跳过    |
+|          hbLocked           |                  不同步                  |   客户端   |
+|          hideInfo           |                  不同步                  |   客户端   |
+|    anglerQuestsFinished     |                  不同步                  |   客户端   |
+|         DpadRadial          |             未知(当作不同步)             |   客户端   |
+|      builderAccStatus       |                  不同步                  |   客户端   |
+|      bartenderQuestLog      |                  不同步                  |   客户端   |
+|            dead             |                   实时                   |   服务端   |
+|        respawnTimer         |                   实时                   |   服务端   |
+|   golferScoreAccumulated    |                  不同步                  |   客户端   |
+|       creativeTracker       |                  不同步                  |   客户端   |
+|                             |                                          |            |
+|          mouseItem          |                  不同步                  |   客户端   |
+|          guideItem          |                  不同步                  |   客户端   |
+|         reforgeItem         |                  不同步                  |   客户端   |
+|        CreativeMenu         |                  不同步                  |   客户端   |
+|    CreativePowerManager     |                  不同步                  |   客户端   |
+|       HairDyeItemName       |                  不同步                  |   客户端   |
+|          Research           |                  不同步                  |   客户端   |
+|           ModData           |                  不同步                  |   客户端   |
+|          ModBuffs           |                  不同步                  |   客户端   |
+|        InfoDisplays         |                  不同步                  |   客户端   |
+|          UsedMods           |                  不同步                  |   客户端   |
 
