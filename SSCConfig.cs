@@ -26,8 +26,6 @@ namespace SSC
 
         [Label("StartingInventory")]
         [Tooltip("StartingInventory")]
-        [Range(20, 400)]
-        [Slider]
         public List<ItemDefinition> StartingInventory = new();
     }
 }

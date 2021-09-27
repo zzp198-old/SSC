@@ -1,62 +1,61 @@
-|           字段名            |               原版同步频率               |  构建方式  |
-| :-------------------------: | :--------------------------------------: | :--------: |
-|            name             |                 进入世界                 |    跳过    |
-|         difficulty          |                 进入世界                 |    跳过    |
-|            hair             |             进入世界，发型师             |   服务端   |
-|           hairDye           |            进入世界，发型染料            |   服务端   |
-|    hideVisibleAccessory     |                   实时                   |   服务端   |
-|          hideMisc           |             进入世界，梳妆台             |   服务端   |
-|         skinVariant         |             进入世界，梳妆台             |   服务端   |
-|          statLife           |                   实时                   |   服务端   |
-|         statLifeMax         |                   实时                   |   服务端   |
-|          statMana           |                   实时                   |   服务端   |
-|         statManaMax         |                   实时                   |   服务端   |
-|       extraAccessory        |            进入世界，恶魔之心            |   服务端   |
-|    unlockedBiomeTorches     |           进入世界，火把神徽章           |   服务端   |
-|      UsingBiomeTorches      |           进入世界，火把神徽章           |   服务端   |
-| downedDD2EventAnyDifficulty |            进入世界，旧日军团            |   服务端   |
-|          taxMoney           |                  不同步                  |   客户端   |
-|          hairColor          |             进入世界，发型师             |   服务端   |
-|          skinColor          |          进入世界，梳妆台(bug)           |   服务端   |
-|          eyeColor           |          进入世界，梳妆台(bug)           |   服务端   |
-|         shirtColor          | 进入世界，发型师(bug,但确实是发型师修改) |   服务端   |
-|       underShirtColor       |          进入世界，梳妆台(bug)           |   服务端   |
-|         pantsColor          |          进入世界，梳妆台(bug)           |   服务端   |
-|          shoeColor          |          进入世界，梳妆台(bug)           |   服务端   |
-|            armor            |                   实时                   |   客户端   |
-|             dye             |                   实时                   |   客户端   |
-|         miscEquips          |                   实时                   |   客户端   |
-|          miscDyes           |                   实时                   |   客户端   |
-|          inventory          |                   实时                   |   客户端   |
-|            bank             |                   实时                   |   客户端   |
-|            bank2            |                   实时                   |   客户端   |
-|            bank3            |                   实时                   |   客户端   |
-|            bank4            |                   实时                   |   客户端   |
-|        voidVaultInfo        |                   实时                   |   服务端   |
-|             spX             |                  不同步                  | 改为SpawnX |
-|             spY             |                  不同步                  | 改为SpawnY |
-|             spI             |                  不同步                  |    跳过    |
-|             spN             |                  不同步                  |    跳过    |
-|          hbLocked           |                  不同步                  |   客户端   |
-|          hideInfo           |                  不同步                  |   客户端   |
-|    anglerQuestsFinished     |                  不同步                  |   客户端   |
-|         DpadRadial          |             未知(当作不同步)             |   客户端   |
-|      builderAccStatus       |                  不同步                  |   客户端   |
-|      bartenderQuestLog      |                  不同步                  |   客户端   |
-|            dead             |                   实时                   |   服务端   |
-|        respawnTimer         |                   实时                   |   服务端   |
-|   golferScoreAccumulated    |                  不同步                  |   客户端   |
-|       creativeTracker       |                  不同步                  |   客户端   |
-|                             |                                          |            |
-|          mouseItem          |                  不同步                  |   客户端   |
-|          guideItem          |                  不同步                  |   客户端   |
-|         reforgeItem         |                  不同步                  |   客户端   |
-|        CreativeMenu         |                  不同步                  |   客户端   |
-|    CreativePowerManager     |                  不同步                  |   客户端   |
-|       HairDyeItemName       |                  不同步                  |   客户端   |
-|          Research           |                  不同步                  |   客户端   |
-|           ModData           |                  不同步                  |   客户端   |
-|          ModBuffs           |                  不同步                  |   客户端   |
-|        InfoDisplays         |                  不同步                  |   客户端   |
-|          UsedMods           |                  不同步                  |   客户端   |
+|           Fields            |    Synchronous Frequency    |
+| :-------------------------: | :-------------------------: |
+|            name             |     OnEnterWorld(skip)      |
+|         difficulty          |     OnEnterWorld(skip)      |
+|            hair             |    OnEnterWorld,Stylist     |
+|           hairDye           |    OnEnterWorld,HairDye     |
+|    hideVisibleAccessory     |           Always            |
+|          hideMisc           |    OnEnterWorld,Dresser     |
+|         skinVariant         |    OnEnterWorld,Dresser     |
+|          statLife           |           Always            |
+|         statLifeMax         |           Always            |
+|          statMana           |           Always            |
+|         statManaMax         |           Always            |
+|       extraAccessory        |   OnEnterWorld,DemonHeart   |
+|    unlockedBiomeTorches     | OnEnterWorld,TorchGodsFavor |
+|      UsingBiomeTorches      | OnEnterWorld,TorchGodsFavor |
+| downedDD2EventAnyDifficulty |     OnEnterWorld,Legion     |
+|          taxMoney           |           NoSync            |
+|          hairColor          |    OnEnterWorld,Stylist     |
+|          skinColor          |  OnEnterWorld,Dresser(bug)  |
+|          eyeColor           |  OnEnterWorld,Dresser(bug)  |
+|         shirtColor          |  OnEnterWorld,Stylist(bug)  |
+|       underShirtColor       |  OnEnterWorld,Dresser(bug)  |
+|         pantsColor          |  OnEnterWorld,Dresser(bug)  |
+|          shoeColor          |  OnEnterWorld,Dresser(bug)  |
+|            armor            |           Always            |
+|             dye             |           Always            |
+|         miscEquips          |           Always            |
+|          miscDyes           |           Always            |
+|          inventory          |           Always            |
+|            bank             |           Always            |
+|            bank2            |           Always            |
+|            bank3            |           Always            |
+|            bank4            |           Always            |
+|        voidVaultInfo        |           Always            |
+|             spX             |        NoSync(skip)         |
+|             spY             |        NoSync(skip)         |
+|             spI             |        NoSync(skip)         |
+|             spN             |        NoSync(skip)         |
+|          hbLocked           |           NoSync            |
+|          hideInfo           |           NoSync            |
+|    anglerQuestsFinished     |           NoSync            |
+|         DpadRadial          |           NoSync            |
+|      builderAccStatus       |           NoSync            |
+|      bartenderQuestLog      |           NoSync            |
+|            dead             |           Always            |
+|        respawnTimer         |           Always            |
+|   golferScoreAccumulated    |           NoSync            |
+|       creativeTracker       |           NoSync            |
+|          mouseItem          |           NoSync            |
+|          guideItem          |           NoSync            |
+|         reforgeItem         |           NoSync            |
+|        creativeMenu         |           NoSync            |
+|    creativePowerManager     |           NoSync            |
+|       hairDyeItemName       |           NoSync            |
+|          research           |           NoSync            |
+|           modData           |           NoSync            |
+|          modBuffs           |           NoSync            |
+|        infoDisplays         |           NoSync            |
+|          usedMods           |           NoSync            |
 

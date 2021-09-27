@@ -14,21 +14,12 @@ namespace SSC
 
         public override void Load()
         {
-            On.Terraria.Main.DrawFPS += On_Main_DrawFPS;
             IL.Terraria.NetMessage.SendData += IL_NetMessage_SendData;
         }
 
         public override void Unload()
         {
-            On.Terraria.Main.DrawFPS -= On_Main_DrawFPS;
             IL.Terraria.NetMessage.SendData -= IL_NetMessage_SendData;
-        }
-
-        private void On_Main_DrawFPS(On.Terraria.Main.orig_DrawFPS orig, Main self)
-        {
-            var state = SSCPlayer.SSCReady ? "ON" : "OFF";
-            Main.debugWords = $"SSC({state})";
-            orig(self);
         }
 
         private static void IL_NetMessage_SendData(ILContext il)
@@ -42,57 +33,60 @@ namespace SSC
         public override void HandlePacket(BinaryReader reader, int _)
         {
             var messageID = (SSCMessageID) reader.ReadByte();
-            if (messageID == SSCMessageID.Reset)
+            if (messageID == SSCMessageID.ClientChange)
             {
                 var i = reader.ReadInt32();
-                var uuid = reader.ReadString();
-                var path = Path.Combine(SavePath, Main.worldName, $"{uuid}.dat");
-                var memoryStream = new MemoryStream();
-                TagIO.ToStream(File.Exists(path) ? TagIO.FromFile(path) : new TagCompound(), memoryStream);
-                var bytes = memoryStream.ToArray();
+                var tagCompound = reader.ReadTagCompound();
 
-                // FIXME can't dispatch to clients without for.
-                for (var j = 0; j < byte.MaxValue; ++j)
-                {
-                    if (Main.player[i].name == "") return;
-                    var packet = GetPacket();
-                    packet.Write((byte) SSCMessageID.Load);
-                    packet.Write(i);
-                    packet.Write(bytes.Length);
-                    packet.Write(bytes);
-                    packet.Send(j);
-                }
+                var player = Main.player[i];
+                var modPlayer = player.GetModPlayer<SSCPlayer>();
+                if (tagCompound.ContainsKey("taxMoney"))
+                    player.taxMoney = tagCompound.GetInt("taxMoney");
+                if (tagCompound.ContainsKey("taxMoney"))
+                    player.taxMoney = tagCompound.GetInt("taxMoney");
+                if (tagCompound.ContainsKey("taxMoney"))
+                    player.taxMoney = tagCompound.GetInt("taxMoney");
+                if (tagCompound.ContainsKey("taxMoney"))
+                    player.taxMoney = tagCompound.GetInt("taxMoney");
+                if (tagCompound.ContainsKey("taxMoney"))
+                    player.taxMoney = tagCompound.GetInt("taxMoney");
+                if (tagCompound.ContainsKey("taxMoney"))
+                    player.taxMoney = tagCompound.GetInt("taxMoney");
+                if (tagCompound.ContainsKey("taxMoney"))
+                    player.taxMoney = tagCompound.GetInt("taxMoney");
+                if (tagCompound.ContainsKey("taxMoney"))
+                    player.taxMoney = tagCompound.GetInt("taxMoney");
+                if (tagCompound.ContainsKey("taxMoney"))
+                    player.taxMoney = tagCompound.GetInt("taxMoney");
+                if (tagCompound.ContainsKey("taxMoney"))
+                    player.taxMoney = tagCompound.GetInt("taxMoney");
+                if (tagCompound.ContainsKey("taxMoney"))
+                    player.taxMoney = tagCompound.GetInt("taxMoney");
+                if (tagCompound.ContainsKey("taxMoney"))
+                    player.taxMoney = tagCompound.GetInt("taxMoney");
 
-                SSCIO.Load(Main.player[i], TagIO.FromStream(memoryStream));
-            }
-            else if (messageID == SSCMessageID.Load)
-            {
-                var i = reader.ReadInt32();
-                var memoryStream = new MemoryStream(reader.ReadBytes(reader.ReadInt32()));
-                SSCIO.Load(Main.player[i], TagIO.FromStream(memoryStream));
-                if (i != Main.myPlayer) return;
-                SSCPlayer.SSCReady = true;
-                SSCPlayer.SaveCountdown = 0;
-            }
-            else if (messageID == SSCMessageID.Save)
-            {
-                Directory.CreateDirectory(Path.Combine(SavePath, Main.worldName));
-                var i = reader.ReadInt32();
-                var uuid = reader.ReadString();
-                var path = Path.Combine(SavePath, Main.worldName, $"{uuid}.dat");
-                var memoryStream = new MemoryStream(reader.ReadBytes(reader.ReadInt32()));
-                var tagCompound = TagIO.FromStream(memoryStream);
-                SSCIO.ServerTagCompound(Main.player[i], tagCompound);
-                TagIO.ToFile(tagCompound, path);
-                File.WriteAllText(Path.Combine(SavePath, Main.worldName, $"{uuid}.txt"), TagIO.Serialize(tagCompound).ToString());
+                // if (!clone.Player..Equals(Player.hbLocked))
+                //     tagCompound.Set("hbLocked", Player.hbLocked);
+                // if (!clone.Player.hideInfo.SequenceEqual(Player.hideInfo))
+                //     tagCompound.Set("hideInfo", Player.hideInfo.ToList());
+                // if (!clone.Player.anglerQuestsFinished.Equals(Player.anglerQuestsFinished))
+                //     tagCompound.Set("anglerQuestsFinished", Player.anglerQuestsFinished);
+                // if (!clone.Player.DpadRadial.Bindings.SequenceEqual(Player.DpadRadial.Bindings))
+                //     tagCompound.Set("DpadRadial", Player.DpadRadial.Bindings);
+                // if (!clone.Player.builderAccStatus.SequenceEqual(Player.builderAccStatus))
+                //     tagCompound.Set("builderAccStatus", Player.builderAccStatus);
+                // if (!clone.Player.bartenderQuestLog.Equals(Player.bartenderQuestLog))
+                //     tagCompound.Set("bartenderQuestLog", Player.bartenderQuestLog);
+                // if (!clone.Player.golferScoreAccumulated.Equals(Player.golferScoreAccumulated))
+                //     tagCompound.Set("golferScoreAccumulated", Player.golferScoreAccumulated);
+
+                return;
             }
         }
     }
 
     public enum SSCMessageID : byte
     {
-        Reset,
-        Load,
-        Save,
+        ClientChange,
     }
 }
