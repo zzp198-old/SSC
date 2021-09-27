@@ -1,30 +1,39 @@
+using System;
+using System.IO;
+using SSC.Extension;
 using Terraria;
 using Terraria.ModLoader.IO;
 
 namespace SSC.Component
 {
-    public class SSCStats : SSCComponent
+    public static class SSCStats
     {
         public static string Cache;
 
-        public override void Reset(Player player)
+        public static void Reset()
         {
-            player.statLife = player.statLifeMax = 100;
-            player.statMana = player.statManaMax = 20;
+            Main.LocalPlayer.statLife = Main.LocalPlayer.statLifeMax = 100;
+            Main.LocalPlayer.statMana = Main.LocalPlayer.statManaMax = 20;
         }
 
-        public override TagCompound ClientSave(Player player)
+        public static void Request()
         {
-            var compound = new TagCompound();
-            compound.Set("StatLife", player.statLife);
-            compound.Set("StatLifeMax", player.statLifeMax);
-            compound.Set("StatMana", player.statMana);
-            compound.Set("StatManaMax", player.statManaMax);
-
-            return compound;
+            var socket = SSC.Instance.GetPacket();
+            socket.Write((byte) SSCMessageID.RequestStats);
+            socket.Write(Main.myPlayer);
+            socket.Write(Main.clientUUID);
+            socket.Send();
         }
 
-        public override void ClientLoad(Player player, TagCompound compound)
+        public static TagCompound Extract(string uuid)
+        {
+            var dir = Path.Combine(SSC.BasePath, Main.worldName, uuid);
+            Directory.CreateDirectory(dir);
+            var name = Path.Combine(dir, "Stats.dat");
+            return File.Exists(name) ? TagIO.FromFile(name) : new TagCompound();
+        }
+
+        public static void Receive(Player player, TagCompound compound)
         {
             if (compound.ContainsKey("StatLife"))
             {
@@ -47,13 +56,28 @@ namespace SSC.Component
             }
         }
 
-        public override void ServerSave(TagCompound tag)
+        public static void RequestStorage()
         {
+            var compound = new TagCompound();
+            compound.Set("StatLife", Main.LocalPlayer.statLife);
+            compound.Set("StatLifeMax", Main.LocalPlayer.statLifeMax);
+            compound.Set("StatMana", Main.LocalPlayer.statMana);
+            compound.Set("StatManaMax", Main.LocalPlayer.statManaMax);
+
+            var message = TagIO.Serialize(compound).ToString();
+            if (string.CompareOrdinal(Cache, message) == 0) return;
+            Cache = message;
+            var socket = SSC.Instance.GetPacket();
+            socket.Write((byte) SSCMessageID.StorageStats);
+            socket.Write(Main.clientUUID);
+            socket.Write(compound);
+            socket.Send();
         }
 
-        public override TagCompound ServerLoad()
+        public static void Storage(string uuid, TagCompound compound)
         {
-            return TagIO.FromFile("");
+            var name = Path.Combine(SSC.BasePath, Main.worldName, uuid, "Stats.dat");
+            TagIO.ToFile(compound, name);
         }
     }
 }
