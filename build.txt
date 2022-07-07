@@ -1,12 +1,4 @@
-displayName = Server Side Character
+displayName = ServerMod
 author = zzp198
-version = 1.0.0
-noCompile = false
-homepage = https://github.com/zzp198/SSC
-hideCode = true
-hideResources = false
-includeSource = false  # Exclude .csproj, .cs, .sln
-buildIgnore = bin/*, obj/*, Thumbs.db
-includePDB = true
-side = Both
-sortAfter = zzp198
+version = 0.1
+homepage = https://github.com/zzp198/ServerMod

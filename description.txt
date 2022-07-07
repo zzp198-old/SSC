@@ -1,0 +1,16 @@
+Function1: Server Side Character
+
+    Current: 
+    Your Steam account is your Terraria account.
+    Every Steam account has only one player in every world.
+    
+    Future:
+    Use the account/password method to support multiple players with the same account.
+    Creation mode support.
+    Optimize network occupancy.
+    API interface.
+    
+    The player is saved in the [tModLoader]\ServerMod\SSC\[World name]\[SteamUUID].dat!
+    It can be reused in the form of replication.
+
+Function2: ......
