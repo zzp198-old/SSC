@@ -1,4 +1,3 @@
-displayName = ServerMod
+displayName = Quality of Server
 author = zzp198
 version = 0.1
-homepage = https://github.com/zzp198/ServerMod
