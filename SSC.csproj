@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\tModLoader.targets" />
   <PropertyGroup>
-    <AssemblyName>QSMod</AssemblyName>
+    <AssemblyName>SSC</AssemblyName>
     <TargetFramework>net6.0</TargetFramework>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>latest</LangVersion>
@@ -11,6 +11,8 @@
     <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Component" />
+    <Reference Include="PlayerSwapper">
+      <HintPath>..\..\..\..\..\..\Desktop\PlayerSwapper\PlayerSwapper.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
