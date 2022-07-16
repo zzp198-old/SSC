@@ -9,10 +9,10 @@ public class SSCPlayer : ModPlayer
 {
     public override void OnEnterWorld(Terraria.Player _)
     {
-        if (Main.netMode == NetmodeID.MultiplayerClient)
-        {
-            var UISystem = ModContent.GetInstance<UISystem>();
-            UISystem.UI.SetState(UISystem.UIState);
-        }
+        // if (Main.netMode == NetmodeID.MultiplayerClient)
+        // {
+        var UISystem = ModContent.GetInstance<UISystem>();
+        UISystem.UI.SetState(UISystem.UIState);
+        // }
     }
 }

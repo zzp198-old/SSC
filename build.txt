@@ -1,4 +1,15 @@
 displayName = Server Side Character
 author = zzp198
 version = 1.0
+dllReferences = 
+modReferences = 
+weakReferences = 
+noCompile = 
+homepage = 
+hideCode = 
+hideResources = 
+includeSource = 
+buildIgnore =
+side = Both
+sortAfter = 
 sortAfter = zzp198
