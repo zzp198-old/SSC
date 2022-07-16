@@ -1,3 +1,4 @@
 displayName = Server Side Character
 author = zzp198
 version = 1.0
+sortAfter = zzp198

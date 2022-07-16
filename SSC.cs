@@ -1,41 +1,80 @@
+using System;
 using System.IO;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 
 namespace SSC
 {
     public class SSC : Mod
     {
-        // tModLoader/SSC/UUID/WID/
-        public static string SavePath = Path.Combine(Main.SavePath, "SSC");
+        readonly string SavePath = Path.Combine(Main.SavePath, "SSC");
 
-        public override void HandlePacket(BinaryReader br, int _)
+        public override void HandlePacket(BinaryReader b, int _)
         {
-            var type = (PacketID)br.Read();
-            if (type == PacketID.UUID)
+            switch (Main.netMode)
             {
-                var ds = Directory.GetFiles(Path.Combine(SavePath, br.ReadString()), "*.plr");
-                foreach (var d in ds)
-                {
-                     
-                }
-
-
-                return;
+                case NetmodeID.MultiplayerClient:
+                    ClientPacket(b, _);
+                    break;
+                case NetmodeID.Server:
+                    ServerPacket(b, _);
+                    break;
             }
 
-            if (type == PacketID.SSCList)
-            {
-                Main.NewText("123");
-                return;
-            }
+            // var type = (PacketID)b.Read();
+            // if (type == PacketID.SSCList)
+            // {
+            //     if (Main.netMode == NetmodeID.Server)
+            //     {
+            //         var ps = Directory.GetFiles(Path.Combine(SavePath, b.ReadString()), "*.plr");
+            //         var p = GetPacket();
+            //         p.Write((int)PacketID.SSCList);
+            //         p.Write(ps.Length);
+            //         foreach (var plr in ps)
+            //         {
+            //             p.Write(Path.GetFileNameWithoutExtension(plr));
+            //         }
+            //
+            //         p.Send(_);
+            //         return;
+            //     }
+            //
+            //     if (Main.netMode == NetmodeID.MultiplayerClient)
+            //     {
+            //         var count = b.Read();
+            //         if (count == 0)
+            //         {
+            //             Main.NewText("You don't have any SSC.");
+            //         }
+            //         else
+            //         {
+            //             Main.NewText("SSC List: ");
+            //             for (var i = 0; i < count; i++)
+            //             {
+            //                 Main.NewText($"{i}: {b.ReadString()}");
+            //             }
+            //         }
+            //
+            //         return;
+            //     }
+            //
+            //     throw new Exception("SSCList");
+            // }
+        }
+
+        public void ClientPacket(BinaryReader b, int _)
+        {
+        }
+
+        public void ServerPacket(BinaryReader b, int _)
+        {
         }
     }
 
     public enum PacketID
     {
-        UUID, //C-S, UUID
-        SSCList, //S-C ,
+        SSCList, // C-S-C
+        SSCData, // C-S-C
     }
 }
