@@ -2,21 +2,21 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.UI;
 
 namespace SSC.Common.System;
 
 public class UISystem : ModSystem
 {
-    public Terraria.UI.UserInterface UI;
-    public Terraria.UI.UIState UIState;
+    public UserInterface UI;
+    public Content.UI.UIState UIState;
     GameTime UIGameTime;
 
     public override void Load()
     {
         if (Main.dedServ) return;
-        UI = new Terraria.UI.UserInterface();
+        UI = new UserInterface();
         UIState = new Content.UI.UIState();
-        UIState.Activate();
     }
 
     public override void Unload()
@@ -34,12 +34,12 @@ public class UISystem : ModSystem
         }
     }
 
-    public override void ModifyInterfaceLayers(List<Terraria.UI.GameInterfaceLayer> layers)
+    public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
     {
         var index = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
         if (index != -1)
         {
-            layers.Insert(index, new Terraria.UI.LegacyGameInterfaceLayer("SSC: UISystem", () =>
+            layers.Insert(index, new LegacyGameInterfaceLayer("SSC: UISystem", () =>
             {
                 if (UIGameTime != null && UI?.CurrentState != null)
                 {
@@ -47,7 +47,7 @@ public class UISystem : ModSystem
                 }
 
                 return true;
-            }, Terraria.UI.InterfaceScaleType.UI));
+            }, InterfaceScaleType.UI));
         }
     }
 }

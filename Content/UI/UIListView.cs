@@ -16,7 +16,6 @@ public class UIListView : UIPanel
 
     UICharacter UICharacter;
     UIImageButton PlayButton;
-    UIImageButton RenameButton;
     UIImageButton DeleteButton;
     UIText LeftText;
     UIText RightText;
@@ -42,14 +41,6 @@ public class UIListView : UIPanel
         PlayButton.OnClick += (_, _) => { };
         Append(PlayButton);
 
-        RenameButton = new UIImageButton(Main.Assets.Request<Texture2D>("Images/UI/ButtonRename"));
-        RenameButton.VAlign = 1;
-        RenameButton.Left.Set(28, 0);
-        RenameButton.OnMouseOver += (_, _) => LeftText.SetText(Language.GetTextValue("UI.Rename"));
-        RenameButton.OnMouseOut += (_, _) => LeftText.SetText("");
-        RenameButton.OnClick += (_, _) => { };
-        Append(RenameButton);
-
         LeftText = new UIText("");
         LeftText.VAlign = 1;
         LeftText.Left.Set(52, 0);
@@ -66,9 +57,9 @@ public class UIListView : UIPanel
         DeleteButton = new UIImageButton(Main.Assets.Request<Texture2D>("Images/UI/ButtonDelete"));
         DeleteButton.HAlign = 1;
         DeleteButton.VAlign = 1;
-        RenameButton.OnMouseOver += (_, _) => RightText.SetText(Language.GetTextValue("UI.Delete"));
-        RenameButton.OnMouseOut += (_, _) => RightText.SetText("");
-        RenameButton.OnClick += (_, _) => { };
+        DeleteButton.OnMouseOver += (_, _) => RightText.SetText(Language.GetTextValue("UI.Delete"));
+        DeleteButton.OnMouseOut += (_, _) => RightText.SetText("");
+        DeleteButton.OnClick += (_, _) => { };
         Append(DeleteButton);
 
         UIImage element4 = new UIImage(Main.Assets.Request<Texture2D>("Images/UI/InnerPanelBackground"));
@@ -98,6 +89,8 @@ public class UIListView : UIPanel
                 break;
         }
 
+        Main.LocalPlayer.ChatColor();
+        
         UIText element5 = new UIText(text1);
         element5.TextColor = color;
         element5.Left.Set((float)(70.0 - (double)FontAssets.MouseText.Value.MeasureString(text1).X * 0.5), 0.0f);

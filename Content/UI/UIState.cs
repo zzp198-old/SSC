@@ -36,9 +36,9 @@ public class UIState : Terraria.UI.UIState
     public override void OnActivate()
     {
         UIList.Clear();
-        foreach (var path in Directory.GetFiles(Main.PlayerPath, "*.plr"))
+        foreach (var path in Directory.GetFiles(Path.Combine(SSC.SavePath, "Cache"), "*.plr"))
         {
-            var item = new UICharacterListItem(Player.LoadPlayer(path, false), 0);
+            var item = new UIListView(Player.LoadPlayer(path, false));
             UIList.Add(item);
         }
     }

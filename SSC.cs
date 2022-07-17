@@ -1,79 +1,89 @@
 using System.IO;
+using SSC.Common.System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace SSC
 {
     public class SSC : Mod
     {
-        readonly string SavePath = Path.Combine(Main.SavePath, "SSC");
+        public static string SavePath = Path.Combine(Main.SavePath, "SSC");
+        public static string CachePath = Path.Combine(SavePath, "Cache");
 
-        public override void HandlePacket(BinaryReader b, int _)
+        public override void HandlePacket(BinaryReader br, int _)
         {
             switch (Main.netMode)
             {
                 case NetmodeID.MultiplayerClient:
-                    ClientPacket(b, _);
+                    ClientPacket(br, _);
                     break;
                 case NetmodeID.Server:
-                    ServerPacket(b, _);
+                    ServerPacket(br, _);
                     break;
             }
-
-            // var type = (PacketID)b.Read();
-            // if (type == PacketID.SSCList)
-            // {
-            //     if (Main.netMode == NetmodeID.Server)
-            //     {
-            //         var ps = Directory.GetFiles(Path.Combine(SavePath, b.ReadString()), "*.plr");
-            //         var p = GetPacket();
-            //         p.Write((int)PacketID.SSCList);
-            //         p.Write(ps.Length);
-            //         foreach (var plr in ps)
-            //         {
-            //             p.Write(Path.GetFileNameWithoutExtension(plr));
-            //         }
-            //
-            //         p.Send(_);
-            //         return;
-            //     }
-            //
-            //     if (Main.netMode == NetmodeID.MultiplayerClient)
-            //     {
-            //         var count = b.Read();
-            //         if (count == 0)
-            //         {
-            //             Main.NewText("You don't have any SSC.");
-            //         }
-            //         else
-            //         {
-            //             Main.NewText("SSC List: ");
-            //             for (var i = 0; i < count; i++)
-            //             {
-            //                 Main.NewText($"{i}: {b.ReadString()}");
-            //             }
-            //         }
-            //
-            //         return;
-            //     }
-            //
-            //     throw new Exception("SSCList");
-            // }
         }
 
-        public void ClientPacket(BinaryReader b, int _)
+        void ClientPacket(BinaryReader br, int _)
         {
+            var type = (PacketID)br.Read();
+            if (type == PacketID.SSCList)
+            {
+                var cacheDir = Path.Combine(SavePath, "Cache");
+                var count = br.Read();
+                Directory.Delete(cacheDir, true);
+                Directory.CreateDirectory(cacheDir);
+                for (var i = 0; i < count; i++)
+                {
+                    var compound = (TagCompound)TagIO.ReadTag(br, out var name);
+                    File.WriteAllBytes(Path.Combine(cacheDir, name + ".plr"), compound.GetByteArray("plr"));
+                    if (compound.ContainsKey("tplr"))
+                    {
+                        File.WriteAllBytes(Path.Combine(cacheDir, name + ".tplr"), compound.GetByteArray("tplr"));
+                    }
+                }
+
+                var UISystem = ModContent.GetInstance<UISystem>();
+                UISystem.UI.SetState(UISystem.UIState);
+                return;
+            }
         }
 
-        public void ServerPacket(BinaryReader b, int _)
+        void ServerPacket(BinaryReader br, int _)
         {
+            var type = (PacketID)br.Read();
+            if (type == PacketID.UUID)
+            {
+                var players = Directory.GetFiles(Path.Combine(SavePath, br.ReadString()), "*.plr");
+
+                var packet = GetPacket();
+                packet.Write((int)PacketID.SSCList);
+                packet.Write(players.Length);
+                foreach (var player in players)
+                {
+                    var compound = new TagCompound
+                    {
+                        { "plr", File.ReadAllBytes(player) }
+                    };
+                    var tplr = Path.ChangeExtension(player, ".tplr");
+                    if (File.Exists(tplr))
+                    {
+                        compound.Add("tplr", File.ReadAllBytes(tplr));
+                    }
+
+                    TagIO.WriteTag(Path.GetFileNameWithoutExtension(player), compound, packet);
+                }
+
+                packet.Send(_);
+                return;
+            }
         }
     }
 
     public enum PacketID
     {
-        SSCList, // C-S-C
-        SSCData, // C-S-C
+        UUID, // C-S, UUID
+        SSCList, // S-C, Count,[Size, TagCompoent]
     }
 }
