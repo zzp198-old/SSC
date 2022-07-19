@@ -13,11 +13,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Common\Config" />
-    <Folder Include="Localization" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="PlayerSwapper">
-      <HintPath>..\..\..\..\..\..\Desktop\PlayerSwapper\PlayerSwapper.dll</HintPath>
-    </Reference>
   </ItemGroup>
 </Project>

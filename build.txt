@@ -1,4 +1,4 @@
-displayName = Server Side Character
+displayName = SSC
 author = zzp198
 version = 1.0
 dllReferences = 
@@ -9,7 +9,7 @@ homepage =
 hideCode = 
 hideResources = 
 includeSource = 
-buildIgnore =
+buildIgnore = 
 side = Both
 sortAfter = 
 sortAfter = zzp198
