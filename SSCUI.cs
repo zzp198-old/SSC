@@ -32,7 +32,7 @@ public class SSCUI : UIState
     {
         UIPanel = new UIPanel();
         UIPanel.Width.Set(450, 0);
-        UIPanel.Height.Set(940, 0);
+        UIPanel.Height.Set(1040, 0);
         UIPanel.HAlign = UIPanel.VAlign = 0.5f;
         UIPanel.BackgroundColor = new Color(33, 43, 79);
         Append(UIPanel);
@@ -49,22 +49,31 @@ public class SSCUI : UIState
         UIList.SetScrollbar(UIScrollbar);
         UIPanel.Append(UIScrollbar);
 
+        pendingPlayer = new Player();
         var difficultyButton1 =
             new UIDifficultyButton(pendingPlayer, Lang.menu[26], Lang.menu[31], (byte)0, Color.Cyan);
         difficultyButton1.Left.Set(0, 0);
         difficultyButton1.Top.Set(640, 0);
+        difficultyButton1.Width.Set(200, 0);
+        difficultyButton1.Width.Set(50, 0);
         var difficultyButton2 =
             new UIDifficultyButton(pendingPlayer, Lang.menu[25], Lang.menu[30], (byte)1, Main.mcColor);
         difficultyButton2.Left.Set(225, 0);
-        difficultyButton3.Top.Set(640, 0);
+        difficultyButton2.Top.Set(640, 0);
+        difficultyButton2.Width.Set(200, 0);
+        difficultyButton2.Width.Set(50, 0);
         var difficultyButton3 =
             new UIDifficultyButton(pendingPlayer, Lang.menu[24], Lang.menu[29], (byte)2, Main.hcColor);
         difficultyButton3.Left.Set(0, 0);
         difficultyButton3.Top.Set(740, 0);
+        difficultyButton3.Width.Set(200, 0);
+        difficultyButton3.Width.Set(50, 0);
         var difficultyButton4 = new UIDifficultyButton(pendingPlayer, Language.GetText("UI.Creative"),
             Language.GetText("UI.CreativeDescriptionPlayer"), (byte)3, Main.creativeModeColor);
         difficultyButton4.Left.Set(225, 0);
         difficultyButton4.Top.Set(740, 0);
+        difficultyButton4.Width.Set(200, 0);
+        difficultyButton4.Width.Set(50, 0);
         UIPanel.Append(difficultyButton1);
         UIPanel.Append(difficultyButton2);
         UIPanel.Append(difficultyButton3);
@@ -82,7 +91,7 @@ public class SSCUI : UIState
         var CreateButton = new UITextPanel<LocalizedText>(Language.GetText("UI.Create"), 0.7f, true);
         CreateButton.Width = StyleDimension.FromPixelsAndPercent(-10f, 0.5f);
         CreateButton.Height = StyleDimension.FromPixels(50f);
-        CreateButton.Top.Set(840, 0);
+        CreateButton.Top.Set(940, 0);
         CreateButton.Left.Set(225, 0);
         CreateButton.OnMouseOver += new UIElement.MouseEvent(this.FadedMouseOver);
         CreateButton.OnMouseOut += new UIElement.MouseEvent(this.FadedMouseOut);
@@ -113,7 +122,6 @@ public class SSCUI : UIState
 
     private void FadedMouseOver(UIMouseEvent evt, UIElement listeningElement)
     {
-        SoundEngine.PlaySound(12);
         ((UIPanel)evt.Target).BackgroundColor = new Color(73, 94, 171);
         ((UIPanel)evt.Target).BorderColor = Colors.FancyUIFatButtonMouseOver;
     }

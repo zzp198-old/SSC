@@ -14,6 +14,11 @@ public partial class SSC : Mod
 
     public override void HandlePacket(BinaryReader br, int _)
     {
+        if (!Directory.Exists(SavePath))
+        {
+            Directory.CreateDirectory(SavePath);
+        }
+
         var type = (PKG_ID)br.Read();
         if (type == PKG_ID.RequestPlayerList)
         {
@@ -178,16 +183,16 @@ public partial class SSC : Mod
             foreach (var file in files)
             {
                 var name = Path.GetFileNameWithoutExtension(file);
-                var tag = new TagCompound
+                var new_tag = new TagCompound
                 {
                     { "plr", File.ReadAllBytes(file) },
                 };
                 if (File.Exists(Path.ChangeExtension(file, ".tplr")))
                 {
-                    tag.Add("tplr", File.ReadAllBytes(Path.ChangeExtension(file, ".tplr")));
+                    new_tag.Add("tplr", File.ReadAllBytes(Path.ChangeExtension(file, ".tplr")));
                 }
 
-                TagIO.WriteTag(name, tag, P);
+                TagIO.WriteTag(name, new_tag, P);
             }
 
             P.Send(_);
