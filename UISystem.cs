@@ -4,33 +4,35 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace SSC.Common.System;
+namespace SSC;
 
 public class UISystem : ModSystem
 {
     public UserInterface UI;
-    public Content.UI.UIState UIState;
-    GameTime UIGameTime;
+    public UIState SSCUI;
+    GameTime UITime;
 
     public override void Load()
     {
         if (Main.dedServ) return;
         UI = new UserInterface();
-        UIState = new Content.UI.UIState();
+        SSCUI = new SSCUI();
     }
 
     public override void Unload()
     {
-        UIState = null;
+        SSCUI = null;
         UI = null;
     }
 
-    public override void UpdateUI(GameTime gameTime)
+    #region UI
+
+    public override void UpdateUI(GameTime time)
     {
-        UIGameTime = gameTime;
+        UITime = time;
         if (UI?.CurrentState != null)
         {
-            UI.Update(gameTime);
+            UI.Update(time);
         }
     }
 
@@ -41,13 +43,15 @@ public class UISystem : ModSystem
         {
             layers.Insert(index, new LegacyGameInterfaceLayer("SSC: UISystem", () =>
             {
-                if (UIGameTime != null && UI?.CurrentState != null)
+                if (UITime != null && UI?.CurrentState != null)
                 {
-                    UI.Draw(Main.spriteBatch, UIGameTime);
+                    UI.Draw(Main.spriteBatch, UITime);
                 }
 
                 return true;
             }, InterfaceScaleType.UI));
         }
     }
+
+    #endregion
 }

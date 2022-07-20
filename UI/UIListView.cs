@@ -6,9 +6,10 @@ using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.IO;
 using Terraria.Localization;
+using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace SSC.Content.UI;
+namespace SSC.UI;
 
 public class UIListView : UIPanel
 {
@@ -38,7 +39,7 @@ public class UIListView : UIPanel
         PlayButton.Left.Set(4, 0);
         PlayButton.OnMouseOver += (_, _) => LeftText.SetText(Language.GetTextValue("UI.Play"));
         PlayButton.OnMouseOut += (_, _) => LeftText.SetText("");
-        PlayButton.OnClick += (_, _) => { };
+        PlayButton.OnClick += PlayerButtonClick;
         Append(PlayButton);
 
         LeftText = new UIText("");
@@ -59,7 +60,7 @@ public class UIListView : UIPanel
         DeleteButton.VAlign = 1;
         DeleteButton.OnMouseOver += (_, _) => RightText.SetText(Language.GetTextValue("UI.Delete"));
         DeleteButton.OnMouseOut += (_, _) => RightText.SetText("");
-        DeleteButton.OnClick += (_, _) => { };
+        DeleteButton.OnClick += DeleteButtonClick;
         Append(DeleteButton);
 
         UIImage element4 = new UIImage(Main.Assets.Request<Texture2D>("Images/UI/InnerPanelBackground"));
@@ -90,7 +91,7 @@ public class UIListView : UIPanel
         }
 
         Main.LocalPlayer.ChatColor();
-        
+
         UIText element5 = new UIText(text1);
         element5.TextColor = color;
         element5.Left.Set((float)(70.0 - (double)FontAssets.MouseText.Value.MeasureString(text1).X * 0.5), 0.0f);
@@ -120,6 +121,24 @@ public class UIListView : UIPanel
         element9.Left.Set(75f, 0.0f);
         element9.Top.Set(7f, 0.0f);
         this.Append((UIElement)element9);
+    }
+
+    private void DeleteButtonClick(UIMouseEvent evt, UIElement listeningelement)
+    {
+        var P = ModContent.GetInstance<SSC>().GetPacket();
+        P.Write((int)SSC.PKG_ID.DeletePlayer);
+        P.Write(Main.clientUUID);
+        P.Write(Data.Name);
+        P.Send();
+    }
+
+    private void PlayerButtonClick(UIMouseEvent evt, UIElement listeningelement)
+    {
+        var P = ModContent.GetInstance<SSC>().GetPacket();
+        P.Write((int)SSC.PKG_ID.PlayPlayer);
+        P.Write(Main.clientUUID);
+        P.Write(Data.Name);
+        P.Send();
     }
 
     public override void MouseOver(UIMouseEvent evt)
