@@ -157,7 +157,40 @@ public partial class SSC : Mod
 
         if (type == PKG_ID.CreatePlayer)
         {
-            // TODO
+            var uuid = br.ReadString();
+            var tag = (TagCompound)TagIO.ReadTag(br, out var player_name);
+            if (tag.ContainsKey("plr"))
+            {
+                File.WriteAllBytes(Path.Combine(SavePath, uuid, player_name + ".plr"), tag.GetByteArray("plr"));
+            }
+
+            if (tag.ContainsKey("tplr"))
+            {
+                File.WriteAllBytes(Path.Combine(SavePath, uuid, player_name + ".tplr"), tag.GetByteArray("tplr"));
+            }
+
+            var path = Path.Combine(SavePath, uuid);
+            var files = Directory.GetFiles(path, "*.plr");
+
+            var P = GetPacket();
+            P.Write((int)PKG_ID.PlayerList);
+            P.Write(files.Length);
+            foreach (var file in files)
+            {
+                var name = Path.GetFileNameWithoutExtension(file);
+                var tag = new TagCompound
+                {
+                    { "plr", File.ReadAllBytes(file) },
+                };
+                if (File.Exists(Path.ChangeExtension(file, ".tplr")))
+                {
+                    tag.Add("tplr", File.ReadAllBytes(Path.ChangeExtension(file, ".tplr")));
+                }
+
+                TagIO.WriteTag(name, tag, P);
+            }
+
+            P.Send(_);
         }
     }
 
