@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Terraria": {
+    "tModLoader": {
       "commandName": "Executable",
       "executablePath": "dotnet\\6.0.0\\dotnet.exe",
       "commandLineArgs": "$(tMLPath)",
