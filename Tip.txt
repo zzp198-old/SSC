@@ -1,6 +1,0 @@
-LoadPlayer -> LoadTemporaryItemSlotContents -> player._temporaryItemSlots changed.
-
-Spawn -> Main.myPlayer==whoAmI -> SetPlayerDataToOutOfClassFields -> player._temporaryItemSlots -> Main.xxxItem changed.
-                    ↑
-
-No sign of loss item.

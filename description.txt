@@ -1,0 +1,23 @@
+Mod name: SSC (Server Side Character)
+
+If you have used TShock, you must be familiar with this mod.
+
+When you enter the world, your local player will be erased.
+Don't worry, this won't cause any damage to your local archive.
+
+Still, your Steam account is your only voucher.
+There can be multiple players under your Steam account name.
+
+Command List:
+    1. /SSC list
+        all your player information will be returned.
+    2. /SSC add name difficulty
+        add a new player to your Steam account name.
+    3. /SSC [number]
+
+
+Future:
+    Add UI, similar to player select interface, for convenience.
+    (In fact, it has been implemented, but the interface layout is too ugly,
+     and it will make the client-server interaction more complex.
+     This scheme is not enabled for the time being.)
