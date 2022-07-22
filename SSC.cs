@@ -20,3 +20,9 @@ public class SSC : Mod
         base.Unload();
     }
 }
+
+public enum PKG_ID
+{
+    
+    
+}
