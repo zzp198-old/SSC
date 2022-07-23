@@ -8,34 +8,26 @@ namespace SSC;
 
 public class SSCPlayer : ModPlayer
 {
-    public bool SSCLogin;
+    public string SteamID;
 
-    // Spawn -> Player.Hooks.EnterWorld
     public override void OnEnterWorld(Player player)
     {
-        SSCLogin = false;
-        // SocialAPI.Friends.GetUsername()
+        SteamID = null;
+
+
         if (Main.netMode == NetmodeID.MultiplayerClient)
         {
-            Anonymous();
-
-            Main.NewText("Hey, you are in SSC mode and your character has been erase.");
-            Main.NewText("You can't play until you create and select player in UI.");
-        }
-    }
-
-    static void Anonymous()
-    {
-        new PlayerFileData
-        {
-            // this.Name = this.Player.name
-            Metadata = FileMetadata.FromCurrentSettings(FileType.Player), // must
-            Player = new Player
+            Main.player[Main.myPlayer] = new Player()
             {
                 name = "Anonymous",
-                difficulty = (byte)Main.GameMode, // Correspond to each other and can be used directly.
-                savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules() // must
-            },
-        }.SetAsActive(); // If there is no resurrection, the character will be fixed to (0, 0).
+                difficulty = (byte)Main.GameMode,
+                savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules(),
+            };
+
+            var packet = Mod.GetPacket();
+            packet.Write((byte)PID.SteamID);
+            packet.Write(SocialAPI.Friends.GetUsername());
+            packet.Send();
+        }
     }
 }
