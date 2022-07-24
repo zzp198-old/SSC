@@ -1,28 +1,43 @@
 using System.IO;
+using System.Linq;
 using Terraria;
-using Terraria.ID;
+using Terraria.IO;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace SSC;
 
 public class SSC : Mod
 {
-    public static readonly string ClientSavePath = Path.Combine(Main.SavePath, "SSC", "Client");
-    public static readonly string ServerSavePath = Path.Combine(Main.SavePath, "SSC", "Server");
-
     public override void HandlePacket(BinaryReader b, int _)
     {
         var type = (PID)b.ReadByte();
+
+        Logger.Debug($"NetMode: {Main.netMode} id:{Main.myPlayer} receive {type} from {_}");
+
         if (type == PID.SteamID)
         {
             var id = b.ReadString();
-            if (string.IsNullOrWhiteSpace(id))
+            if (string.IsNullOrEmpty(id))
             {
-                SSCUtils.Kick(_, $"Unexpected SteamID: {id}");
+                NetMessage.BootPlayer(_, NetworkText.FromLiteral($"Unexpected SteamID: {id}"));
                 return;
             }
 
-            Main.player[_].GetModPlayer<SSCPlayer>().SteamID = id;
+            if (Main.player.Any(i => i.GetModPlayer<SteamPlayer>().SteamID == id))
+            {
+                NetMessage.BootPlayer(_, NetworkText.FromLiteral($"SteamID repeat: {id}"));
+                return;
+            }
+
+            Main.player[_] = new Player
+            {
+                name = id,
+                difficulty = (byte)Main.GameMode,
+                dead = true,
+                ghost = true,
+                savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules()
+            };
         }
     }
 }
