@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using Terraria;
@@ -14,7 +15,6 @@ public class SSC : Mod
         var type = (PID)b.ReadByte();
 
         Logger.Debug($"NetMode: {Main.netMode} id:{Main.myPlayer} receive {type} from {_}");
-
         if (type == PID.SteamID)
         {
             var id = b.ReadString();
@@ -24,11 +24,11 @@ public class SSC : Mod
                 return;
             }
 
-            if (Main.player.Any(i => i.GetModPlayer<SteamPlayer>().SteamID == id))
-            {
-                NetMessage.BootPlayer(_, NetworkText.FromLiteral($"SteamID repeat: {id}"));
-                return;
-            }
+            // if (Main.player.Any(i => i.active && i.GetModPlayer<SteamPlayer>().SteamID == id))
+            // {
+            //     NetMessage.BootPlayer(_, NetworkText.FromLiteral($"SteamID repeat: {id}"));
+            //     return;
+            // }
 
             Main.player[_] = new Player
             {
@@ -38,6 +38,8 @@ public class SSC : Mod
                 ghost = true,
                 savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules()
             };
+            Main.player[_].Spawn(PlayerSpawnContext.SpawningIntoWorld);
+            Main.player[_].GetModPlayer<SteamPlayer>().SteamID = id;
         }
     }
 }
