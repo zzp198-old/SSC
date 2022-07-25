@@ -1,12 +1,11 @@
 displayName = SSC
 author = zzp198
 version = 1.1
-# Linq and EF6 are not supported.
-dllReferences = System.Data.SQLite
+dllReferences = SQLite
 modReferences =
 weakReferences =
 noCompile = false
-homepage = 
+homepage = https://github.com/zzp198/SSC
 hideCode = false
 hideResources = false
 includeSource = true

@@ -22,9 +22,4 @@
     <Folder Include="Command" />
     <Folder Include="lib" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Data.SQLite">
-      <HintPath>lib\System.Data.SQLite.dll</HintPath>
-    </Reference>
-  </ItemGroup>
 </Project>
