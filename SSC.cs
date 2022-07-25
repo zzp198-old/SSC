@@ -1,8 +1,6 @@
-using System;
+using System.Data.SQLite;
 using System.IO;
-using System.Linq;
 using Terraria;
-using Terraria.IO;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
@@ -10,6 +8,21 @@ namespace SSC;
 
 public class SSC : Mod
 {
+    public static SQLiteConnection DB;
+
+    public override void Load()
+    {
+        if (Main.dedServ)
+        {
+            DB = new SQLiteConnection($"Data Source={Path.Combine(Main.SavePath, "SSC.db")};Pooling=true;");
+        }
+    }
+
+    public override void Unload()
+    {
+        DB?.Close();
+    }
+
     public override void HandlePacket(BinaryReader b, int _)
     {
         var type = (PID)b.ReadByte();
@@ -29,16 +42,6 @@ public class SSC : Mod
             //     NetMessage.BootPlayer(_, NetworkText.FromLiteral($"SteamID repeat: {id}"));
             //     return;
             // }
-
-            Main.player[_] = new Player
-            {
-                name = id,
-                difficulty = (byte)Main.GameMode,
-                dead = true,
-                ghost = true,
-                savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules()
-            };
-            Main.player[_].Spawn(PlayerSpawnContext.SpawningIntoWorld);
             Main.player[_].GetModPlayer<SteamPlayer>().SteamID = id;
         }
     }
