@@ -23,9 +23,19 @@ public class SSC : Mod
 
     public override void Unload()
     {
-        if (Directory.Exists(Path.Combine(SavePath, "Client")))
+        if (File.Exists(Path.Combine(SavePath, "Client", "Anonymous.plr")))
         {
-            Directory.Delete(Path.Combine(SavePath, "Client"), true);
+            File.Delete(Path.Combine(SavePath, "Client", "Anonymous.plr"));
+        }
+
+        if (File.Exists(Path.Combine(SavePath, "Client", "Anonymous.tplr")))
+        {
+            File.Delete(Path.Combine(SavePath, "Client", "Anonymous.tplr"));
+        }
+
+        if (Directory.Exists(Path.Combine(SavePath, "Client", "Anonymous")))
+        {
+            Directory.Delete(Path.Combine(SavePath, "Client", "Anonymous"), true);
         }
     }
 
@@ -58,58 +68,6 @@ public class SSC : Mod
                 }
             }
                 break;
-            case PID.LoadMap:
-            {
-                var compound = TagIO.Read(b);
-
-                var dir = Path.Combine(SavePath, "Client", Main.ActivePlayerFileData.Name);
-                if (!Directory.Exists(dir))
-                {
-                    Directory.CreateDirectory(dir);
-                }
-
-                if (compound.ContainsKey("Terraria"))
-                {
-                    File.WriteAllBytes(Path.Combine(dir, Main.ActiveWorldFileData.UniqueId + ".map"),
-                        compound.GetByteArray("Terraria"));
-                }
-
-                if (compound.ContainsKey("tModLoader"))
-                {
-                    File.WriteAllBytes(Path.Combine(dir, Main.ActiveWorldFileData.UniqueId + ".tmap"),
-                        compound.GetByteArray("tModLoader"));
-                }
-
-                Main.Map.Load();
-            }
-                break;
-            case PID.SaveMap:
-            {
-                var id = Main.player[_].GetModPlayer<SSCPlayer>().SteamID;
-                if (string.IsNullOrEmpty(id))
-                {
-                    NetMessage.BootPlayer(_, NetworkText.FromLiteral($"Unexpected SteamID: {id}"));
-                    return;
-                }
-
-                var compound = TagIO.Read(b);
-                if (compound.ContainsKey("Terraria"))
-                {
-                    File.WriteAllBytes(Path.Combine(SavePath, "Server", id, Main.ActiveWorldFileData.UniqueId + ".map"),
-                        compound.GetByteArray("Terraria"));
-                }
-
-                if (compound.ContainsKey("tModLoader"))
-                {
-                    File.WriteAllBytes(
-                        Path.Combine(SavePath, "Server", id, Main.ActiveWorldFileData.UniqueId + ".tmap"),
-                        compound.GetByteArray("tModLoader"));
-                }
-
-                ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral("Map data saved successfully."),
-                    Color.Green, _);
-            }
-                break;
             case PID.LoadSSC:
             {
                 var i = b.ReadInt32();
@@ -127,6 +85,17 @@ public class SSC : Mod
                 {
                     data.SetAsActive();
                     Main.LocalPlayer.GetModPlayer<SSCPlayer>().State = true;
+                    Main.Map.Load();
+                    for (var j = 0; j < Main.Map.MaxWidth; j++)
+                    {
+                        for (var k = 0; k < Main.Map.MaxHeight; k++)
+                        {
+                            if (WorldGen.InWorld(j, k))
+                                Main.Map.UpdateType(j, k);
+                        }
+                    }
+
+                    Main.refreshMap = true;
                 }
 
                 Main.player[i].Spawn(PlayerSpawnContext.SpawningIntoWorld);
@@ -181,8 +150,8 @@ public class SSC : Mod
                     File.Delete(Path.Combine(SavePath, "Server", id, name + ".tplr"));
                 }
 
-                ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral($"Player {name} deleted successfully."),
-                    Color.Yellow, _);
+                ChatHelper.SendChatMessageToClient(
+                    NetworkText.FromLiteral($"Player {name} were deleted because died in hardcore."), Color.Yellow, _);
             }
                 break;
             default:
@@ -197,7 +166,5 @@ public enum PID : byte
     SteamID,
     LoadSSC,
     SaveSSC,
-    LoadMap,
-    SaveMap,
     KillMeForGood,
 }

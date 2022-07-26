@@ -18,10 +18,9 @@ public class SSCCommand : ModCommand
     public override string Command => "SSC";
     public override CommandType Type => CommandType.Server;
 
-    public override string Usage => "/SSC [action] [arg...]\n" +
-                                    "e.g: \n" +
+    public override string Usage => "/SSC [use 0](default)\n" +
                                     "/SSC list\n" +
-                                    "/SSC add [name] [difficulty](0/classic,1/mediumcore,2/hardcore,3/journey)\n" +
+                                    "/SSC add [name] [difficulty](0/classic,1/medium,2/hard,3/journey)\n" +
                                     "/SSC use [id](from list)\n" +
                                     "/SSC del [id](from list)\n";
 
@@ -32,6 +31,11 @@ public class SSCCommand : ModCommand
         {
             NetMessage.BootPlayer(caller.Player.whoAmI, NetworkText.FromLiteral($"Unexpected SteamID: {id}"));
             return;
+        }
+
+        if (args.Length == 0)
+        {
+            args = new[] { "use", "0" };
         }
 
         switch (args[0])
@@ -62,6 +66,8 @@ public class SSCCommand : ModCommand
                                 $"time: {data.GetPlayTime():hh\\:mm\\:ss}"
                             );
                         }
+
+                        return;
                     }
                 }
 
@@ -111,11 +117,11 @@ public class SSCCommand : ModCommand
                 {
                     player.difficulty = 0;
                 }
-                else if (difficulty == "1" || difficulty.ToLower() == "mediumcore")
+                else if (difficulty == "1" || difficulty.ToLower() == "medium")
                 {
                     player.difficulty = 1;
                 }
-                else if (difficulty == "2" || difficulty.ToLower() == "hardcore")
+                else if (difficulty == "2" || difficulty.ToLower() == "hard")
                 {
                     player.difficulty = 2;
                 }
@@ -206,25 +212,6 @@ public class SSCCommand : ModCommand
                         packet.Write(caller.Player.whoAmI);
                         TagIO.WriteTag(Path.GetFileNameWithoutExtension(files[i]), compound, packet);
                         packet.Send();
-
-                        // 发送地图数据
-                        compound = new TagCompound();
-                        var map_name = Path.Combine(SSC.SavePath, "Server", id,
-                            Main.ActiveWorldFileData.UniqueId + ".map");
-                        if (File.Exists(map_name))
-                        {
-                            compound.Set("Terraria", File.ReadAllBytes(map_name));
-                        }
-
-                        if (File.Exists(Path.ChangeExtension(map_name, ".tmap")))
-                        {
-                            compound.Set("tModLoader", File.ReadAllBytes(Path.ChangeExtension(map_name, ".tmap")));
-                        }
-
-                        packet = Mod.GetPacket();
-                        packet.Write((byte)PID.LoadMap);
-                        TagIO.Write(compound, packet);
-                        packet.Send(caller.Player.whoAmI);
                         return;
                     }
                 }
