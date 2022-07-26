@@ -5,6 +5,7 @@ using Terraria;
 using Terraria.Chat;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace SSC;
 
@@ -32,10 +33,55 @@ public class SSC : Mod
             Main.player[_].GetModPlayer<SSCPlayer>().SteamID = id;
             ChatHelper.BroadcastChatMessage(NetworkText.FromLiteral($"SteamID {id} login succeeded."), Color.Green);
         }
+
+        if (type == PID.ApplySSC)
+        {
+            if (!Directory.Exists(Path.Combine(Main.SavePath, "SSC", "Client")))
+            {
+                Directory.CreateDirectory(Path.Combine(Main.SavePath, "SSC", "Client"));
+            }
+
+            var who = b.ReadInt32();
+            var compound = (TagCompound)TagIO.ReadTag(b, out var name);
+            File.WriteAllBytes(Path.Combine(Main.SavePath, "SSC", "Client", name + ".plr"),
+                compound.GetByteArray("Terraria"));
+            File.WriteAllBytes(Path.Combine(Main.SavePath, "SSC", "Client", name + ".tplr"),
+                compound.GetByteArray("tModLoader"));
+
+            var data = Player.LoadPlayer(Path.Combine(Main.SavePath, "SSC", "Client", name + ".plr"), false);
+            Main.player[who] = data.Player;
+            if (who == Main.myPlayer)
+            {
+                data.SetAsActive();
+                Main.LocalPlayer.GetModPlayer<SSCPlayer>().Sended = true;
+            }
+
+            Main.player[who].Spawn(PlayerSpawnContext.SpawningIntoWorld);
+        }
+
+        if (type == PID.SaveSSC)
+        {
+            var compound = (TagCompound)TagIO.ReadTag(b, out var name);
+            var id = Main.player[_].GetModPlayer<SSCPlayer>().SteamID;
+            if (string.IsNullOrEmpty(id))
+            {
+                NetMessage.BootPlayer(_, NetworkText.FromLiteral($"Unexpected SteamID: {id}"));
+                return;
+            }
+
+            File.WriteAllBytes(Path.Combine(Main.SavePath, "SSC", id, name + ".plr"),
+                compound.GetByteArray("Terraria"));
+            File.WriteAllBytes(Path.Combine(Main.SavePath, "SSC", id, name + ".tplr"),
+                compound.GetByteArray("tModLoader"));
+
+            ChatHelper.BroadcastChatMessage(NetworkText.FromLiteral($"{id} save success."), Color.Green);
+        }
     }
 }
 
 public enum PID : byte
 {
     SteamID,
+    ApplySSC,
+    SaveSSC,
 }
