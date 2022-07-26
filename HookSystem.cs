@@ -1,8 +1,11 @@
 using System;
+using System.IO;
+using MonoMod.Cil;
 using Terraria;
 using Terraria.IO;
 using Terraria.ModLoader;
-using Terraria.Social;
+using Terraria.ModLoader.IO;
+using Terraria.Utilities;
 
 namespace SSC;
 
@@ -13,18 +16,17 @@ public class HookSystem : ModSystem
         On.Terraria.Main.SelectPlayer += Hook1;
     }
 
-
     public override void Unload()
     {
         On.Terraria.Main.SelectPlayer -= Hook1;
     }
 
-    void Hook1(On.Terraria.Main.orig_SelectPlayer invoke, PlayerFileData data)
+    static void Hook1(On.Terraria.Main.orig_SelectPlayer invoke, PlayerFileData data)
     {
         if (Main.menuMultiplayer)
         {
             Console.WriteLine("SSC Hook1.");
-            data = new PlayerFileData($"SSC:{SocialAPI.Friends.GetUsername()}:{data.Player.name}", false)
+            data = new PlayerFileData(Path.Combine(Main.SavePath, "SSC.plr"), false)
             {
                 Name = data.Name,
                 Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
