@@ -10,18 +10,26 @@ There can be multiple players under your Steam account name.
 
 Note: In order to ensure that the archive will not be lost,
 SteamID is used instead of ClientUUID, which means that you must use steam to log in.
-(it may make GOG players unable to use it normally, to be tested)
+(it may make GOG players unable to use it normally. Just guess, to be verified.)
 
 Command List:
     1. /SSC list
         all your player information will be returned.
-    2. /SSC add name difficulty
+    2. /SSC add [name] difficulty[0/classic,1/mediumcore,2/hardcore,3/journey]
         add a new player to your Steam account name.
-    3. /SSC [number]
+    3. /SSC use [number]
+        select a player that in your list and play.
+    4. /SSC del [number]
+        delete a player that in your list.
 
+Save location: [tModLoader]/SSC/Server/[SteamID]/
+There will be "plr", "tplr", "map" and "tmap" files, which can be copied and pasted directly.
  
 Future:
     Add UI, similar to player select interface, for convenience.
     (In fact, it has been implemented, but the interface layout is too ugly,
     and it will make the client-server interaction more complex.
     This scheme is not enabled for the time being.)
+    
+The new version has not been fully tested, which can only ensure that the normal process is correct.
+If you encounter any problems during your play, please go to GitHub for feedback.

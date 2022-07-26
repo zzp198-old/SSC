@@ -1,9 +1,12 @@
 using System;
 using System.IO;
 using System.Reflection;
+using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Chat;
 using Terraria.ID;
 using Terraria.IO;
+using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.Social;
@@ -13,69 +16,70 @@ namespace SSC;
 public class SSCPlayer : ModPlayer
 {
     public string SteamID;
-    public bool Sended;
+
+    public bool State;
     public int Cooldown;
 
     public override void OnEnterWorld(Player player)
     {
-        var packet = Mod.GetPacket();
-        packet.Write((byte)PID.SteamID);
-        packet.Write(SocialAPI.Friends.GetUsername());
-        packet.Send();
-    }
-
-    public override void Load()
-    {
-        On.Terraria.Main.SelectPlayer += Hook1;
-    }
-
-    public override void Unload()
-    {
-        On.Terraria.Main.SelectPlayer -= Hook1;
-    }
-
-    static void Hook1(On.Terraria.Main.orig_SelectPlayer invoke, PlayerFileData data)
-    {
-        if (Main.menuMultiplayer)
+        if (Main.netMode == NetmodeID.MultiplayerClient)
         {
-            Console.WriteLine("SSC Hook1.");
-            // TODO
-            data = new PlayerFileData(Path.Combine(Main.SavePath, "SSC.plr"), false)
-            {
-                Name = data.Name,
-                Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
-                Player = new Player
-                {
-                    name = data.Player.name,
-                    difficulty = data.Player.difficulty,
-                    savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules(),
-                }
-            };
+            Main.NewTextMultiline(
+                "SSC has been enabled and the local player has been erased." +
+                "Please synchronize the cloud player through the command.");
+            var packet = Mod.GetPacket();
+            packet.Write((byte)PID.SteamID);
+            packet.Write(SocialAPI.Friends.GetUsername());
+            packet.Send();
         }
-
-        invoke(data);
     }
 
     public override void PostUpdate()
     {
-        if (Sended && Main.netMode == NetmodeID.MultiplayerClient)
+        Main.ServerSideCharacter = Main.netMode == NetmodeID.MultiplayerClient;
+
+        if (Main.netMode == NetmodeID.MultiplayerClient && State)
         {
             Cooldown++;
-            if (Cooldown > 600)
+            if (Cooldown > 1800)
             {
                 typeof(Player).GetMethod("InternalSavePlayerFile", BindingFlags.NonPublic | BindingFlags.Static)
                     ?.Invoke(null, new object[] { Main.ActivePlayerFileData });
 
                 var compound = new TagCompound();
-
                 compound.Set("Terraria", File.ReadAllBytes(Main.ActivePlayerFileData.Path));
-                compound.Set("tModLoader",
-                    File.ReadAllBytes(Path.ChangeExtension(Main.ActivePlayerFileData.Path, ".tplr")!));
-
+                if (File.Exists(Path.ChangeExtension(Main.ActivePlayerFileData.Path, ".tplr")))
+                {
+                    compound.Set("tModLoader",
+                        File.ReadAllBytes(Path.ChangeExtension(Main.ActivePlayerFileData.Path, ".tplr")!));
+                }
 
                 var packet = Mod.GetPacket();
                 packet.Write((byte)PID.SaveSSC);
                 TagIO.WriteTag(Main.ActivePlayerFileData.Name, compound, packet);
+                packet.Send();
+
+
+                // typeof(MapHelper).GetMethod("InternalSaveMap", BindingFlags.NonPublic | BindingFlags.Static)
+                //     ?.Invoke(null, Array.Empty<object>());
+                Main.Map.Save();
+                var map_name = Path.Combine(SSC.SavePath, "Client", Main.ActivePlayerFileData.Name,
+                    Main.ActiveWorldFileData.UniqueId + ".map");
+                compound = new TagCompound();
+                if (File.Exists(map_name))
+                {
+                    compound.Set("Terraria", File.ReadAllBytes(map_name));
+                }
+
+                if (File.Exists(Path.ChangeExtension(map_name, ".tmap")))
+                {
+                    compound.Set("tModLoader",
+                        File.ReadAllBytes(Path.ChangeExtension(map_name, ".tmap")!));
+                }
+
+                packet = Mod.GetPacket();
+                packet.Write((byte)PID.SaveMap);
+                TagIO.Write(compound, packet);
                 packet.Send();
 
                 Cooldown = 0;
