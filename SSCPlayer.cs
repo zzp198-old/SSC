@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Reflection;
 using Steamworks;
@@ -18,7 +17,7 @@ public class SSCPlayer : ModPlayer
 
     public override void OnEnterWorld(Player player)
     {
-        if (Main.netMode == NetmodeID.MultiplayerClient)
+        if (Main.netMode == NetmodeID.MultiplayerClient && !State)
         {
             var packet = Mod.GetPacket();
             packet.Write((byte)PID.SteamID);
