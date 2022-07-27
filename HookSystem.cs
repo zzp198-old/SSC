@@ -26,7 +26,18 @@ public class HookSystem : ModSystem
         if (Main.menuMultiplayer)
         {
             Console.WriteLine("SSC Hook1.");
-            data = new PlayerFileData(Path.Combine(SSC.SavePath, "Client", "Anonymous.plr"), false)
+
+            if (File.Exists(Path.Combine(SSC.SavePath, "Client", "Player.plr")))
+            {
+                File.Delete(Path.Combine(SSC.SavePath, "Client", "Player.plr"));
+            }
+
+            if (File.Exists(Path.Combine(SSC.SavePath, "Client", "Player.tplr")))
+            {
+                File.Delete(Path.Combine(SSC.SavePath, "Client", "Player.tplr"));
+            }
+
+            data = new PlayerFileData(Path.Combine(SSC.SavePath, "Client", "Player.plr"), false)
             {
                 Name = data.Name,
                 Metadata = FileMetadata.FromCurrentSettings(FileType.Player),

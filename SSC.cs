@@ -1,8 +1,11 @@
+using System;
 using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Steamworks;
 using Terraria;
 using Terraria.Chat;
+using Terraria.IO;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -23,19 +26,14 @@ public class SSC : Mod
 
     public override void Unload()
     {
-        if (File.Exists(Path.Combine(SavePath, "Client", "Anonymous.plr")))
+        if (File.Exists(Path.Combine(SavePath, "Client", "Player.plr")))
         {
-            File.Delete(Path.Combine(SavePath, "Client", "Anonymous.plr"));
+            File.Delete(Path.Combine(SavePath, "Client", "Player.plr"));
         }
 
-        if (File.Exists(Path.Combine(SavePath, "Client", "Anonymous.tplr")))
+        if (File.Exists(Path.Combine(SavePath, "Client", "Player.tplr")))
         {
-            File.Delete(Path.Combine(SavePath, "Client", "Anonymous.tplr"));
-        }
-
-        if (Directory.Exists(Path.Combine(SavePath, "Client", "Anonymous")))
-        {
-            Directory.Delete(Path.Combine(SavePath, "Client", "Anonymous"), true);
+            File.Delete(Path.Combine(SavePath, "Client", "Player.tplr"));
         }
     }
 
@@ -43,7 +41,6 @@ public class SSC : Mod
     {
         var type = (PID)b.ReadByte();
         Logger.Debug($"NetMode: {Main.netMode} id:{Main.myPlayer} receive {type} from {_}");
-
         switch (type)
         {
             case PID.SteamID:
@@ -83,22 +80,26 @@ public class SSC : Mod
                 Main.player[i] = data.Player;
                 if (i == Main.myPlayer)
                 {
-                    data.SetAsActive();
-                    Main.LocalPlayer.GetModPlayer<SSCPlayer>().State = true;
-                    Main.Map.Load();
-                    for (var j = 0; j < Main.Map.MaxWidth; j++)
+                    new PlayerFileData(Path.Combine(SavePath, "Client", "Player.plr"), false)
                     {
-                        for (var k = 0; k < Main.Map.MaxHeight; k++)
-                        {
-                            if (WorldGen.InWorld(j, k))
-                                Main.Map.UpdateType(j, k);
-                        }
-                    }
-
-                    Main.refreshMap = true;
+                        Name = data.Name,
+                        Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
+                        Player = data.Player,
+                    }.SetAsActive();
+                    Main.LocalPlayer.GetModPlayer<SSCPlayer>().State = true;
                 }
 
                 Main.player[i].Spawn(PlayerSpawnContext.SpawningIntoWorld);
+
+                if (File.Exists(data.Path))
+                {
+                    File.Delete(data.Path);
+                }
+
+                if (File.Exists(Path.ChangeExtension(data.Path, ".tplr")))
+                {
+                    File.Delete(Path.ChangeExtension(data.Path, ".tplr")!);
+                }
             }
                 break;
             case PID.SaveSSC:

@@ -26,10 +26,7 @@ Save location: [tModLoader]/SSC/Server/[SteamID]/
 There will be "plr", "tplr", "map" and "tmap" files, which can be copied and pasted directly.
 
 Known Issues:
-    1.After the map synchronization function is written,
-    it is found that the map cannot be synchronized normally.To be solved.
-
-    2.There is a maximum limit of 64KB for data transmission at one time.
+    1.There is a maximum limit of 64KB for data transmission at one time.
     When there is too much player data, it cannot be saved normally.
     For this reason, the "server side map" has to be cancelled temporarily,
     and subcontracting may be used to solve this problem in the future.

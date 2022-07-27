@@ -1,11 +1,11 @@
 using System;
 using System.IO;
 using System.Reflection;
+using Steamworks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Terraria.Social;
 
 namespace SSC;
 
@@ -22,7 +22,7 @@ public class SSCPlayer : ModPlayer
         {
             var packet = Mod.GetPacket();
             packet.Write((byte)PID.SteamID);
-            packet.Write(SocialAPI.Friends.GetUsername());
+            packet.Write(SteamUser.GetSteamID().ToString());
             packet.Send();
         }
     }
@@ -55,10 +55,5 @@ public class SSCPlayer : ModPlayer
                 packet.Send();
             }
         }
-    }
-
-    public override void PreUpdate()
-    {
-        Console.WriteLine(Main.Map[(int)Main.grabMapX, (int)Main.grabMapY].Light);
     }
 }

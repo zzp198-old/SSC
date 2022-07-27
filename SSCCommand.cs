@@ -99,6 +99,12 @@ public class SSCCommand : ModCommand
                     return;
                 }
 
+                if (name.ToLower() == "player")
+                {
+                    caller.Reply("Name already exists.", Color.Red);
+                    return;
+                }
+
                 if (name.Length > Player.nameLen)
                 {
                     caller.Reply(NetworkText.FromKey("Net.NameTooLong").ToString(), Color.Red);
