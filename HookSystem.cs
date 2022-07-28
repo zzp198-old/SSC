@@ -61,6 +61,7 @@ public class HookSystem : ModSystem
             packet.Write((byte)PID.KillMeForGood);
             packet.Write(Main.LocalPlayer.name);
             packet.Send();
+            self.GetModPlayer<SSCPlayer>().State = false;
         }
 
         invoke(self);

@@ -50,10 +50,10 @@ public class SSC : Mod
                 {
                     NetMessage.BootPlayer(_, NetworkText.FromLiteral($"Unexpected SteamID: {id}"));
                 }
-                else if (Main.player.Any(i => i.active && i.GetModPlayer<SSCPlayer>().SteamID == id))
-                {
-                    NetMessage.BootPlayer(_, NetworkText.FromLiteral($"SteamID already exists: {id}"));
-                }
+                // else if (Main.player.Any(i => i.active && i.GetModPlayer<SSCPlayer>().SteamID == id))
+                // {
+                //     NetMessage.BootPlayer(_, NetworkText.FromLiteral($"SteamID already exists: {id}"));
+                // }
                 else
                 {
                     if (!Directory.Exists(Path.Combine(SavePath, "Server", id)))

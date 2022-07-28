@@ -26,10 +26,22 @@ public class SSCPlayer : ModPlayer
         }
     }
 
-    public override void PostUpdate()
+    public override void PreUpdate()
     {
         Main.ServerSideCharacter = Main.netMode == NetmodeID.MultiplayerClient;
+        if (Player.whoAmI == Main.myPlayer || Main.netMode == NetmodeID.Server)
+        {
+            if (State == false && Player.dead == false)
+            {
+                Player.dead = true;
+            }
 
+            Player.ghost = !State;
+        }
+    }
+
+    public override void PostUpdate()
+    {
         if (Main.netMode == NetmodeID.MultiplayerClient && State)
         {
             Cooldown++;
