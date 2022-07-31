@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using Steamworks;
 using Terraria;
 using Terraria.ID;
@@ -11,7 +13,7 @@ public class SSCSystem : ModSystem
     {
         if (Main.netMode == NetmodeID.MultiplayerClient)
         {
-            NETCore.ErasePLR(Main.myPlayer, SteamUser.GetSteamID().m_SteamID.ToString());
+            NETCore.CS_ErasePLR(Main.myPlayer, SteamUser.GetSteamID().m_SteamID);
         }
     }
 }

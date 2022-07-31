@@ -17,16 +17,16 @@ public class SSC : Mod
         switch ((PID)type)
         {
             case PID.ErasePLR:
-                NETCore.HErasePLR(b, _);
+                NETCore.H_ErasePLR(b, _);
                 break;
             case PID.CreatePLR:
-                NETCore.HCreatePLR(b, _);
+                NETCore.H_CreatePLR(b, _);
                 break;
             case PID.DeletePLR:
-                NETCore.HDeletePLR(b, _);
+                NETCore.H_DeletePLR(b, _);
                 break;
             case PID.ObtainPLR:
-                NETCore.HObtainPLR(b, _);
+                NETCore.H_ObtainPLR(b, _);
                 break;
             default:
                 Utils.Boot(_, $"Unexpected packet: {type}");
@@ -42,5 +42,4 @@ public enum PID : byte
     DeletePLR,
     ObtainPLR,
     ByteArray,
-    
 }
