@@ -1,18 +1,13 @@
-using System.Diagnostics;
+using System;
 using System.IO;
-using System.Linq;
 using Terraria;
-using Terraria.ID;
-using Terraria.IO;
 using Terraria.ModLoader;
 
 namespace SSC;
 
 public class SSC : Mod
 {
-    // Client SSC/[SteamID]/[WorldID].map
-    // Server SSC/[SteamID]/[PlayerName].plr
-    internal readonly static string SavePath = Path.Combine(Main.SavePath, "SSC");
+    internal static string SavePath => Path.Combine(Main.SavePath, "SSC");
 
     public override void HandlePacket(BinaryReader b, int _)
     {
@@ -21,54 +16,31 @@ public class SSC : Mod
 
         switch ((PID)type)
         {
-            case PID.Steam:
-            {
-                Debug.Assert(Main.netMode == NetmodeID.Server);
-
-                var whoAmI = b.ReadInt32();
-                var SteamID = b.ReadUInt64();
-                var GameMode = Main.GameMode == 3 ? (byte)3 : (byte)0;
-
-                Main.player[whoAmI] = new Player { name = SteamID.ToString(), difficulty = GameMode };
-
-                var p = GetPacket();
-                p.Write((byte)PID.Erase);
-                p.Write(whoAmI);
-                p.Write(SteamID);
-                p.Write(GameMode);
-                Netplay.Clients.Where(i => i.IsConnected()).ToList().ForEach(i => p.Send(i.Id));
-            }
+            case PID.ErasePLR:
+                NETCore.HErasePLR(b, _);
                 break;
-            case PID.Erase:
-            {
-                var whoAmI = b.ReadInt32();
-                var SteamID = b.ReadUInt64();
-                var GameMode = b.ReadByte();
-
-                Main.player[whoAmI] = new Player
-                {
-                    name = SteamID.ToString(), difficulty = GameMode,
-                    savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules()
-                };
-                if (whoAmI == Main.myPlayer)
-                {
-                    new PlayerFileData()
-                    {
-                        Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
-                        Player = Main.player[whoAmI],
-                    }.SetAsActive();
-                }
-            }
+            case PID.CreatePLR:
+                NETCore.HCreatePLR(b, _);
+                break;
+            case PID.DeletePLR:
+                NETCore.HDeletePLR(b, _);
+                break;
+            case PID.ObtainPLR:
+                NETCore.HObtainPLR(b, _);
                 break;
             default:
-                Utils.Boot(_, $"Unexpected PacketID: {type}");
-                break;
+                Utils.Boot(_, $"Unexpected packet: {type}");
+                throw new Exception();
         }
     }
 }
 
 public enum PID : byte
 {
-    Steam, // Client only. whoAmI, SteamID
-    Erase, // Server only. whoAmI, SteamID, GameMode
+    ErasePLR,
+    CreatePLR,
+    DeletePLR,
+    ObtainPLR,
+    ByteArray,
+    
 }

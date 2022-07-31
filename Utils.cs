@@ -1,6 +1,7 @@
 using System;
 using Terraria;
 using Terraria.ID;
+using Terraria.IO;
 using Terraria.Localization;
 
 namespace SSC;
@@ -22,5 +23,23 @@ public static class Utils
             default:
                 throw new Exception("Boot can only be used in C/S");
         }
+    }
+
+    public static Player ErasePLR(int whoAmI, string name, byte GameMode)
+    {
+        Main.player[whoAmI] = new Player
+        {
+            name = name, difficulty = GameMode,
+            savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules()
+        };
+
+        if (whoAmI == Main.myPlayer)
+        {
+            var data = new PlayerFileData { Player = Main.player[whoAmI] };
+            data.MarkAsServerSide();
+            data.SetAsActive();
+        }
+
+        return Main.player[whoAmI];
     }
 }

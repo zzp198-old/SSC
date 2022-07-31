@@ -11,11 +11,7 @@ public class SSCSystem : ModSystem
     {
         if (Main.netMode == NetmodeID.MultiplayerClient)
         {
-            var p = Mod.GetPacket();
-            p.Write((byte)PID.Steam);
-            p.Write(Main.myPlayer);
-            p.Write(SteamUser.GetSteamID().m_SteamID);
-            p.Send();
+            NETCore.ErasePLR(Main.myPlayer, SteamUser.GetSteamID().m_SteamID.ToString());
         }
     }
 }
