@@ -301,7 +301,7 @@ public class SSC : Mod
                 var path = Path.Combine(SavePath, SteamID.ToString(), $"{name}.plr");
                 if (!File.Exists(path))
                 {
-                    ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral("用户不存在,保存失败"), Color.Red, _);
+                    ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral("User does not exist, save failed"), Color.Red, _);
                     return;
                 }
 

@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using Steamworks;
 using Terraria;
@@ -28,11 +29,16 @@ public class SSCPlayer : ModPlayer
 
     public override void PreUpdate()
     {
-        if (Main.myPlayer != Player.whoAmI || Player.ghost || !Selected) return;
+        if (Main.myPlayer != Player.whoAmI || !Selected) return;
 
         Countdown++;
         if (Countdown < 600) return;
         Countdown = 0;
+
+        if (!Directory.Exists(SSC.SavePath))
+        {
+            Directory.CreateDirectory(SSC.SavePath);
+        }
 
         var path = Path.Combine(SSC.SavePath, $"{Main.LocalPlayer.name}.plr");
         var data = new PlayerFileData(path, false)
