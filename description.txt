@@ -1,0 +1,5 @@
+SSC (Server Side Character)
+
+V2.0 Added UI, one click operation.
+
+If you encounter a error, please leave me a message or GitHub feedback.
