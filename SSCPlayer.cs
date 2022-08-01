@@ -1,4 +1,4 @@
-using SSC.UI.State;
+using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -9,9 +9,17 @@ public class SSCPlayer : ModPlayer
 {
     public override void OnEnterWorld(Player player)
     {
-        // if (Main.netMode == NetmodeID.MultiplayerClient)
-        // {
-        SSCSystem.UI.SetState(new ListState());
-        // }
+        if (Main.netMode == NetmodeID.MultiplayerClient)
+        {
+            try
+            {
+                SSCSystem.UI.SetState(new SSCState());
+            }
+            catch (Exception e)
+            {
+                Utils.Boot(Main.myPlayer, e.ToString());
+                throw;
+            }
+        }
     }
 }

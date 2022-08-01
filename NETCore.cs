@@ -1,9 +1,13 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Chat;
 using Terraria.ID;
 using Terraria.IO;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace SSC;
@@ -30,12 +34,27 @@ public static class NETCore
         var GameMode = b.ReadByte();
         GameMode = GameMode == byte.MaxValue ? (byte)Main.GameMode : GameMode;
 
+        if (SteamID == 0)
+        {
+            Utils.Boot(whoAmI, $"Unexpected SteamID: {SteamID}");
+            return;
+        }
+
         Utils.ErasePLR(whoAmI, SteamID.ToString(), GameMode);
 
         if (Main.netMode == NetmodeID.Server)
         {
             CS_ErasePLR(whoAmI, SteamID, GameMode, _);
             CS_ErasePLR(whoAmI, SteamID, GameMode);
+        }
+
+        if (Main.netMode == NetmodeID.Server || whoAmI == Main.myPlayer)
+        {
+            var dir = Path.Combine(SSC.SavePath, SteamID.ToString());
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
         }
     }
 
@@ -55,18 +74,49 @@ public static class NETCore
         var name = b.ReadString();
         var GameMode = b.ReadByte();
 
-        InternalSavePlayerFile.Invoke(null, new object[]
+        if (name == "")
         {
-            new PlayerFileData(Path.Combine(SSC.SavePath, SteamID.ToString(), $"{name}.plr"), false)
+            ChatHelper.SendChatMessageToClient(NetworkText.FromKey("Net.EmptyName"), Color.Red, _);
+            return;
+        }
+
+        if (name.Length > Player.nameLen)
+        {
+            ChatHelper.SendChatMessageToClient(NetworkText.FromKey("Net.NameTooLong"), Color.Red, _);
+            return;
+        }
+
+        if (name.IndexOfAny(Path.GetInvalidFileNameChars()) != -1)
+        {
+            ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral("名字中有非法字符"), Color.Red, _);
+            return;
+        }
+
+        if (Directory.GetFiles(SSC.SavePath, $"{name}.plr", SearchOption.AllDirectories).Length > 0)
+        {
+            ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral("名字已被占用"), Color.Red, _);
+            return;
+        }
+
+        var data = new PlayerFileData(Path.Combine(SSC.SavePath, SteamID.ToString(), $"{name}.plr"), false)
+        {
+            Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
+            Player = new Player
             {
-                Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
-                Player = new Player
-                {
-                    name = name, difficulty = GameMode,
-                    savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules()
-                }
+                name = name, difficulty = GameMode,
+                savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules()
             }
-        });
+        };
+        Utils.SetupPlayerStatsAndInventoryBasedOnDifficulty(data.Player);
+        try
+        {
+            InternalSavePlayerFile.Invoke(null, new object[] { data });
+            ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral("创建成功"), Color.Red, _);
+        }
+        catch (Exception e)
+        {
+            ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral(e.ToString()), Color.Red, _);
+        }
     }
 
     internal static void C_DeletePLR(ulong SteamID, string name)
@@ -83,8 +133,17 @@ public static class NETCore
         var SteamID = b.ReadUInt64();
         var name = b.ReadString();
 
-        File.Delete(Path.Combine(SSC.SavePath, SteamID.ToString(), $"{name}.plr"));
-        File.Delete(Path.Combine(SSC.SavePath, SteamID.ToString(), $"{name}.tplr"));
+        try
+        {
+            File.Delete(Path.Combine(SSC.SavePath, SteamID.ToString(), $"{name}.plr"));
+            File.Delete(Path.Combine(SSC.SavePath, SteamID.ToString(), $"{name}.tplr"));
+            ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral("删除成功"), Color.Green, _);
+        }
+        catch (Exception e)
+        {
+            ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral(e.ToString()), Color.Red, _);
+            throw;
+        }
     }
 
     internal static void C_ObtainPLR(ulong SteamID, string name = "")
@@ -102,8 +161,16 @@ public static class NETCore
         var name = b.ReadString();
         name = name == "" ? "*" : name;
 
-        Directory.GetFiles(Path.Combine(SSC.SavePath, SteamID.ToString()), $"{name}.*plr").ToList()
-            .ForEach(i => CS_ByteArray(SteamID, Path.GetFileName(i), File.ReadAllBytes(i), _));
+        try
+        {
+            Directory.GetFiles(Path.Combine(SSC.SavePath, SteamID.ToString()), $"{name}.*plr").ToList()
+                .ForEach(i => CS_ByteArray(SteamID, Path.GetFileName(i), File.ReadAllBytes(i), _));
+        }
+        catch (Exception e)
+        {
+            ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral(e.ToString()), Color.Red, _);
+            throw;
+        }
     }
 
     internal static void CS_ByteArray(ulong SteamID, string name, byte[] data, int toClient = -1)
@@ -123,6 +190,14 @@ public static class NETCore
         var FileName = b.ReadString();
         var data = b.ReadBytes(b.ReadInt32());
 
-        File.WriteAllBytes(Path.Combine(SSC.SavePath, SteamID, FileName), data);
+        try
+        {
+            File.WriteAllBytes(Path.Combine(SSC.SavePath, SteamID, FileName), data);
+        }
+        catch (Exception e)
+        {
+            ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral(e.ToString()), Color.Red, _);
+            throw;
+        }
     }
 }

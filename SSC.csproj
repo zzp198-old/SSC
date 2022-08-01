@@ -20,6 +20,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="lib" />
-    <Folder Include="UI\Kit" />
   </ItemGroup>
 </Project>

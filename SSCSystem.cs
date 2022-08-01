@@ -1,8 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
 using Microsoft.Xna.Framework;
-using SSC.UI.State;
 using Steamworks;
 using Terraria;
 using Terraria.ID;
@@ -37,16 +34,14 @@ public class SSCSystem : ModSystem
 
     public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
     {
-        var index = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
+        var index = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Cursor"));
         if (index != -1)
         {
-            layers.Insert(index, new LegacyGameInterfaceLayer("SSC: SSCSystem", delegate
-                {
-                    UI?.Draw(Main.spriteBatch, Main.gameTimeCache);
-                    return true;
-                },
-                InterfaceScaleType.UI)
-            );
+            layers.Insert(index, new LegacyGameInterfaceLayer("SSC: SSCSystem", () =>
+            {
+                UI?.Draw(Main.spriteBatch, Main.gameTimeCache);
+                return true;
+            }, InterfaceScaleType.UI));
         }
     }
 }
