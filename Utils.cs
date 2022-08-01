@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Reflection;
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
-using Terraria.IO;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
@@ -28,24 +26,6 @@ public static class Utils
             default:
                 throw new Exception("Boot can only be used in C/S");
         }
-    }
-
-    public static Player ErasePLR(int whoAmI, string name, byte GameMode)
-    {
-        Main.player[whoAmI] = new Player
-        {
-            name = name, difficulty = GameMode,
-            savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules()
-        };
-
-        if (whoAmI == Main.myPlayer)
-        {
-            var data = new PlayerFileData { Player = Main.player[whoAmI] };
-            data.MarkAsServerSide();
-            data.SetAsActive();
-        }
-
-        return Main.player[whoAmI];
     }
 
     public static void SetupPlayerStatsAndInventoryBasedOnDifficulty(Player player)
@@ -121,13 +101,5 @@ public static class Utils
                     .Select((Func<Item, Item>)(x => x.Clone()))));
     }
 
-    public static void CleanCache()
-    {
-        if (Directory.Exists(Path.Combine(SSC.SavePath, "Cache")))
-        {
-            Directory.Delete(Path.Combine(SSC.SavePath, "Cache"), true);
-        }
-
-        Directory.CreateDirectory(Path.Combine(SSC.SavePath, "Cache"));
-    }
+    public static MethodInfo InternalSavePlayerFile => typeof(Player).GetMethod("InternalSavePlayerFile", (BindingFlags)40);
 }

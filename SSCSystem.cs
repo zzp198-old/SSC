@@ -11,14 +11,17 @@ namespace SSC;
 public class SSCSystem : ModSystem
 {
     internal static UserInterface UI;
+    internal static SSCState SSCState;
 
     public override void Load()
     {
         UI = new UserInterface();
+        SSCState = new SSCState();
     }
 
     public override void Unload()
     {
+        SSCState = null;
         UI = null;
     }
 
@@ -26,7 +29,12 @@ public class SSCSystem : ModSystem
     {
         if (Main.netMode == NetmodeID.MultiplayerClient)
         {
-            NETCore.CS_ErasePLR(Main.myPlayer, SteamUser.GetSteamID().m_SteamID);
+            var p = Mod.GetPacket();
+            p.Write((byte)PID.CleanPLR);
+            p.Write(Main.myPlayer);
+            p.Write(SteamUser.GetSteamID().m_SteamID);
+            p.Write(byte.MaxValue);
+            p.Send();
         }
     }
 
