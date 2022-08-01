@@ -48,12 +48,6 @@ public static class Utils
         return Main.player[whoAmI];
     }
 
-    public static List<string> GetPlayerList(ulong SteamID, string searchPattern)
-    {
-        var directory = Path.Combine(SSC.SavePath, SteamID.ToString());
-        return Directory.GetFiles(directory, searchPattern).ToList();
-    }
-
     public static void SetupPlayerStatsAndInventoryBasedOnDifficulty(Player player)
     {
         const int index1 = 0;
@@ -125,5 +119,15 @@ public static class Utils
             PlayerLoader.GetStartingItems(player,
                 player.inventory.Where((Func<Item, bool>)(item => !item.IsAir))
                     .Select((Func<Item, Item>)(x => x.Clone()))));
+    }
+
+    public static void CleanCache()
+    {
+        if (Directory.Exists(Path.Combine(SSC.SavePath, "Cache")))
+        {
+            Directory.Delete(Path.Combine(SSC.SavePath, "Cache"), true);
+        }
+
+        Directory.CreateDirectory(Path.Combine(SSC.SavePath, "Cache"));
     }
 }

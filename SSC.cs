@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Reflection;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -8,6 +9,7 @@ namespace SSC;
 public class SSC : Mod
 {
     internal static string SavePath => Path.Combine(Main.SavePath, "SSC");
+    static MethodInfo InternalSavePlayerFile => typeof(Player).GetMethod("InternalSavePlayerFile", (BindingFlags)40);
 
     public override void HandlePacket(BinaryReader b, int _)
     {
@@ -16,33 +18,14 @@ public class SSC : Mod
 
         switch ((PID)type)
         {
-            case PID.ErasePLR:
-                NETCore.H_ErasePLR(b, _);
-                break;
-            case PID.CreatePLR:
-                NETCore.H_CreatePLR(b, _);
-                break;
-            case PID.DeletePLR:
-                NETCore.H_DeletePLR(b, _);
-                break;
-            case PID.ObtainPLR:
-                NETCore.H_ObtainPLR(b, _);
-                break;
-            case PID.ByteArray:
-                NETCore.H_ByteArray(b, _);
-                break;
+
             default:
-                Utils.Boot(_, $"Unexpected packet: {type}");
-                throw new Exception();
+                throw new Exception($"Unexpected packet id: {type}");
         }
     }
 }
 
 public enum PID : byte
 {
-    ErasePLR,
-    CreatePLR,
-    DeletePLR,
-    ObtainPLR,
-    ByteArray,
+    SteamInit,
 }

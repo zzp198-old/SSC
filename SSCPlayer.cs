@@ -13,7 +13,7 @@ public class SSCPlayer : ModPlayer
         {
             try
             {
-                SSCSystem.UI.SetState(new SSCState());
+                SSCSystem.UI.SetState(new SSCLayout());
             }
             catch (Exception e)
             {

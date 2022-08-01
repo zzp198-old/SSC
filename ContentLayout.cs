@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using SSC.UIKit;
@@ -12,18 +13,16 @@ using Terraria.UI;
 
 namespace SSC;
 
-public class SSCState : UIState
+public class ContentLayout : UIState
 {
-    int Countdown;
-    ulong SteamID;
-
-    UITextPanel<string> MainPanel;
-
+    readonly Player Player;
+    readonly FileSystemWatcher Watch;
     List<PlayerFileData> PlayerList;
-    UIList ItemList;
 
-    Player Player;
+    UITextPanel<LocalizedText> Contain;
+    UIList ItemList;
     UIPanel CreatePanel;
+
     UICharacterNameButton NameButton;
     UISearchBar NameSearchBar;
     UIDifficultyButton SoftCoreButton;
@@ -32,24 +31,32 @@ public class SSCState : UIState
     UIDifficultyButton CreativeButton;
     HoverableButton CreateButton;
 
+    public ContentLayout()
+    {
+        Player = new Player();
+        Watch = new FileSystemWatcher();
+        Watch.Path = Path.Combine(SSC.SavePath, SteamUser.GetSteamID().m_SteamID.ToString());
+        Watch.Changed += Changed;
+        Watch.EnableRaisingEvents = true;
+    }
+
     public override void OnInitialize()
     {
-        MainPanel = new UITextPanel<string>("SSC", 1, true);
-        MainPanel.Width.Set(450, 0);
-        MainPanel.Height.Set(650, 0);
-        MainPanel.SetPadding(10);
-        MainPanel.HAlign = MainPanel.VAlign = 0.5f;
-        Append(MainPanel);
+        Contain = new UITextPanel<LocalizedText>(Language.GetText("SSC"));
+        Contain.Width.Set(450, 0);
+        Contain.Height.Set(650, 0);
+        Contain.SetPadding(10);
+        Contain.HAlign = Contain.VAlign = 0.5f;
+        Append(Contain);
 
         ItemList = new UIList();
         ItemList.Width.Set(0, 1);
         ItemList.Height.Set(0, 1);
         ItemList.Top.Set(40, 0);
-        MainPanel.Append(ItemList);
+        Contain.Append(ItemList);
 
-        Player = new Player();
         CreatePanel = new UIPanel();
-        CreatePanel.Width.Set(0, 1); // 430
+        CreatePanel.Width.Set(0, 1);
         CreatePanel.Height.Set(180, 0);
         CreatePanel.SetPadding(10);
         ItemList.Add(CreatePanel);
@@ -103,29 +110,21 @@ public class SSCState : UIState
         CreateButton.Height.Set(30, 0);
         CreateButton.Top.Set(115, 0);
         CreateButton.HAlign = 0.5f;
-        CreateButton.OnClick += (evt, _) =>
+        CreateButton.OnClick += (_, _) =>
         {
-            NETCore.C_CreatePLR(SteamID, Player.name, Player.difficulty);
-            NETCore.C_ObtainPLR(SteamID);
+            // TODO
+
+
             NameSearchBar.SetContents("");
             Player.difficulty = 0;
         };
         CreatePanel.Append(CreateButton);
     }
 
-    public override void OnActivate()
+    void Changed(object sender, FileSystemEventArgs e)
     {
-        SteamID = SteamUser.GetSteamID().m_SteamID;
-        NETCore.C_ObtainPLR(SteamID);
-    }
-
-    public override void Update(GameTime gameTime)
-    {
-        Countdown++;
-        if (Countdown < 60) return;
-        Countdown = 0;
         ItemList.Clear();
-        PlayerList = Utils.GetPlayerList(SteamID, "*.plr").Select(i => Player.LoadPlayer(i, false)).ToList();
+        PlayerList = Directory.GetFiles(Watch.Path, "*.plr").Select(i => Player.LoadPlayer(i, false)).ToList();
         PlayerList.Sort((x, y) => x.IsFavorite switch
         {
             true when !y.IsFavorite => -1, false when y.IsFavorite => 1,
@@ -133,7 +132,7 @@ public class SSCState : UIState
         });
         PlayerList.ForEach(i =>
         {
-            var item = new UICharacterListItem(i, 0);
+            var item = new UIPlayerListItem(i);
             ItemList.Add(item);
         });
         ItemList.Add(CreatePanel);
