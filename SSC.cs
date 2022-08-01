@@ -28,6 +28,9 @@ public class SSC : Mod
             case PID.ObtainPLR:
                 NETCore.H_ObtainPLR(b, _);
                 break;
+            case PID.ByteArray:
+                NETCore.H_ByteArray(b, _);
+                break;
             default:
                 Utils.Boot(_, $"Unexpected packet: {type}");
                 throw new Exception();

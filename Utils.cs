@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.IO;
@@ -41,5 +44,11 @@ public static class Utils
         }
 
         return Main.player[whoAmI];
+    }
+
+    public static List<string> GetPlayerList(ulong SteamID, string searchPattern)
+    {
+        var directory = Path.Combine(SSC.SavePath, SteamID.ToString());
+        return Directory.GetFiles(directory, searchPattern).ToList();
     }
 }

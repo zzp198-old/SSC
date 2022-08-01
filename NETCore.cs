@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Terraria;
 using Terraria.ID;
@@ -86,7 +87,7 @@ public static class NETCore
         File.Delete(Path.Combine(SSC.SavePath, SteamID.ToString(), $"{name}.tplr"));
     }
 
-    internal static void C_ObtainPLR(ulong SteamID, string name)
+    internal static void C_ObtainPLR(ulong SteamID, string name = "")
     {
         var p = Mod.GetPacket();
         p.Write((byte)PID.ObtainPLR);
@@ -101,19 +102,16 @@ public static class NETCore
         var name = b.ReadString();
         name = name == "" ? "*" : name;
 
-        foreach (var path in Directory.GetFiles(Path.Combine(SSC.SavePath, SteamID.ToString()), $"{name}.?plr"))
-        {
-            CS_ByteArray(SteamID, Path.GetFileName(path), File.ReadAllBytes(path), _);
-        }
+        Directory.GetFiles(Path.Combine(SSC.SavePath, SteamID.ToString()), $"{name}.*plr").ToList()
+            .ForEach(i => CS_ByteArray(SteamID, Path.GetFileName(i), File.ReadAllBytes(i), _));
     }
 
-    // 用于Client和Server互相传递byte[]
-    internal static void CS_ByteArray(ulong SteamID, string FileName, byte[] data, int toClient = -1)
+    internal static void CS_ByteArray(ulong SteamID, string name, byte[] data, int toClient = -1)
     {
         var p = Mod.GetPacket();
         p.Write((byte)PID.ByteArray);
         p.Write(SteamID);
-        p.Write(FileName);
+        p.Write(name);
         p.Write(data.Length);
         p.Write(data);
         p.Send(toClient);
