@@ -1,7 +1,7 @@
 displayName = SSC
 author = zzp198
-version = 2.0
-dllReferences = System.Data.SQLite
+version = 2.1
+dllReferences =
 modReferences =
 weakReferences =
 noCompile = false

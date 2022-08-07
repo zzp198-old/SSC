@@ -1,0 +1,8 @@
+﻿// namespace SSC;
+//
+// public enum PID : byte
+// {
+//     SteamAccount,
+//     
+//     
+// }
