@@ -1,8 +1,9 @@
-﻿// namespace SSC;
-//
-// public enum PID : byte
-// {
-//     SteamAccount,
-//     
-//     
-// }
+﻿namespace SSC;
+
+public enum PID : byte
+{
+    SteamAccount,
+    ClearPLR,
+    
+    
+}
