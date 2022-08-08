@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Steamworks;
 using Terraria;
@@ -59,7 +60,16 @@ public class SSCSystem : ModSystem
             var p = Mod.GetPacket();
             p.Write((byte)PID.SteamAccount);
             p.Write(SteamUser.GetSteamID().m_SteamID);
-            p.Send();
+            ModLoader.GetMod("StreamPacket").Call("SSC", p);
+
+
+            p = Mod.GetPacket();
+            p.Write((byte)PID.Test);
+            var bytes = File.ReadAllBytes(
+                @"C:\Users\Administrator\Documents\My Games\Terraria\tModLoader\Players\zzp198\42492281-e9e2-4262-9fa9-197372fc1391.map");
+            p.Write(bytes.Length);
+            p.Write(bytes);
+            ModLoader.GetMod("StreamPacket").Call("SSC", p);
         }
     }
 }

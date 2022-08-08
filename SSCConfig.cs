@@ -6,5 +6,5 @@ public class SSCConfig : ModConfig
 {
     public override ConfigScope Mode => ConfigScope.ServerSide;
 
-    public bool MultipleOnline;
+    public bool MultipleOnline = false;
 }

@@ -8,7 +8,7 @@ namespace SSC;
 public class SSCPlayer : ModPlayer
 {
     internal ulong SteamID = 0;
-    
+
     internal bool Record;
     internal FileStream Stream;
 
@@ -16,7 +16,6 @@ public class SSCPlayer : ModPlayer
     {
         if (Main.netMode == NetmodeID.MultiplayerClient)
         {
-            
         }
     }
 

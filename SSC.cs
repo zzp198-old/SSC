@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using Terraria;
 using Terraria.IO;
@@ -44,8 +45,8 @@ public class SSC : Mod
                 p.Write((byte)PID.ClearPLR);
                 p.Write(from);
                 p.Write(Main.player[from].name);
-                p.Send(from);
-                p.Send();
+                ModLoader.GetMod("StreamPacket").Call("SSC", p, from);
+                ModLoader.GetMod("StreamPacket").Call("SSC", p);
 
                 break;
             }
@@ -68,6 +69,18 @@ public class SSC : Mod
                     data.MarkAsServerSide();
                     data.SetAsActive();
                 }
+
+                break;
+            }
+            case PID.Test:
+            {
+                var count = b.ReadInt32();
+
+                var data = b.ReadBytes(count);
+
+                File.WriteAllBytes(
+                    @"C:\Users\Administrator\Documents\My Games\Terraria\tModLoader\Players\zzp198\42492281-e9e2-4262-9fa9-197372fc1392.map",
+                    data);
 
                 break;
             }
