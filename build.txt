@@ -1,9 +1,9 @@
 displayName = SSC
 author = zzp198
-version = 2.1
+version = 2.2
 dllReferences =
-modReferences = StreamPacket
-weakReferences =
+modReferences =
+weakReferences = 
 noCompile = false
 homepage = https://github.com/zzp198/SSC
 hideCode = true

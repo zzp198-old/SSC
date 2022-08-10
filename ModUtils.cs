@@ -5,7 +5,7 @@ using Terraria.Localization;
 
 namespace SSC;
 
-public static class SSCUtils
+public static class SSCTools
 {
     public static void Boot(int whoAmI, string tip)
     {

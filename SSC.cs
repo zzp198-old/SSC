@@ -1,8 +1,11 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Chat;
+using Terraria.ID;
 using Terraria.IO;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace SSC;
@@ -11,60 +14,51 @@ public class SSC : Mod
 {
     public override void Load()
     {
-        var dir = Path.Combine(Main.SavePath, "SSC", "Cache");
-        if (!Directory.Exists(dir))
-        {
-            Directory.CreateDirectory(dir);
-        }
+        Directory.CreateDirectory(Path.Combine(Main.SavePath, "SSC", "Temp"));
     }
 
-    public override void HandlePacket(BinaryReader b, int from)
+    public override void HandlePacket(BinaryReader b, int _)
     {
         var type = b.ReadByte();
-        Logger.Debug($"{Main.myPlayer}({Main.netMode}) receive {(PID)type} from {from}");
-
-        switch ((PID)type)
+        switch ((SSCID)type)
         {
-            case PID.SteamAccount:
+            case SSCID.Connect:
             {
-                var steamID = b.ReadUInt64();
-                if (ModContent.GetInstance<SSCConfig>().MultipleOnline)
+                var i = b.ReadInt32();
+                var id = b.ReadUInt64();
+
+                if (Main.netMode == NetmodeID.Server)
                 {
-                    var activeList = Main.player.Where(i => i.active).ToList();
-                    if (activeList.Any(i => i.GetModPlayer<SSCPlayer>().SteamID == steamID))
+                    if (!ModContent.GetInstance<SSCConfig>().RepeatConnect)
                     {
-                        SSCUtils.Boot(from, $"Restrict: Prohibit repeated login.");
-                        return;
+                        if (Main.player.Any(who => who.active && who.GetModPlayer<SSCPlayer>().SteamID == id))
+                        {
+                            SSCTools.Boot(i, "Repeat connect. Can be modified on the config.");
+                            return;
+                        }
                     }
+
+                    var p = GetPacket();
+                    p.Write((byte)SSCID.Connect);
+                    p.Write(i);
+                    p.Write(id);
+                    p.Send(i);
+                    p.Send();
                 }
 
-                Main.player[from] = new Player { name = steamID.ToString() };
-                Main.player[from].GetModPlayer<SSCPlayer>().SteamID = steamID;
-
-                var p = GetPacket();
-                p.Write((byte)PID.ClearPLR);
-                p.Write(from);
-                p.Write(Main.player[from].name);
-                ModLoader.GetMod("StreamPacket").Call("SSC", p, from);
-                ModLoader.GetMod("StreamPacket").Call("SSC", p);
-
-                break;
-            }
-            case PID.ClearPLR:
-            {
-                var whoAmI = b.ReadInt32();
-                Main.player[whoAmI] = new Player
+                Main.player[i] = new Player
                 {
-                    name = b.ReadString(),
+                    name = id.ToString(), difficulty = (byte)Main.GameMode,
                     savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules()
                 };
+                Main.player[i].GetModPlayer<SSCPlayer>().SteamID = id;
 
-                if (whoAmI == Main.myPlayer)
+                if (i == Main.myPlayer)
                 {
                     var data = new PlayerFileData
                     {
                         Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
-                        Player = Main.player[whoAmI]
+                        Player = Main.player[i]
                     };
                     data.MarkAsServerSide();
                     data.SetAsActive();
@@ -72,19 +66,8 @@ public class SSC : Mod
 
                 break;
             }
-            case PID.Test:
-            {
-                var count = b.ReadInt32();
-
-                var data = b.ReadBytes(count);
-
-                File.WriteAllBytes(
-                    @"C:\Users\Administrator\Documents\My Games\Terraria\tModLoader\Players\zzp198\42492281-e9e2-4262-9fa9-197372fc1392.map",
-                    data);
-
-                break;
-            }
             default:
+                SSCTools.Boot(_, $"Unexpected packet ID: {type}");
                 break;
         }
     }
