@@ -1,1 +1,11 @@
 SSC
+
+SSC(Server Side Character) is a special mechanism designed for tModLoader servers that forces players to start with fresh characters when they join.
+This means they lose all of their items.Though, it will not affect their actual SinglePlayer character.
+SSC are what you need if you wish to prevent people from bringing in items from other servers and/or SinglePlayer and force them to start from scratch.
+
+v2.2 Optimize data compress. Support config.
+v2.1 UI update
+v2.0 Basic with UI
+v1.1 Fix name error
+v1.0 Basic with command
