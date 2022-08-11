@@ -1,10 +1,17 @@
-SSC
-
 SSC(Server Side Character) is a special mechanism designed for tModLoader servers that forces players to start with fresh characters when they join.
 This means they lose all of their items.Though, it will not affect their actual SinglePlayer character.
 SSC are what you need if you wish to prevent people from bringing in items from other servers and/or SinglePlayer and force them to start from scratch.
 
-v2.2 Optimize data compress. Support config.
+此mod不依赖Main.ServerSideCharacter,游玩体验会和单人模式一样顺畅,不会影响多人模式中的net交互.
+(比如旅途模式的解锁无限物品,当开启ServerSideCharacter后解锁物品非本地解锁,而是向服务端发送packet,但开发者只写了接收,并没写逻辑如何处理???
+我猜本意是想实现全体玩家共同解锁,但是目前的代码来看,会导致物品被消耗且解锁失败,虽然我可以额外写逻辑实现这一功能,但开发者的烂摊子让他自己处理吧.
+代码链接:GameContent.Creative.CreativeUI.SacrificeItem -> NetCreativeUnlocksPlayerReportModule.SerializeSacrificeRequest)
+
+保存的数据为完整的plr,理论(实际)上兼容一切(正常)mod.
+
+保存位置: [Documents]\My Games\Terraria\tModLoader\SSC\[SteamID]\[name].plr
+
+v2.2 Optimize data compress.
 v2.1 UI update
 v2.0 Basic with UI
 v1.1 Fix name error
