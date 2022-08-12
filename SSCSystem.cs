@@ -8,12 +8,6 @@ namespace SSC;
 
 public class SSCSystem : ModSystem
 {
-    public override void Load()
-    {
-        var dir = Path.Combine(Main.SavePath, "SSC", "Cache");
-        Directory.CreateDirectory(dir);
-    }
-
     public override void OnWorldLoad()
     {
         var mp = SSC.GetPacket(SSC.ID.SSCInit);
