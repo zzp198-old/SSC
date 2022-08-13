@@ -8,6 +8,7 @@ public partial class SSC
         SSCList,
         CreateSSC,
         RemoveSSC,
+        SelectSSC,
         SSCBinary,
     }
 }

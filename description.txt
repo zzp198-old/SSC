@@ -1,18 +1,53 @@
+------Synopsis------
+
 SSC(Server Side Character) is a special mechanism designed for tModLoader servers that forces players to start with fresh characters when they join.
 This means they lose all of their items.Though, it will not affect their actual SinglePlayer character.
 SSC are what you need if you wish to prevent people from bringing in items from other servers and/or SinglePlayer and force them to start from scratch.
 
+This mod does not depend on Main.ServerSideCharacter, the playing experience will be as smooth as that in single player mode, and will not affect the net interaction in multi player mode.
+
 此mod不依赖Main.ServerSideCharacter,游玩体验会和单人模式一样顺畅,不会影响多人模式中的net交互.
+
+------Changelog------
+
+v2.2 Optimize data compress. Optimize save logic, mount to the place where the original needs to be saved.
+     The time saving interval is increased from 10 seconds to 1 minute to reduce the pressure on the server.
+v2.1 UI update.
+v2.0 Basic with UI.
+v1.1 Fix name error.
+v1.0 Basic with command(like Tshock).
+
+v2.2 玩家数据压缩. 优化保存逻辑,挂载到原版需要保存的地方.定时保存间隔从10秒提高到1分钟,减少服务端压力.
+v2.1 UI更新.
+v2.0 带UI的全新版本.
+v1.1 修复玩家输入奇怪的名称导致保存失败的问题.
+v1.0 初代命令行版本(类似Tshock)
+
+------Configuration------
+
+The saved data is a complete PLR file, which is theoretically (practically) compatible with all (normal) mod.
+Note: 1.During playing, temporary files will be created in the temp folder of the system.
+      2.It is best not to perform other operations before selecting players to avoid losing data.
+      3.If you are sure to delete the player, double-click the delete button.
+Save location: [Documents]\My Games\Terraria\tModLoader\SSC\[SteamID]\[name].plr
+
+保存的数据为完整的plr文件,理论(实际)上兼容一切(正常)mod.
+Note: 1.在游玩过程中,会在系统的Temp文件夹创建临时文件.
+      2.最好在选择玩家前，不要进行其他操作，以免丢失数据.
+      3.如果你确定要删除玩家，请双击删除按钮.
+保存位置: [我的文档]\My Games\Terraria\tModLoader\SSC\[SteamID]\[name].plr
+
+------Feature------
+
+Personally, I think the character selection list is still ugly, but I don't know how to look good for a while.
+Because of the randomness of the storage, the play time will be reset constantly. It may be solved later, but the priority is low.
+
+个人感觉角色选择列表还是丑了点,但一时间不知道怎么样算好看.
+因为保存的随机性，游玩时间会被不停重置，以后可能会解决，但优先度低(反正存档在云端,你想看时间也看不了).
+
+------Digression------
+
+此mod不依赖Main.ServerSideCharacter,游玩体验会和单人模式一样顺畅,不会影响多人模式中的net交互.下面是遇到的一个坑:
 (比如旅途模式的解锁无限物品,当开启ServerSideCharacter后解锁物品非本地解锁,而是向服务端发送packet,但开发者只写了接收,并没写逻辑如何处理???
 我猜本意是想实现全体玩家共同解锁,但是目前的代码来看,会导致物品被消耗且解锁失败,虽然我可以额外写逻辑实现这一功能,但开发者的烂摊子他们自己处理吧.
 代码链接:GameContent.Creative.CreativeUI.SacrificeItem -> NetCreativeUnlocksPlayerReportModule.SerializeSacrificeRequest)
-
-保存的数据为完整的plr文件,理论(实际)上兼容一切(正常)mod.
-
-保存位置: [Documents]\My Games\Terraria\tModLoader\SSC\[SteamID]\[name].plr
-
-v2.2 Optimize data compress.
-v2.1 UI update
-v2.0 Basic with UI
-v1.1 Fix name error
-v1.0 Basic with command
