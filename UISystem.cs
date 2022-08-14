@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -9,17 +10,20 @@ namespace SSC;
 public class UISystem : ModSystem
 {
     internal static UserInterface UI;
+    internal static UIState View;
 
     public override void Load()
     {
         if (!Main.dedServ)
         {
             UI = new UserInterface();
+            View = new SSCView();
         }
     }
 
     public override void Unload()
     {
+        View = null;
         UI = null;
     }
 
@@ -50,8 +54,14 @@ public class UISystem : ModSystem
 
     public override void OnWorldLoad()
     {
-        var mp = SSCUtils.GetPacket(SSC.ID.SSCInit);
-        mp.Write(SSC.SteamID);
-        mp.Send();
+        if (Main.netMode == NetmodeID.MultiplayerClient)
+        {
+            var mp = SSCUtils.GetPacket(SSC.ID.SSCInit);
+            mp.Write(SSC.SteamID);
+            mp.Send();
+        }
+
+        // TODO
+        UI.SetState(View);
     }
 }

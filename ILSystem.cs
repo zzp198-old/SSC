@@ -47,7 +47,7 @@ public class ILSystem : ModSystem
                     savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules(),
                 }
             };
-            data.Player.AddBuff(ModContent.BuffType<Content.Spooky>(), 198); // 重要,用于后续的限制
+            data.Player.AddBuff(ModContent.BuffType<Content.Spooky>(), 198); // 幽灵化
             data.MarkAsServerSide();
             data.SetAsActive();
         });
