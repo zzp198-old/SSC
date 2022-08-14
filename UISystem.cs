@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
@@ -9,7 +9,6 @@ namespace SSC;
 public class UISystem : ModSystem
 {
     internal static UserInterface UI;
-    internal static GameTime Time;
 
     public override void Load()
     {
@@ -26,7 +25,6 @@ public class UISystem : ModSystem
 
     public override void UpdateUI(GameTime time)
     {
-        Time = time;
         if (UI?.CurrentState != null)
         {
             UI.Update(time);
@@ -35,18 +33,25 @@ public class UISystem : ModSystem
 
     public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
     {
-        var index = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Cursor"));
+        var index = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
         if (index != -1)
         {
-            layers.Insert(index, new LegacyGameInterfaceLayer("SSC: UISystem", () =>
+            layers.Insert(index, new LegacyGameInterfaceLayer("Vanilla: SSC", () =>
             {
-                if (Time != null && UI?.CurrentState != null)
+                if (UI?.CurrentState != null)
                 {
-                    UI.Draw(Main.spriteBatch, Time);
+                    UI.Draw(Main.spriteBatch, Main.gameTimeCache);
                 }
 
                 return true;
             }, InterfaceScaleType.UI));
         }
+    }
+
+    public override void OnWorldLoad()
+    {
+        var mp = SSCUtils.GetPacket(SSC.ID.SSCInit);
+        mp.Write(SSC.SteamID);
+        mp.Send();
     }
 }

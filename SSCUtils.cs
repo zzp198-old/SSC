@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -29,6 +29,13 @@ public static class SSCUtils
             default:
                 throw new Exception("Boot can only be used in C/S.");
         }
+    }
+
+    public static ModPacket GetPacket(SSC.ID id)
+    {
+        var mp = ModContent.GetInstance<SSC>().GetPacket();
+        mp.Write((byte)id);
+        return mp;
     }
 
     public static bool CheckName(string name, out string msg)

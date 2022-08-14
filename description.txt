@@ -47,7 +47,8 @@ Because of the randomness of the storage, the play time will be reset constantly
 
 ------Digression------
 
-此mod不依赖Main.ServerSideCharacter,游玩体验会和单人模式一样顺畅,不会影响多人模式中的net交互.下面是遇到的一个坑:
+此mod不依赖Main.ServerSideCharacter,游玩体验会和单人模式一样顺畅,不会影响多人模式中的net交互.
+下面是遇到的一个坑:
 (比如旅途模式的解锁无限物品,当开启ServerSideCharacter后解锁物品非本地解锁,而是向服务端发送packet,但开发者只写了接收,并没写逻辑如何处理???
 我猜本意是想实现全体玩家共同解锁,但是目前的代码来看,会导致物品被消耗且解锁失败,虽然我可以额外写逻辑实现这一功能,但开发者的烂摊子他们自己处理吧.
 代码链接:GameContent.Creative.CreativeUI.SacrificeItem -> NetCreativeUnlocksPlayerReportModule.SerializeSacrificeRequest)
