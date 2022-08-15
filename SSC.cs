@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -75,8 +76,16 @@ public class SSC : Mod
                     Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
                     Player = new Player { name = name, difficulty = mode }
                 };
-                SSCUtils.SetupPlayerStatsAndInventoryBasedOnDifficulty(data.Player);
-                SSCUtils.InternalSavePlayer(data);
+
+                try
+                {
+                    SSCUtils.SetupPlayerStatsAndInventoryBasedOnDifficulty(data.Player);
+                    SSCUtils.InternalSavePlayer(data);
+                }
+                catch (Exception e)
+                {
+                    ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral(e.ToString()), Color.Red, from);
+                }
 
                 SSCUtils.SendSSCList(id, from);
                 break;
@@ -86,9 +95,16 @@ public class SSC : Mod
                 var id = b.ReadUInt64();
                 var name = b.ReadString();
 
-                // 删除人物
-                File.Delete(SavePath(id, name));
-                File.Delete(SavePath(id, name, true));
+                try
+                {
+                    // 删除人物
+                    File.Delete(SavePath(id, name));
+                    File.Delete(SavePath(id, name, true));
+                }
+                catch (Exception e)
+                {
+                    ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral(e.ToString()), Color.Red, from);
+                }
 
                 SSCUtils.SendSSCList(id, from);
                 break;
@@ -175,10 +191,16 @@ public class SSC : Mod
                             return;
                         }
 
-                        File.WriteAllBytes(SavePath(id, name), compound.GetByteArray("PLR"));
-                        File.WriteAllBytes(SavePath(id, name, true), compound.GetByteArray("TPLR"));
+                        try
+                        {
+                            File.WriteAllBytes(SavePath(id, name), compound.GetByteArray("PLR"));
+                            File.WriteAllBytes(SavePath(id, name, true), compound.GetByteArray("TPLR"));
+                        }
+                        catch (Exception e)
+                        {
+                            ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral(e.ToString()), Color.Red, from);
+                        }
 
-                        ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral("Saved successfully."), Color.Green, from);
                         break;
                     }
                 }

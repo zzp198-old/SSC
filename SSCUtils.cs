@@ -139,4 +139,28 @@ public static class SSCUtils
         File.WriteAllBytes(Path.ChangeExtension(name, ".tplr"), root.GetByteArray("TPLR"));
         return Player.LoadPlayer(name, false).Player;
     }
+
+    public static void SendSSCBinary2Server(ulong id, Player player)
+    {
+        var name = Path.Combine(Path.GetTempPath(), $"{player.name}.plr");
+        InternalSavePlayer(new PlayerFileData(name, false)
+        {
+            Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
+            Player = player
+        });
+        var memoryStream = new MemoryStream();
+        TagIO.ToStream(new TagCompound
+        {
+            { "PLR", File.ReadAllBytes(name) },
+            { "TPLR", File.ReadAllBytes(Path.ChangeExtension(name, ".tplr")) },
+        }, memoryStream);
+        var array = memoryStream.ToArray();
+
+        var mp = GetPacket(SSC.ID.SSCBinary);
+        mp.Write(id);
+        mp.Write(player.name);
+        mp.Write(array.Length);
+        mp.Write(array);
+        mp.Send();
+    }
 }
