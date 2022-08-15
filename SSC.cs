@@ -164,7 +164,7 @@ public class SSC : Mod
                 }, memoryStream);
                 var array = memoryStream.ToArray();
 
-                // 指定Client挂载全部数据,不管是否需要同步的,以确保mod的本地数据同步.(发送给全部Client会出现显示错误,原因未知,可能和带宽,Packet的顺序有关)
+                // 指定Client挂载全部数据,不管是否需要同步的,以确保mod的本地数据同步.(发送给全部Client会出现显示错误,会先Spawn再Apply)
                 var mp = SSCUtils.GetPacket(ID.SSCBinary);
                 mp.Write(from);
                 mp.Write(array.Length);
@@ -189,7 +189,7 @@ public class SSC : Mod
 
                         if (whoAmI == Main.myPlayer)
                         {
-                            Main.player[whoAmI].Spawn(PlayerSpawnContext.SpawningIntoWorld);
+                            Main.player[whoAmI].Spawn(PlayerSpawnContext.SpawningIntoWorld); // SetPlayerDataToOutOfClassFields
                             try
                             {
                                 Player.Hooks.EnterWorld(whoAmI); // 其他mod如果没有防御性编程可能会报错
