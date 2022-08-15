@@ -7,6 +7,7 @@ using Terraria.ID;
 using Terraria.IO;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 using Terraria.UI;
 using Terraria.Utilities;
 
@@ -14,8 +15,6 @@ namespace SSC;
 
 public class ILSystem : ModSystem
 {
-    public int Cooldown;
-
     public override void Load()
     {
         // 此时已经选择玩家,并对其他玩家进行了初始化.通过IL挂载可确保仅被执行一次.
@@ -30,6 +29,8 @@ public class ILSystem : ModSystem
         IL.Terraria.Player.SavePlayer += ILHook5;
         // 缩短自动保存的时间间隔
         IL.Terraria.Main.DoUpdate_AutoSave += ILHook6;
+        // 硬核死亡删除云存档
+        IL.Terraria.Player.KillMeForGood += ILHook7;
     }
 
     public override void Unload()
@@ -40,6 +41,7 @@ public class ILSystem : ModSystem
         IL.Terraria.Player.Hooks.EnterWorld -= ILHook4;
         IL.Terraria.WorldGen.saveToonWhilePlayingCallBack -= ILHook5;
         IL.Terraria.Main.DoUpdate_AutoSave -= ILHook6;
+        IL.Terraria.Player.KillMeForGood -= ILHook7;
     }
 
     private static void ILHook1(ILContext il)
@@ -49,14 +51,12 @@ public class ILSystem : ModSystem
         c.EmitDelegate(() =>
         {
             Main.statusText = "SSC Hooking...";
-            var data = new PlayerFileData(Path.Combine(SSC.SavePath, $"{SSC.SteamID}.plr"), false)
+            var data = new PlayerFileData(Path.Combine(SSC.SavePath(), $"{SSC.SteamID}.plr"), false)
             {
                 Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
                 Player = new Player
                 {
-                    name = DateTime.UtcNow.Ticks.ToString(),
-                    // name = SSC.SteamID.ToString(), TODO 
-                    difficulty = Main.LocalPlayer.difficulty,
+                    name = SSC.SteamID.ToString(), difficulty = Main.LocalPlayer.difficulty,
                     savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules(),
                 }
             };
@@ -115,11 +115,6 @@ public class ILSystem : ModSystem
 
     private static void ILHook5(ILContext il)
     {
-        // IL_002e: ldloc.0      // V_0
-        // IL_002f: ldftn        instance void Terraria.Player/'<>c__DisplayClass1757_0'::'<SavePlayer>b__0'()
-        // IL_0035: newobj       instance void [System.Runtime]System.Action::.ctor(object, native int)
-        // IL_003a: call         void Terraria.Utilities.FileUtilities::ProtectedInvoke(class [System.Runtime]System.Action)
-
         // 原方法会成功保存Map,剩下的内容由此Hook继续下去.
         var c = new ILCursor(il);
         c.GotoNext(MoveType.After, i => i.MatchCall(typeof(FileUtilities), nameof(FileUtilities.ProtectedInvoke)));
@@ -128,13 +123,25 @@ public class ILSystem : ModSystem
             if (Main.netMode == NetmodeID.MultiplayerClient && !Main.LocalPlayer.HasBuff<Content.Spooky>())
             {
                 var id = SSC.SteamID;
-                var data = SSCUtils.Player2ByteArray(id, Main.LocalPlayer);
+                var name = Path.Combine(Path.GetTempPath(), $"{id}.plr");
+                SSCUtils.InternalSavePlayer(new PlayerFileData(name, false)
+                {
+                    Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
+                    Player = Main.LocalPlayer
+                });
+                var memoryStream = new MemoryStream();
+                TagIO.ToStream(new TagCompound
+                {
+                    { "PLR", File.ReadAllBytes(name) },
+                    { "TPLR", File.ReadAllBytes(Path.ChangeExtension(name, ".tplr")) },
+                }, memoryStream);
+                var array = memoryStream.ToArray();
 
                 var mp = SSCUtils.GetPacket(SSC.ID.SSCBinary);
                 mp.Write(id);
                 mp.Write(Main.LocalPlayer.name);
-                mp.Write(data.Length);
-                mp.Write(data);
+                mp.Write(array.Length);
+                mp.Write(array);
                 mp.Send();
             }
         });
@@ -145,5 +152,21 @@ public class ILSystem : ModSystem
         var c = new ILCursor(il);
         c.GotoNext(i => i.MatchLdcI4(300000));
         c.EmitDelegate<Func<long, long>>(_ => 60000);
+    }
+
+    private void ILHook7(ILContext il)
+    {
+        var c = new ILCursor(il);
+        c.GotoNext(i => i.MatchLdsfld(typeof(Main), nameof(Main.ActivePlayerFileData)));
+        c.EmitDelegate(() =>
+        {
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                var mp = SSCUtils.GetPacket(SSC.ID.RemoveSSC);
+                mp.Write(SSC.SteamID);
+                mp.Write(Main.LocalPlayer.name);
+                mp.Send();
+            }
+        });
     }
 }

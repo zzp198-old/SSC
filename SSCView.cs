@@ -229,7 +229,7 @@ public class SSCView : UIState
             {
                 HAlign = 1, VAlign = 1
             };
-            removeView.OnClick += (_, _) =>
+            removeView.OnDoubleClick += (_, _) =>
             {
                 var mp = SSCUtils.GetPacket(SSC.ID.RemoveSSC);
                 mp.Write(SSC.SteamID);
