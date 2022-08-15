@@ -24,14 +24,12 @@ public class ILSystem : ModSystem
         IL.Terraria.Main.DrawInventory += ILHook3;
         // 用于显示UI,但是不用TML提供的接口以免被重复调用.并在应用SSC后重复调用一遍TML的接口确保新角色数据正常.
         IL.Terraria.Player.Hooks.EnterWorld += ILHook4;
-        // 每当多人模式客户端游戏中请求保存时触发.(其他mod请求此方法时也可触发保存,完美)
+        // 每当多人模式客户端游戏中请求保存时触发(死亡,保存并退出).(其他mod请求此方法时也可触发保存,完美)
         IL.Terraria.Player.SavePlayer += ILHook5;
         // 缩短自动保存的时间间隔
         IL.Terraria.Main.DoUpdate_AutoSave += ILHook6;
         // 硬核死亡删除云存档
         IL.Terraria.Player.KillMeForGood += ILHook7;
-        // 退出前也会进行保存
-        IL.Terraria.IngameOptions.Draw += ILHook8;
     }
 
     public override void Unload()
@@ -43,7 +41,6 @@ public class ILSystem : ModSystem
         IL.Terraria.WorldGen.saveToonWhilePlayingCallBack -= ILHook5;
         IL.Terraria.Main.DoUpdate_AutoSave -= ILHook6;
         IL.Terraria.Player.KillMeForGood -= ILHook7;
-        IL.Terraria.IngameOptions.Draw -= ILHook8;
     }
 
     private static void ILHook1(ILContext il)
@@ -108,7 +105,7 @@ public class ILSystem : ModSystem
         c.GotoNext(MoveType.After, i => i.MatchCall(typeof(PlayerLoader), nameof(PlayerLoader.OnEnterWorld)));
         c.EmitDelegate(() =>
         {
-            if (Main.netMode == NetmodeID.MultiplayerClient)
+            if (Main.netMode == NetmodeID.MultiplayerClient && Main.LocalPlayer.HasBuff<Content.Spooky>())
             {
                 UISystem.UI.SetState(UISystem.View);
             }
@@ -148,19 +145,6 @@ public class ILSystem : ModSystem
                 mp.Write(SSC.SteamID);
                 mp.Write(Main.LocalPlayer.name);
                 mp.Send();
-            }
-        });
-    }
-
-    private static void ILHook8(ILContext il)
-    {
-        var c = new ILCursor(il);
-        c.GotoNext(MoveType.After, i => i.MatchCall(typeof(SystemLoader), nameof(SystemLoader.PreSaveAndQuit)));
-        c.EmitDelegate(() =>
-        {
-            if (Main.netMode == NetmodeID.MultiplayerClient && !Main.LocalPlayer.HasBuff<Content.Spooky>())
-            {
-                SSCUtils.SendSSCBinary2Server(SSC.SteamID, Main.LocalPlayer);
             }
         });
     }

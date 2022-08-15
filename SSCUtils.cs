@@ -131,9 +131,9 @@ public static class SSCUtils
         };
     }
 
-    public static Player ByteArray2Player(ulong key, byte[] data)
+    public static Player ByteArray2Player(byte[] data)
     {
-        var name = Path.Combine(Path.GetTempPath(), $"{key}.plr");
+        var name = Path.Combine(Path.GetTempPath(), $"{DateTime.UtcNow.Ticks}.plr");
         var root = TagIO.FromStream(new MemoryStream(data));
         File.WriteAllBytes(name, root.GetByteArray("PLR"));
         File.WriteAllBytes(Path.ChangeExtension(name, ".tplr"), root.GetByteArray("TPLR"));

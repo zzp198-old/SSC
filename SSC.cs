@@ -19,7 +19,7 @@ public class SSC : Mod
     internal static string SavePath() => Path.Combine(Main.SavePath, "SSC");
     internal static string SavePath(ulong id) => Path.Combine(SavePath(), id.ToString());
 
-    internal static string SavePath(ulong id, string name, bool tml = false) =>
+    private static string SavePath(ulong id, string name, bool tml = false) =>
         Path.Combine(SavePath(id), $"{name}.{(tml ? "tplr" : "plr")}");
 
     internal static ulong SteamID => SteamUser.GetSteamID().m_SteamID;
@@ -150,7 +150,6 @@ public class SSC : Mod
 
                 var mp = SSCUtils.GetPacket(ID.SSCBinary);
                 mp.Write(from);
-                mp.Write(id);
                 mp.Write(array.Length);
                 mp.Write(array);
                 mp.Send();
@@ -163,17 +162,25 @@ public class SSC : Mod
                     case NetmodeID.MultiplayerClient:
                     {
                         var whoAmI = b.ReadInt32();
-                        var id = b.ReadUInt64();
                         var array = b.ReadBytes(b.ReadInt32());
 
-                        Main.player[whoAmI] = SSCUtils.ByteArray2Player(id, array);
+                        Main.player[whoAmI] = SSCUtils.ByteArray2Player(array);
 
                         if (whoAmI == Main.myPlayer)
                         {
                             Main.player[whoAmI].Spawn(PlayerSpawnContext.SpawningIntoWorld);
-                            PlayerLoader.OnEnterWorld(whoAmI);
-
-                            UISystem.UI.SetState(null);
+                            try
+                            {
+                                PlayerLoader.OnEnterWorld(whoAmI);
+                            }
+                            catch (Exception e)
+                            {
+                                Logger.Error(e);
+                            }
+                            finally
+                            {
+                                UISystem.UI.SetState(null);
+                            }
                         }
 
                         break;

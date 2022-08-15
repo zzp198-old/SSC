@@ -75,7 +75,7 @@ public class SSCView : UIState
                     InputState = true;
                 }
             }
-            else if (InputState && Main.mouseLeft) // 有焦点但未被选中的情况下点击
+            else if (InputState && Main.mouseLeft)
             {
                 NameInput.ToggleTakingText();
                 InputState = false;
