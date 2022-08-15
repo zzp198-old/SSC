@@ -170,12 +170,15 @@ public class SSC : Mod
 
                         if (!File.Exists(SavePath(id, name)))
                         {
-                            ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral("Remote player doesn't exist."), Color.Red, from);
+                            ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral("Player does not exist or has been deleted."),
+                                Color.Red, from);
                             return;
                         }
 
                         File.WriteAllBytes(SavePath(id, name), compound.GetByteArray("PLR"));
                         File.WriteAllBytes(SavePath(id, name, true), compound.GetByteArray("TPLR"));
+
+                        ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral("Saved successfully."), Color.Green, from);
                         break;
                     }
                 }
