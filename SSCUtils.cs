@@ -2,12 +2,14 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.IO;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 using Terraria.Utilities;
 
 namespace SSC;
@@ -36,6 +38,20 @@ public static class SSCUtils
         var mp = ModContent.GetInstance<SSC>().GetPacket();
         mp.Write((byte)id);
         return mp;
+    }
+
+    public static void SendSSCList(ulong id)
+    {
+        var dir = Path.Combine(SSC.SavePath, id.ToString());
+        var mp = GetPacket(SSC.ID.SSCList);
+        mp.Write(Directory.GetFiles(dir, "*.plr").Length);
+        Directory.GetFiles(dir, "*.plr").ToList().ForEach(name =>
+        {
+            var data = Player.LoadPlayer(name, false);
+            mp.Write(data.Player.name);
+            mp.Write(data.Player.difficulty);
+        });
+        mp.Send();
     }
 
     public static bool CheckName(string name, out string msg)
@@ -104,5 +120,36 @@ public static class SSCUtils
         CreativePowerManager.Instance.ResetDataForNewPlayer(player);
         var items = PlayerLoader.GetStartingItems(player, player.inventory.Where(x => !x.IsAir).Select(x => x.Clone()));
         PlayerLoader.SetStartInventory(player, items);
+    }
+
+    public static Color GetColorByMode(byte mode)
+    {
+        return mode switch
+        {
+            1 => Main.mcColor, 2 => Main.hcColor,
+            3 => Main.creativeModeColor, _ => Color.White,
+        };
+    }
+
+    public static byte[] Player2ByteArray(ulong key, Player player)
+    {
+        var name = Path.Combine(Path.GetTempPath(), $"{key}.plr");
+        InternalSavePlayer(new PlayerFileData(name, false) { Player = player });
+        var memoryStream = new MemoryStream();
+        TagIO.ToStream(new TagCompound
+        {
+            { "PLR", File.ReadAllBytes(name) },
+            { "TPLR", File.ReadAllBytes(Path.ChangeExtension(name, ".tplr")) },
+        }, memoryStream);
+        return memoryStream.ToArray();
+    }
+
+    public static Player ByteArray2Player(ulong key, byte[] data)
+    {
+        var name = Path.Combine(Path.GetTempPath(), $"{key}.plr");
+        var root = TagIO.FromStream(new MemoryStream(data));
+        File.WriteAllBytes(name, root.GetByteArray("PLR"));
+        File.WriteAllBytes(Path.ChangeExtension(name, ".tplr"), root.GetByteArray("TPLR"));
+        return Player.LoadPlayer(name, false).Player;
     }
 }

@@ -1,27 +1,38 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ID;
 using Terraria.Localization;
 using Terraria.UI;
 
 namespace SSC;
 
+[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 public class SSCView : UIState
 {
-    internal static UIPanel ViewGroup;
-    internal static UIList ViewList;
-    internal static UIPanel CreateView;
+    public UIPanel ViewGroup;
+    public UIList ViewList;
+    public Player Unknown;
+    public UIPanel CreateView;
+    public UICharacterNameButton NameView;
+    public UISearchBar NameInput;
+    public UITextPanel<LocalizedText> CreateButton;
+    public bool InputState;
 
     public override void OnActivate()
     {
         ViewGroup = new UIPanel
         {
-            Width = new StyleDimension(309, 0),
-            Height = new StyleDimension(500, 0),
+            Width = new StyleDimension(Main.screenWidth, 0),
+            Height = new StyleDimension(Main.screenHeight, 0),
+            MaxWidth = new StyleDimension(370, 0),
+            MaxHeight = new StyleDimension(600, 0),
             HAlign = 0.5f, VAlign = 0.5f,
             PaddingRight = 10,
+            BackgroundColor = new Color(33, 43, 79) * 0.8f
         };
         Append(ViewGroup);
 
@@ -40,45 +51,138 @@ public class SSCView : UIState
         ViewList.SetScrollbar(scrollbar);
         ViewGroup.Append(ViewList);
 
-        RedrawList(new List<(string, byte)>
+        Unknown = new Player();
+        CreateView = new UIPanel
         {
-            ("zzp198", 0),
-            ("zzp198", 1),
-            ("zzp198", 2),
-            ("zzp198", 3),
-            ("zzp198", 4),
-            ("Sam Javid Pack", 4),
+            Width = new StyleDimension(0, 1),
+            Height = new StyleDimension(180, 0),
+        };
+        CreateView.SetPadding(10);
+        ViewList.Add(CreateView);
+
+        NameView = new UICharacterNameButton(Language.GetText("UI.WorldCreationName"), LocalizedText.Empty)
+        {
+            Width = new StyleDimension(0, 1),
+            Height = new StyleDimension(40, 0)
+        };
+        NameView.OnUpdate += _ =>
+        {
+            if (NameView.IsMouseHovering)
+            {
+                if (!InputState && Main.mouseLeft)
+                {
+                    NameInput.ToggleTakingText();
+                    InputState = true;
+                }
+            }
+            else if (InputState && Main.mouseLeft) // 有焦点但未被选中的情况下点击
+            {
+                NameInput.ToggleTakingText();
+                InputState = false;
+            }
+        };
+        CreateView.Append(NameView);
+
+        NameInput = new UISearchBar(LocalizedText.Empty, 1)
+        {
+            Width = new StyleDimension(-50, 1),
+            Height = new StyleDimension(40, 0),
+            Left = new StyleDimension(50, 0)
+        };
+        NameInput.OnMouseOver += (evt, _) => NameView.MouseOver(evt); // 影响nameButton.IsMouseHovering
+        NameInput.OnMouseOut += (evt, _) => NameView.MouseOut(evt);
+        NameInput.OnContentsChanged += name => Unknown.name = name;
+        CreateView.Append(NameInput);
+
+        CreateView.Append(new UIDifficultyButton(Unknown, Lang.menu[26], null, PlayerDifficultyID.SoftCore, Color.Cyan)
+        {
+            Width = new StyleDimension(-5, 0.5f),
+            Height = new StyleDimension(26, 0),
+            Top = new StyleDimension(50, 0)
         });
+        CreateView.Append(new UIDifficultyButton(Unknown, Lang.menu[25], null, PlayerDifficultyID.MediumCore, Main.mcColor)
+        {
+            Width = new StyleDimension(-5, 0.5f),
+            Height = new StyleDimension(26, 0),
+            Top = new StyleDimension(50, 0),
+            Left = new StyleDimension(5, 0.5f)
+        });
+        CreateView.Append(new UIDifficultyButton(Unknown, Lang.menu[24], null, PlayerDifficultyID.Hardcore, Main.hcColor)
+        {
+            Width = new StyleDimension(-5, 0.5f),
+            Height = new StyleDimension(26, 0),
+            Top = new StyleDimension(80, 0)
+        });
+        CreateView.Append(new UIDifficultyButton(Unknown, Language.GetText("UI.Creative"), null, PlayerDifficultyID.Creative,
+            Main.creativeModeColor)
+        {
+            Width = new StyleDimension(-5, 0.5f),
+            Height = new StyleDimension(26, 0),
+            Top = new StyleDimension(80, 0),
+            Left = new StyleDimension(5, 0.5f)
+        });
+
+        CreateButton = new UITextPanel<LocalizedText>(Language.GetText("UI.Create"), 0.7f, true)
+        {
+            Width = new StyleDimension(0, 1),
+            Height = new StyleDimension(30, 0),
+            Top = new StyleDimension(115, 0),
+            HAlign = 0.5f
+        };
+        CreateButton.OnMouseOver += (_, _) =>
+        {
+            CreateButton.BackgroundColor = new Color(73, 94, 171);
+            CreateButton.BorderColor = Colors.FancyUIFatButtonMouseOver;
+        };
+        CreateButton.OnMouseOut += (_, _) =>
+        {
+            CreateButton.BackgroundColor = new Color(63, 82, 151) * 0.8f;
+            CreateButton.BorderColor = Color.Black;
+        };
+        CreateButton.OnClick += (_, _) =>
+        {
+            var mp = SSCUtils.GetPacket(SSC.ID.CreateSSC);
+            mp.Write(SSC.SteamID);
+            mp.Write(Unknown.name);
+            mp.Write(Unknown.difficulty);
+            mp.Send();
+
+            NameInput.SetContents("");
+            Unknown.difficulty = 0;
+        };
+        CreateView.Append(CreateButton);
+
+        var mp = SSCUtils.GetPacket(SSC.ID.SSCInit);
+        mp.Write(SSC.SteamID);
+        mp.Send();
     }
 
-    public override void OnDeactivate()
-    {
-        CreateView = null;
-        ViewList = null;
-        ViewGroup = null;
-    }
-
-    public static void RedrawList(List<(string, byte)> data)
+    public void RedrawList(List<(string, byte)> data)
     {
         ViewList.Clear();
         foreach (var (name, mode) in data)
         {
-            var baseColor = mode switch
-            {
-                1 => Main.mcColor, 2 => Main.hcColor,
-                3 => Main.creativeModeColor, _ => Color.White,
-            };
-
             var item = new UIPanel
             {
                 Width = new StyleDimension(0, 1),
                 Height = new StyleDimension(80, 0),
+                PaddingBottom = 10
+            };
+            item.OnMouseOver += (_, _) =>
+            {
+                item.BackgroundColor = new Color(73, 94, 171);
+                item.BorderColor = new Color(89, 116, 213);
+            };
+            item.OnMouseOut += (_, _) =>
+            {
+                item.BackgroundColor = new Color(63, 82, 151) * 0.7f;
+                item.BorderColor = new Color(89, 116, 213) * 0.7f;
             };
             ViewList.Add(item);
 
             item.Append(new UIText(name)
             {
-                TextColor = baseColor,
+                TextColor = SSCUtils.GetColorByMode(mode),
                 Height = new StyleDimension(30, 0)
             });
 
@@ -89,7 +193,7 @@ public class SSCView : UIState
                 _ => "Unknown"
             }))
             {
-                TextColor = baseColor,
+                TextColor = SSCUtils.GetColorByMode(mode),
                 Height = new StyleDimension(30, 0),
                 HAlign = 1,
             });
@@ -101,33 +205,47 @@ public class SSCView : UIState
                 ScaleToFit = true
             });
 
-            var PlayButton = new UIImageButton(Main.Assets.Request<Texture2D>("Images/UI/ButtonPlay"))
+            var chooseView = new UIImageButton(Main.Assets.Request<Texture2D>("Images/UI/ButtonPlay"))
             {
                 VAlign = 1
             };
-            PlayButton.OnClick += (_, _) => { };
-            PlayButton.OnUpdate += _ =>
+            chooseView.OnClick += (_, _) =>
             {
-                if (PlayButton.IsMouseHovering)
+                var mp = SSCUtils.GetPacket(SSC.ID.ChooseSSC);
+                mp.Write(SSC.SteamID);
+                mp.Write(name);
+                mp.Send();
+            };
+            chooseView.OnUpdate += _ =>
+            {
+                if (chooseView.IsMouseHovering)
                 {
-                    Main.instance.MouseText("开始游戏");
+                    Main.instance.MouseText(Language.GetTextValue("UI.Play"));
                 }
             };
-            item.Append(PlayButton);
+            item.Append(chooseView);
 
-            var DeleteButton = new UIImageButton(Main.Assets.Request<Texture2D>("Images/UI/ButtonDelete"))
+            var removeView = new UIImageButton(Main.Assets.Request<Texture2D>("Images/UI/ButtonDelete"))
             {
                 HAlign = 1, VAlign = 1
             };
-            DeleteButton.OnClick += (_, _) => { };
-            DeleteButton.OnUpdate += _ =>
+            removeView.OnClick += (_, _) =>
             {
-                if (DeleteButton.IsMouseHovering)
+                var mp = SSCUtils.GetPacket(SSC.ID.RemoveSSC);
+                mp.Write(SSC.SteamID);
+                mp.Write(name);
+                mp.Send();
+            };
+            removeView.OnUpdate += _ =>
+            {
+                if (removeView.IsMouseHovering)
                 {
-                    Main.instance.MouseText("双击删除");
+                    Main.instance.MouseText($"{Language.GetTextValue("UI.Delete")} (Double-Click)");
                 }
             };
-            item.Append(DeleteButton);
+            item.Append(removeView);
         }
+
+        ViewList.Add(CreateView);
     }
 }

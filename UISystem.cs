@@ -10,7 +10,7 @@ namespace SSC;
 public class UISystem : ModSystem
 {
     internal static UserInterface UI;
-    internal static UIState View;
+    internal static SSCView View;
 
     public override void Load()
     {
@@ -50,18 +50,5 @@ public class UISystem : ModSystem
                 return true;
             }, InterfaceScaleType.UI));
         }
-    }
-
-    public override void OnWorldLoad()
-    {
-        if (Main.netMode == NetmodeID.MultiplayerClient)
-        {
-            var mp = SSCUtils.GetPacket(SSC.ID.SSCInit);
-            mp.Write(SSC.SteamID);
-            mp.Send();
-        }
-
-        // TODO
-        UI.SetState(View);
     }
 }
