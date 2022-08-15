@@ -164,11 +164,16 @@ public class SSC : Mod
                 }, memoryStream);
                 var array = memoryStream.ToArray();
 
+                // 指定Client挂载全部数据,不管是否需要同步的,以确保mod的本地数据同步.(发送给全部Client会出现显示错误,原因未知,可能和带宽,Packet的顺序有关)
                 var mp = SSCUtils.GetPacket(ID.SSCBinary);
                 mp.Write(from);
                 mp.Write(array.Length);
                 mp.Write(array);
-                mp.Send();
+                mp.Send(from);
+
+                // 其他Client者通过原生代码同步必要的数据,包括mod的net同步.
+                // 客户端的返回数据会更改服务端的Client名称,不添加的话,离开时的提示信息有误且后进的玩家无法被先进的玩家看到(虽然死亡能解除)
+                NetMessage.SendData(MessageID.PlayerInfo, from);
                 break;
             }
             case ID.SSCBinary:
@@ -187,11 +192,12 @@ public class SSC : Mod
                             Main.player[whoAmI].Spawn(PlayerSpawnContext.SpawningIntoWorld);
                             try
                             {
-                                PlayerLoader.OnEnterWorld(whoAmI);
+                                Player.Hooks.EnterWorld(whoAmI); // 其他mod如果没有防御性编程可能会报错
                             }
                             catch (Exception e)
                             {
                                 Logger.Error(e);
+                                throw;
                             }
                             finally
                             {
