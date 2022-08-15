@@ -101,7 +101,7 @@ public class SSC : Mod
                 // 防止在线玩家名称重复
                 if (Netplay.Clients.Where(x => x.IsActive).Any(x => Main.player[x.Id].name == name))
                 {
-                    SSCUtils.Boot(from, NetworkText.FromKey(Lang.mp[5].Key, id.ToString()).ToString());
+                    ChatHelper.SendChatMessageToClient(NetworkText.FromKey(Lang.mp[5].Key, name), Color.Red, from);
                     return;
                 }
 

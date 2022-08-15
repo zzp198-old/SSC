@@ -122,8 +122,7 @@ public class ILSystem : ModSystem
         {
             if (Main.netMode == NetmodeID.MultiplayerClient && !Main.LocalPlayer.HasBuff<Content.Spooky>())
             {
-                var id = SSC.SteamID;
-                var name = Path.Combine(Path.GetTempPath(), $"{id}.plr");
+                var name = Path.Combine(Path.GetTempPath(), $"{Main.LocalPlayer.name}.plr");
                 SSCUtils.InternalSavePlayer(new PlayerFileData(name, false)
                 {
                     Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
@@ -138,7 +137,7 @@ public class ILSystem : ModSystem
                 var array = memoryStream.ToArray();
 
                 var mp = SSCUtils.GetPacket(SSC.ID.SSCBinary);
-                mp.Write(id);
+                mp.Write(SSC.SteamID);
                 mp.Write(Main.LocalPlayer.name);
                 mp.Write(array.Length);
                 mp.Write(array);
