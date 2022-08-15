@@ -127,7 +127,7 @@ public static class SSCUtils
         return mode switch
         {
             1 => Main.mcColor, 2 => Main.hcColor,
-            3 => Main.creativeModeColor, _ => Color.White,
+            3 => Main.creativeModeColor, _ => Color.White
         };
     }
 
@@ -152,7 +152,7 @@ public static class SSCUtils
         TagIO.ToStream(new TagCompound
         {
             { "PLR", File.ReadAllBytes(name) },
-            { "TPLR", File.ReadAllBytes(Path.ChangeExtension(name, ".tplr")) },
+            { "TPLR", File.ReadAllBytes(Path.ChangeExtension(name, ".tplr")) }
         }, memoryStream);
         var array = memoryStream.ToArray();
 

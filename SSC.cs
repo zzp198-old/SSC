@@ -16,13 +16,32 @@ namespace SSC;
 
 public class SSC : Mod
 {
-    internal static string SavePath() => Path.Combine(Main.SavePath, "SSC");
-    internal static string SavePath(ulong id) => Path.Combine(SavePath(), id.ToString());
-
-    private static string SavePath(ulong id, string name, bool tml = false) =>
-        Path.Combine(SavePath(id), $"{name}.{(tml ? "tplr" : "plr")}");
+    public enum ID
+    {
+        SSCInit,
+        SSCList,
+        CreateSSC,
+        RemoveSSC,
+        ChooseSSC,
+        SSCBinary
+    }
 
     internal static ulong SteamID => SteamUser.GetSteamID().m_SteamID;
+
+    internal static string SavePath()
+    {
+        return Path.Combine(Main.SavePath, "SSC");
+    }
+
+    internal static string SavePath(ulong id)
+    {
+        return Path.Combine(SavePath(), id.ToString());
+    }
+
+    private static string SavePath(ulong id, string name, bool tml = false)
+    {
+        return Path.Combine(SavePath(id), $"{name}.{(tml ? "tplr" : "plr")}");
+    }
 
     public override void HandlePacket(BinaryReader b, int from)
     {
@@ -42,10 +61,7 @@ public class SSC : Mod
             {
                 var num = b.ReadInt32();
                 var data = new List<(string, byte)>();
-                for (var i = 0; i < num; i++)
-                {
-                    data.Add((b.ReadString(), b.ReadByte()));
-                }
+                for (var i = 0; i < num; i++) data.Add((b.ReadString(), b.ReadByte()));
 
                 UISystem.View.RedrawList(data);
                 break;
@@ -144,7 +160,7 @@ public class SSC : Mod
                 TagIO.ToStream(new TagCompound
                 {
                     { "PLR", File.ReadAllBytes(SavePath(id, name)) },
-                    { "TPLR", File.ReadAllBytes(SavePath(id, name, true)) },
+                    { "TPLR", File.ReadAllBytes(SavePath(id, name, true)) }
                 }, memoryStream);
                 var array = memoryStream.ToArray();
 
@@ -218,15 +234,5 @@ public class SSC : Mod
                 SSCUtils.Boot(from, $"Unexpected Package ID: {type}");
                 break;
         }
-    }
-
-    public enum ID
-    {
-        SSCInit,
-        SSCList,
-        CreateSSC,
-        RemoveSSC,
-        ChooseSSC,
-        SSCBinary,
     }
 }

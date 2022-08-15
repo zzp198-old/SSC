@@ -13,14 +13,14 @@ namespace SSC;
 [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 public class SSCView : UIState
 {
+    public UITextPanel<LocalizedText> CreateButton;
+    public UIPanel CreateView;
+    public bool InputState;
+    public UISearchBar NameInput;
+    public UICharacterNameButton NameView;
+    public Player Unknown;
     public UIPanel ViewGroup;
     public UIList ViewList;
-    public Player Unknown;
-    public UIPanel CreateView;
-    public UICharacterNameButton NameView;
-    public UISearchBar NameInput;
-    public UITextPanel<LocalizedText> CreateButton;
-    public bool InputState;
 
     public override void OnActivate()
     {
@@ -55,7 +55,7 @@ public class SSCView : UIState
         CreateView = new UIPanel
         {
             Width = new StyleDimension(0, 1),
-            Height = new StyleDimension(180, 0),
+            Height = new StyleDimension(180, 0)
         };
         CreateView.SetPadding(10);
         ViewList.Add(CreateView);
@@ -195,7 +195,7 @@ public class SSCView : UIState
             {
                 TextColor = SSCUtils.GetColorByMode(mode),
                 Height = new StyleDimension(30, 0),
-                HAlign = 1,
+                HAlign = 1
             });
 
             item.Append(new UIImage(Main.Assets.Request<Texture2D>("Images/UI/Divider"))
@@ -218,10 +218,7 @@ public class SSCView : UIState
             };
             chooseView.OnUpdate += _ =>
             {
-                if (chooseView.IsMouseHovering)
-                {
-                    Main.instance.MouseText(Language.GetTextValue("UI.Play"));
-                }
+                if (chooseView.IsMouseHovering) Main.instance.MouseText(Language.GetTextValue("UI.Play"));
             };
             item.Append(chooseView);
 
@@ -238,10 +235,7 @@ public class SSCView : UIState
             };
             removeView.OnUpdate += _ =>
             {
-                if (removeView.IsMouseHovering)
-                {
-                    Main.instance.MouseText($"{Language.GetTextValue("UI.Delete")} (Double-Click)");
-                }
+                if (removeView.IsMouseHovering) Main.instance.MouseText($"{Language.GetTextValue("UI.Delete")} (Double-Click)");
             };
             item.Append(removeView);
         }

@@ -28,26 +28,18 @@ public class UISystem : ModSystem
 
     public override void UpdateUI(GameTime time)
     {
-        if (UI?.CurrentState != null)
-        {
-            UI.Update(time);
-        }
+        if (UI?.CurrentState != null) UI.Update(time);
     }
 
     public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
     {
         var index = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
         if (index != -1)
-        {
             layers.Insert(index, new LegacyGameInterfaceLayer("Vanilla: SSC", () =>
             {
-                if (UI?.CurrentState != null)
-                {
-                    UI.Draw(Main.spriteBatch, Main.gameTimeCache);
-                }
+                if (UI?.CurrentState != null) UI.Draw(Main.spriteBatch, Main.gameTimeCache);
 
                 return true;
             }, InterfaceScaleType.UI));
-        }
     }
 }

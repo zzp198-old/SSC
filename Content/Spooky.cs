@@ -15,6 +15,7 @@ public class Spooky : ModBuff
         Main.persistentBuff[Type] = true;
         Main.buffNoTimeDisplay[Type] = true;
     }
+
     public override void Update(Player self, ref int index)
     {
         self.statLife = 0; // 不为0会让Boss召唤陷入死循环
