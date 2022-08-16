@@ -153,6 +153,7 @@ public class SSCView : UIState
         CreateView.Append(CreateButton);
 
         var mp = SSCUtils.GetPacket(SSC.ID.SSCInit);
+        mp.Write(Main.myPlayer);
         mp.Write(SSC.SteamID);
         mp.Send();
     }

@@ -21,6 +21,7 @@ Important: Mod depends on AutoSave. You can reconfigure the interface to change 
 
 ------Changelog------
 
+v2.2.3   fix need reload and then can't show UI.
 v2.2.2   Update description.txt. Especially the important part!
 v2.2.1   Preview release!
 v2.2.0   UI update. Optimize data compress. Optimize save logic, mount to the place where the original version needs to be saved.
@@ -31,6 +32,7 @@ v2.0     Basic with UI.
 v1.1     Fix name error.
 v1.0     Basic with command(like Tshock).
 
+v2.2.3   修复重新加载后不显示UI.
 v2.2.2   更新介绍.尤其是重要的部分!
 v2.2.1   Preview版本.
 v2.2.0   UI更新.玩家数据压缩. 优化保存逻辑,挂载到原版需要保存的地方(死亡,从菜单界面退出等).额外的保险定时保存间隔从10秒提高到1分钟,减少服务端压力.

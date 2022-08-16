@@ -65,6 +65,25 @@ public class ILSystem : ModSystem
         });
     }
 
+    public override void OnWorldLoad()
+    {
+        if (Main.netMode == NetmodeID.MultiplayerClient)
+        {
+            var data = new PlayerFileData(Path.Combine(SSC.SavePath(), $"{SSC.SteamID}.plr"), false)
+            {
+                Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
+                Player = new Terraria.Player
+                {
+                    name = SSC.SteamID.ToString(), difficulty = Terraria.Main.LocalPlayer.difficulty,
+                    savedPerPlayerFieldsThatArentInThePlayerClass = new Terraria.Player.SavedPlayerDataWithAnnoyingRules()
+                }
+            };
+            data.Player.AddBuff(ModContent.BuffType<Content.Spooky>(), 198); // 幽灵化
+            data.MarkAsServerSide();
+            data.SetAsActive();
+        }
+    }
+
     private static void ILHook2(ILContext il)
     {
         var c = new ILCursor(il);

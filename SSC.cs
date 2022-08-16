@@ -52,8 +52,29 @@ public class SSC : Mod
         {
             case ID.SSCInit:
             {
+                var i = b.ReadInt32();
                 var id = b.ReadUInt64();
                 Directory.CreateDirectory(SavePath(id));
+                var data = new PlayerFileData(Path.Combine(SSC.SavePath(), $"{id}.plr"), false)
+                {
+                    Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
+                    Player = new Terraria.Player
+                    {
+                        name = id.ToString(), difficulty = Main.player[from].difficulty,
+                        savedPerPlayerFieldsThatArentInThePlayerClass = new Terraria.Player.SavedPlayerDataWithAnnoyingRules()
+                    }
+                };
+                data.Player.AddBuff(ModContent.BuffType<Content.Spooky>(), 198); // 幽灵化
+                Main.player[from] = data.Player;
+
+                if (Main.netMode == NetmodeID.Server)
+                {
+                    var mp = SSCUtils.GetPacket(SSC.ID.SSCInit);
+                    mp.Write(i);
+                    mp.Write(id);
+                    mp.Send();
+                }
+
                 SSCUtils.SendSSCList(id, from);
                 break;
             }
