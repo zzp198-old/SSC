@@ -1,7 +1,7 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
 
-namespace SSC.Content;
+namespace SSC.Content.Buffs;
 
 public class Spooky : ModBuff
 {
