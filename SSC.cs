@@ -1,11 +1,16 @@
-﻿using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria.ModLoader.Config;
+﻿using Terraria.ModLoader;
 
 namespace SSC;
 
-public class SSC : Mod
+public partial class SSC : Mod
 {
-    
+    public override void Load()
+    {
+        base.Load();
+    }
+
+    public override void Unload()
+    {
+        base.Unload();
+    }
 }

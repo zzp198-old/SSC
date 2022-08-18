@@ -7,14 +7,14 @@ using Terraria.ModLoader;
 
 namespace SSC.Core;
 
-public class ILHook : ModSystem
+public class ILHook : ILoadable
 {
-    public override void Load()
+    public void Load(Mod mod)
     {
         IL.Terraria.MessageBuffer.GetData += InitPlayer;
     }
 
-    public override void Unload()
+    public void Unload()
     {
         IL.Terraria.MessageBuffer.GetData -= InitPlayer;
     }
@@ -29,18 +29,9 @@ public class ILHook : ModSystem
         );
         c.EmitDelegate(() =>
         {
-            var data = new PlayerFileData(Path.Combine(Main.PlayerPath), false)
-            {
-                Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
-                Player = new Player
-                {
-                    name = SteamUser.GetSteamID().ToString(),
-                    difficulty = Main.LocalPlayer.difficulty,
-                    savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules(),
-                },
-            };
+            var data = Misc.NewSSC(SteamUser.GetSteamID().ToString());
+            data.Player.difficulty = Main.LocalPlayer.difficulty;
             data.Player.AddBuff(ModContent.BuffType<Content.Spooky>(), 198);
-            data.MarkAsServerSide();
             data.SetAsActive();
         });
     }
