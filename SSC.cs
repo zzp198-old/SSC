@@ -4,13 +4,13 @@ namespace SSC;
 
 public partial class SSC : Mod
 {
+    internal static SSC Mod => ModContent.GetInstance<SSC>();
+
     public override void Load()
     {
-        base.Load();
     }
 
     public override void Unload()
     {
-        base.Unload();
     }
 }

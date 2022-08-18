@@ -12,5 +12,5 @@ includeSource = false
 buildIgnore = Properties/*
 includePDB = false
 side = Both
-sortAfter = zzp198
+sortAfter =
 sortBefore =

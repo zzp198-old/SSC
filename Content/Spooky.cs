@@ -11,6 +11,7 @@ public class Spooky : ModBuff
         Description.SetDefault("Spooky by SSC");
 
         Main.debuff[Type] = true;
+        Main.pvpBuff[Type] = true;
         Main.buffNoSave[Type] = true;
         Main.persistentBuff[Type] = true;
         Main.buffNoTimeDisplay[Type] = true;
@@ -18,5 +19,10 @@ public class Spooky : ModBuff
 
     public override void Update(Player self, ref int index)
     {
+        self.statLife = 0;
+        self.statMana = 0;
+        self.dead = true;
+        self.ghost = true;
+        self.buffTime[index] = 198;
     }
 }
