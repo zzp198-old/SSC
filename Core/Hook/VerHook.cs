@@ -1,10 +1,9 @@
 using System;
 using MonoMod.Cil;
-using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace SSC.Common;
+namespace SSC.Core.Hook;
 
 public class VerHook : ILoadable
 {
@@ -18,7 +17,7 @@ public class VerHook : ILoadable
         IL.Terraria.IngameOptions.Draw -= Hook;
     }
 
-    private void Hook(ILContext il)
+    private static void Hook(ILContext il)
     {
         var c = new ILCursor(il);
         c.GotoNext(MoveType.After,

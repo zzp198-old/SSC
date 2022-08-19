@@ -8,12 +8,19 @@ using Terraria.Chat;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace SSC.Common;
+namespace SSC.Core.Hook;
 
 public class GreetHook : ILoadable
 {
-    public void Load(Mod mod) => IL.Terraria.NetMessage.greetPlayer += Hook;
-    public void Unload() => IL.Terraria.NetMessage.greetPlayer -= Hook;
+    public void Load(Mod mod)
+    {
+        IL.Terraria.NetMessage.greetPlayer += Hook;
+    }
+
+    public void Unload()
+    {
+        IL.Terraria.NetMessage.greetPlayer -= Hook;
+    }
 
     private static void Hook(ILContext il)
     {
