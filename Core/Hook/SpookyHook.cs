@@ -61,7 +61,7 @@ public class SpookyHook : ILoadable
                 Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
                 Player = new Player
                 {
-                    name = SSC.SID.ToString(), difficulty = i.ReadByte(),
+                    name = SSC.Sid.ToString(), difficulty = i.ReadByte(),
                     savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules()
                 }
             };

@@ -1,4 +1,4 @@
-displayName = SSC
+displayName = SSC (Server Side Character)
 author = zzp198
 version = 3.0.0
 dllReferences =

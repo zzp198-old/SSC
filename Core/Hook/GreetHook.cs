@@ -30,12 +30,12 @@ public class GreetHook : ILoadable
         {
             ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral(Main.motd switch
             {
-                "" => $"Welcome to {Main.worldName} with SSC",
+                "" => $"{Lang.mp[18].Value} {Main.worldName}! \n云存档(SSC)已开启,祝您开荒愉快!",
                 _ => Main.motd
             }), new Color(byte.MaxValue, 240, 20), whoAmI);
-
             ChatHelper.SendChatMessageToClient(NetworkText.FromKey(
-                "Game.JoinGreeting", string.Join(", ", from i in Main.player.Where(i => i.active) select i.name)
+                "Game.JoinGreeting",
+                string.Join(", ", from i in Main.player.Where(i => i.active) select i.name)
             ), new Color(byte.MaxValue, 240, 20), whoAmI);
         });
         c.Emit(OpCodes.Ret);
