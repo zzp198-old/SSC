@@ -1,20 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SSC.Core;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria.ModLoader.IO;
 using Terraria.UI;
 
-namespace SSC.Content;
+namespace SSC;
 
-[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 public class SSCView : UIState
 {
+    public static bool Clicking;
+    public static Vector2 ClickVec2;
+
     public UITextPanel<LocalizedText> CreateButton;
     public UIPanel CreateView;
     public bool InputState;
@@ -35,6 +35,42 @@ public class SSCView : UIState
             HAlign = 0.5f, VAlign = 0.5f,
             PaddingRight = 10,
             BackgroundColor = new Color(33, 43, 79) * 0.8f
+        };
+        ViewGroup.OnMouseDown += (evt, element) =>
+        {
+            ClickVec2 = new Vector2(
+                evt.MousePosition.X - element.Left.Pixels,
+                evt.MousePosition.Y - element.Top.Pixels
+            );
+            Clicking = true;
+        };
+        ViewGroup.OnMouseUp += (evt, element) =>
+        {
+            Clicking = false;
+            element.Left.Set(evt.MousePosition.X - ClickVec2.X, 0);
+            element.Top.Set(evt.MousePosition.Y - ClickVec2.Y, 0);
+        };
+        ViewGroup.OnUpdate += element =>
+        {
+            if (element.ContainsPoint(Main.MouseScreen))
+            {
+                Main.LocalPlayer.mouseInterface = true;
+            }
+
+            if (Clicking)
+            {
+                element.Left.Set(Main.mouseX - ClickVec2.X, 0);
+                element.Top.Set(Main.mouseY - ClickVec2.Y, 0);
+                element.Recalculate();
+            }
+
+            var parentSpace = element.Parent.GetDimensions().ToRectangle();
+            if (!element.GetDimensions().ToRectangle().Intersects(parentSpace))
+            {
+                element.Left.Pixels = Utils.Clamp(element.Left.Pixels, 0, parentSpace.Right - element.Width.Pixels);
+                element.Top.Pixels = Utils.Clamp(element.Top.Pixels, 0, parentSpace.Bottom - element.Height.Pixels);
+                element.Recalculate();
+            }
         };
         Append(ViewGroup);
 
@@ -155,10 +191,12 @@ public class SSCView : UIState
         CreateView.Append(CreateButton);
     }
 
-    public void RedrawList(List<(string, byte)> data)
+    public override void Update(GameTime gameTime)
     {
+        base.Update(gameTime);
+
         ViewList.Clear();
-        foreach (var (name, mode) in data)
+        foreach (var compound in SSCSyS.Database.Get<List<TagCompound>>(SSC.Sid.ToString()))
         {
             var item = new UIPanel
             {
@@ -178,20 +216,18 @@ public class SSCView : UIState
             };
             ViewList.Add(item);
 
-            item.Append(new UIText(name)
+            item.Append(new UIText(compound.GetString("name"))
             {
-                TextColor = SSC.ChatColor(mode),
                 Height = new StyleDimension(30, 0)
             });
 
-            item.Append(new UIText(Language.GetTextValue(mode switch
+            item.Append(new UIText(Language.GetTextValue(compound.GetByte("mode") switch
             {
                 0 => "UI.Softcore", 1 => "UI.Mediumcore",
                 2 => "UI.Hardcore", 3 => "UI.Creative",
                 _ => "Unknown"
             }))
             {
-                TextColor = SSC.ChatColor(mode),
                 Height = new StyleDimension(30, 0),
                 HAlign = 1
             });
