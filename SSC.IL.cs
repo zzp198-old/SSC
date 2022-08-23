@@ -1,16 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
-using Steamworks;
 using Terraria;
 using Terraria.Chat;
 using Terraria.IO;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.Utilities;
+using Terraria.ModLoader.IO;
+using Terraria.UI;
 
 namespace SSC;
 
@@ -31,6 +32,10 @@ public partial class SSC
         IL.Terraria.Player.InternalSavePlayerFile += Hook6;
         // 接收到SystemData后,显示选择角色界面
         IL.Terraria.MessageBuffer.GetData += Hook7;
+        // 处于幽灵化时,隐藏其他mod界面
+        IL.Terraria.Main.DrawInterface += Hook8;
+        // 硬核死亡删除云存档
+        IL.Terraria.Player.KillMeForGood += Hook9;
     }
 
     public override void Unload()
@@ -42,6 +47,8 @@ public partial class SSC
         IL.Terraria.Main.DoUpdate_AutoSave -= Hook5;
         IL.Terraria.Player.InternalSavePlayerFile -= Hook6;
         IL.Terraria.MessageBuffer.GetData -= Hook7;
+        IL.Terraria.Main.DrawInterface -= Hook8;
+        IL.Terraria.Player.KillMeForGood -= Hook9;
     }
 
     private static void Hook1(ILContext il)
@@ -87,12 +94,14 @@ public partial class SSC
         c.Emit(OpCodes.Ldfld, typeof(MessageBuffer).GetField(nameof(MessageBuffer.reader)));
         c.EmitDelegate<Action<BinaryReader>>(i =>
         {
-            var data = new PlayerFileData(Path.Combine(Main.PlayerPath, $"{SteamUser.GetSteamID()}.SSC"), true)
+            if (Netplay.Connection.State != 2) return;
+
+            var data = new PlayerFileData(Path.Combine(Main.PlayerPath, $"{Sid}.SSC"), false)
             {
                 Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
                 Player = new Player
                 {
-                    name = SSC.Sid.ToString(), difficulty = i.ReadByte(),
+                    name = Sid.ToString(), difficulty = i.ReadByte(),
                     savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules()
                 }
             };
@@ -136,10 +145,31 @@ public partial class SSC
         {
             if (data.ServerSideCharacter && data.Path.EndsWith("SSC"))
             {
-                FileUtilities.ProtectedInvoke(() =>
+                var name = Path.Combine(Path.GetTempPath(), $"{Sid}.plr");
+
+                InternalSavePlayer(new PlayerFileData(name, false) // 此时为Temp/[id].plr,不满足id.SSC,所以不会向云端发送
                 {
-                    // TODO
+                    Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
+                    Player = data.Player
                 });
+
+                // 压缩玩家为byte[],客户端同步SSC玩家
+                var memoryStream = new MemoryStream();
+                TagIO.ToStream(new TagCompound
+                {
+                    { "PLR", File.ReadAllBytes(name) },
+                    { "TPLR", File.ReadAllBytes(Path.ChangeExtension(name, ".tplr")) },
+                }, memoryStream);
+                var array = memoryStream.ToArray();
+
+                // 指定Client挂载全部数据,不管是否需要同步的,以确保mod的本地数据同步.(发送给全部Client会出现显示错误,会先Spawn)
+                var mp = Mod.GetPacket();
+                mp.Write((byte)ID.SaveSSC);
+                mp.Write(Sid);
+                mp.Write(data.Player.name);
+                mp.Write(array.Length);
+                mp.Write(array);
+                mp.Send();
             }
         });
     }
@@ -162,6 +192,48 @@ public partial class SSC
             {
                 ModContent.GetInstance<SSCSyS>().UI.SetState(new SSCView());
             }
+
+            if (ModContent.GetInstance<SSCSyS>().UI.CurrentState != null)
+            {
+                ((SSCView)ModContent.GetInstance<SSCSyS>().UI.CurrentState).Refresh();
+            }
+        });
+    }
+
+    private static void Hook8(ILContext il)
+    {
+        var c = new ILCursor(il);
+        c.GotoNext(MoveType.After, i => i.MatchCall(typeof(SystemLoader), nameof(SystemLoader.ModifyInterfaceLayers)));
+        c.EmitDelegate<Func<List<GameInterfaceLayer>, List<GameInterfaceLayer>>>(layers =>
+        {
+            if (Main.LocalPlayer.HasBuff<Content.Spooky>())
+            {
+                foreach (var layer in layers)
+                {
+                    layer.Active = layer.Name.StartsWith("Vanilla");
+                }
+            }
+
+            return layers;
+        });
+    }
+
+    private static void Hook9(ILContext il)
+    {
+        var c = new ILCursor(il);
+        c.GotoNext(MoveType.After, i => i.MatchLdsfld(typeof(Main), nameof(Main.ActivePlayerFileData)));
+        c.EmitDelegate<Func<PlayerFileData, PlayerFileData>>(data =>
+        {
+            if (data.ServerSideCharacter && data.Path.EndsWith("SSC"))
+            {
+                var mp = Mod.GetPacket();
+                mp.Write((byte)ID.RemoveSSC);
+                mp.Write(Sid);
+                mp.Write(data.Player.name);
+                mp.Send();
+            }
+
+            return data;
         });
     }
 }
