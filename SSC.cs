@@ -19,7 +19,7 @@ public partial class SSC : Mod
     internal static SSC Mod => ModContent.GetInstance<SSC>();
     internal static ulong Sid => SteamUser.GetSteamID().m_SteamID;
 
-    public static void Boot(int plr, string msg)
+    private static void Boot(int plr, string msg)
     {
         switch (Main.netMode)
         {

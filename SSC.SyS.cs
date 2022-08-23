@@ -61,8 +61,7 @@ public class SSCSyS : ModSystem
     public override void NetSend(BinaryWriter b)
     {
         Database = new TagCompound();
-
-        new DirectoryInfo(Path.Combine(Main.SavePath, "SSC")).GetDirectories().ToList().ForEach(i =>
+        new DirectoryInfo(SSC.SavePath).GetDirectories().ToList().ForEach(i =>
         {
             Database.Set(i.Name, new List<TagCompound>());
             i.GetFiles("*.plr").ToList().ForEach(j =>

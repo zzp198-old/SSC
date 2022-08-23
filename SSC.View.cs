@@ -26,7 +26,7 @@ public class SSCView : UIState
 
     public override void OnActivate()
     {
-        ViewGroup = new UIPanel
+        ViewGroup = new UIKit.UIDockPanel
         {
             Width = new StyleDimension(Main.screenWidth, 0),
             Height = new StyleDimension(Main.screenHeight, 0),
@@ -234,7 +234,7 @@ public class SSCView : UIState
             {
                 HAlign = 1, VAlign = 1
             };
-            removeView.OnDoubleClick += (_, _) =>
+            removeView.OnRightClick += (_, _) =>
             {
                 var mp = SSC.Mod.GetPacket();
                 mp.Write((byte)SSC.ID.RemoveSSC);
@@ -244,7 +244,7 @@ public class SSCView : UIState
             };
             removeView.OnUpdate += _ =>
             {
-                if (removeView.IsMouseHovering) Main.instance.MouseText($"{Language.GetTextValue("UI.Delete")} (Double-Click)");
+                if (removeView.IsMouseHovering) Main.instance.MouseText($"{Language.GetTextValue("UI.Delete")} (Right-Click)");
             };
             item.Append(removeView);
         }

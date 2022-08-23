@@ -210,7 +210,12 @@ public partial class SSC
             {
                 foreach (var layer in layers)
                 {
-                    layer.Active = layer.Name.StartsWith("Vanilla");
+                    layer.Active = layer.Name switch
+                    {
+                        "Vanilla: Map / Minimap" => false,
+                        "Vanilla: Resource Bars" => false,
+                        _ => layer.Name.StartsWith("Vanilla")
+                    };
                 }
             }
 
