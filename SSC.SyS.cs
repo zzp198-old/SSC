@@ -61,6 +61,8 @@ public class SSCSyS : ModSystem
     public override void NetSend(BinaryWriter b)
     {
         Database = new TagCompound();
+
+        Directory.CreateDirectory(SSC.SavePath);
         new DirectoryInfo(SSC.SavePath).GetDirectories().ToList().ForEach(i =>
         {
             Database.Set(i.Name, new List<TagCompound>());
@@ -74,6 +76,7 @@ public class SSCSyS : ModSystem
                 });
             });
         });
+
         TagIO.Write(Database, b);
     }
 

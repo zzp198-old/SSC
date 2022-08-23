@@ -73,6 +73,8 @@ public partial class SSC
                         Player = new Player { name = name, difficulty = mode }
                     };
                     SetupPlayerStatsAndInventoryBasedOnDifficulty(data.Player);
+
+                    Directory.CreateDirectory(Path.Combine(SavePath, id.ToString()));
                     InternalSavePlayer(data);
 
                     #endregion

@@ -157,8 +157,6 @@ public class SSCView : UIState
     public void Refresh()
     {
         ViewList.Clear();
-        if (!ModContent.GetInstance<SSCSyS>().Database.ContainsKey(SSC.Sid.ToString())) return;
-
         foreach (var compound in ModContent.GetInstance<SSCSyS>().Database.Get<List<TagCompound>>(SSC.Sid.ToString()))
         {
             var item = new UIPanel
