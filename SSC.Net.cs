@@ -67,6 +67,7 @@ public partial class SSC
 
                     #region Create SSC
 
+                    // 需要在服务端进行保存,不然Client型mod可以本地修改数据并保存存档发送的方式带入非初始物品(修改StartInventory而不需要同步的本地mod)
                     var data = new PlayerFileData(Path.Combine(SavePath, id.ToString(), $"{name}.plr"), false)
                     {
                         Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
