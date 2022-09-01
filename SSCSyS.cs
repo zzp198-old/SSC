@@ -186,6 +186,7 @@ public class SSCSyS : ModSystem
                 mp.Write(SSC.ClientID);
                 mp.Write(data.Player.name);
                 mp.Send();
+                Main.ActivePlayerFileData = new PlayerFileData();
             }
 
             return data;
