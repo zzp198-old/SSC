@@ -1,6 +1,1 @@
-﻿SSC(Server Side Character) is a special mechanism designed for tModLoader servers that forces players to start with fresh characters when they join.
-This means they lose all of their items. Though, it will not affect their actual Single player character.
-Server Side Character are what you need if you wish to prevent people from bringing in items from other servers and/or single player and force them to start from scratch.
-
-Default save in: [Documents]\My Games\Terraria\tModLoader\SSC\[SteamID]\[name].plr
-默认保存位置: [我的文档]\My Games\Terraria\tModLoader\SSC\[SteamID]\[name].plr
+﻿
