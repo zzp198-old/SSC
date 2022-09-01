@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Steamworks;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
@@ -57,7 +55,7 @@ public class SSCView : UIState
     public void RedrawList(TagCompound binary)
     {
         _listView.Clear();
-        foreach (var compound in binary.Get<List<TagCompound>>(SteamUser.GetSteamID().m_SteamID.ToString()))
+        foreach (var compound in binary.Get<List<TagCompound>>(SSC.ClientID.ToString()))
         {
             var item = new UIPanel
             {
@@ -118,13 +116,16 @@ public class SSCView : UIState
             {
                 var mp = SSC.Mod.GetPacket();
                 mp.Write((byte)SSC.ID.ChooseSSC);
-                mp.Write(SteamUser.GetSteamID().m_SteamID);
+                mp.Write(SSC.ClientID);
                 mp.Write(compound.Get<string>("name"));
                 mp.Send();
             };
             chooseView.OnUpdate += _ =>
             {
-                if (chooseView.IsMouseHovering) Main.instance.MouseText(Language.GetTextValue("UI.Play"));
+                if (chooseView.IsMouseHovering)
+                {
+                    Main.instance.MouseText(Language.GetTextValue("UI.Play"));
+                }
             };
             item.Append(chooseView);
 
@@ -132,17 +133,20 @@ public class SSCView : UIState
             {
                 HAlign = 1, VAlign = 1
             };
-            removeView.OnRightClick += (_, _) =>
+            removeView.OnRightDoubleClick += (_, _) =>
             {
                 var mp = SSC.Mod.GetPacket();
                 mp.Write((byte)SSC.ID.RemoveSSC);
-                mp.Write(SteamUser.GetSteamID().m_SteamID);
+                mp.Write(SSC.ClientID);
                 mp.Write(compound.Get<string>("name"));
                 mp.Send();
             };
             removeView.OnUpdate += _ =>
             {
-                if (removeView.IsMouseHovering) Main.instance.MouseText($"{Language.GetTextValue("UI.Delete")} (Right-Click)");
+                if (removeView.IsMouseHovering)
+                {
+                    Main.instance.MouseText($"{Language.GetTextValue("UI.Delete")} (Right-Double-Click/右键双击)");
+                }
             };
             item.Append(removeView);
         }

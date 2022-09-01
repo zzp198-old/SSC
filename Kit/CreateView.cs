@@ -1,5 +1,4 @@
 using Microsoft.Xna.Framework;
-using Steamworks;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
@@ -99,7 +98,7 @@ public class CreateView : UIPanel
         {
             var mp = SSC.Mod.GetPacket();
             mp.Write((byte)SSC.ID.CreateSSC);
-            mp.Write(SteamUser.GetSteamID().m_SteamID);
+            mp.Write(SSC.ClientID);
             mp.Write(dummy.name);
             mp.Write(dummy.difficulty);
             mp.Send();

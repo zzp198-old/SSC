@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Terraria;
@@ -7,6 +8,7 @@ using Terraria.ID;
 using Terraria.IO;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 using Terraria.Utilities;
 
 namespace SSC;
@@ -72,5 +74,29 @@ public static class SSCKit
         CreativePowerManager.Instance.ResetDataForNewPlayer(player);
         var items = PlayerLoader.GetStartingItems(player, player.inventory.Where(x => !x.IsAir).Select(x => x.Clone()));
         PlayerLoader.SetStartInventory(player, items);
+    }
+
+    public static byte[] Plr2Byte(string name)
+    {
+        var tag = new TagCompound();
+        tag.Set("T", File.ReadAllBytes(name));
+        if (File.Exists(Path.ChangeExtension(name, "*.tplr")))
+        {
+            tag.Set("TML", Path.ChangeExtension(name, "*.tplr"));
+        }
+
+        var memory = new MemoryStream();
+        TagIO.ToStream(tag, memory);
+        return memory.ToArray();
+    }
+
+    public static void Byte2Plr(byte[] data, string name)
+    {
+        var tag = TagIO.FromStream(new MemoryStream(data));
+        File.WriteAllBytes(name, tag.GetByteArray("T"));
+        if (tag.ContainsKey("TML"))
+        {
+            File.WriteAllBytes(Path.ChangeExtension(name, "*.tplr"), tag.GetByteArray("TML"));
+        }
     }
 }
