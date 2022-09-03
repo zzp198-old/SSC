@@ -63,16 +63,17 @@ public class SSC : Mod
                     return;
                 }
 
+                Directory.CreateDirectory(Path.Combine(SavePath, id.ToString()));
+
                 var data = new PlayerFileData(Path.Combine(SavePath, id.ToString(), $"{name}.plr"), false)
                 {
                     Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
                     Player = new Player { name = name, difficulty = mode }
                 };
-                SSCKit.SetupPlayerStatsAndInventoryBasedOnDifficulty(data.Player);
 
-                Directory.CreateDirectory(Path.Combine(Main.SavePath, "SSC", id.ToString()));
                 try
                 {
+                    SSCKit.SetupPlayerStatsAndInventoryBasedOnDifficulty(data.Player);
                     // 保存并不一定成功,如果其他mod的数据涉及到服务端未加载的内容,会导致异常并且无法正常生成TML存档
                     SSCKit.InternalSavePlayer(data);
                 }
@@ -149,7 +150,7 @@ public class SSC : Mod
             }
             case ID.LoadSSC:
             {
-                var name = Path.Combine(Path.GetTempPath(), $"{ClientID}.plr");
+                var name = Path.Combine(Path.GetTempPath(), $"{DateTime.UtcNow.Ticks}.plr");
 
                 SSCKit.Byte2Plr(bin.ReadBytes(bin.ReadInt32()), name);
 

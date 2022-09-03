@@ -84,6 +84,7 @@ public class SSCSyS : ModSystem
         {
             if (Netplay.Connection.State == 2)
             {
+                // 在发送3之前,客户端已经Reload并重加载Player,ClientID.plr并不会被实用.
                 var data = new PlayerFileData(Path.Combine(Main.PlayerPath, $"{SSC.ClientID}.plr"), false)
                 {
                     Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
@@ -119,9 +120,9 @@ public class SSCSyS : ModSystem
         {
             if (data.ServerSideCharacter && data.Path.EndsWith("SSC"))
             {
-                var name = Path.Combine(Path.GetTempPath(), $"{SSC.ClientID}.plr");
+                var name = Path.Combine(Path.GetTempPath(), $"{DateTime.UtcNow.Ticks}.plr");
 
-                // 此时为Temp/[id].plr,不满足id.SSC,所以只会保存到本地,不会向云端发送
+                // 此时为Temp/[Time].plr,不满足.SSC,所以只会保存到本地,不会向云端发送
                 SSCKit.InternalSavePlayer(new PlayerFileData(name, false)
                 {
                     Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
