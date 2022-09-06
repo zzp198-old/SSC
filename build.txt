@@ -1,6 +1,6 @@
 displayName = SSC
 author = zzp198
-version = 2022.9.26
+version = 2022.10.0
 dllReferences =
 modReferences =
 weakReferences =
