@@ -84,6 +84,19 @@ public class SSCSyS : ModSystem
         {
             if (Netplay.Connection.State == 2)
             {
+                // 检测本地是否有非法mod
+                foreach (var mod in ModLoader.Mods.Where(mod => mod.Name != "ModLoader"))
+                {
+                    if (mod.Side is ModSide.Client or ModSide.NoSync)
+                    {
+                        if (!ModContent.GetInstance<SSCSet>().LocalModWhiteList.Contains(mod.Name))
+                        {
+                            SSCKit.Boot(0, $"{mod.Name} mod is not allowed by the server.");
+                            return;
+                        }
+                    }
+                }
+
                 // 在发送3之前,客户端已经Reload并重加载Player,ClientID.plr并不会被实用.
                 var data = new PlayerFileData(Path.Combine(Main.PlayerPath, $"{SSC.ClientID}.plr"), false)
                 {
@@ -196,6 +209,8 @@ public class SSCSyS : ModSystem
 
     #endregion
 
+    #region Fixed UI
+
     public override void UpdateUI(GameTime time)
     {
         if (UI?.CurrentState != null)
@@ -220,6 +235,10 @@ public class SSCSyS : ModSystem
             }, InterfaceScaleType.UI));
         }
     }
+
+    #endregion
+
+    #region Net Sync
 
     public override void NetSend(BinaryWriter bin)
     {
@@ -259,4 +278,6 @@ public class SSCSyS : ModSystem
 
         ((SSCView)UI.CurrentState)?.RedrawList(data);
     }
+
+    #endregion
 }

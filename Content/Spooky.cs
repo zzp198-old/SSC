@@ -25,4 +25,25 @@ public class Spooky : ModBuff
         self.ghost = true;
         self.buffTime[index] = 198;
     }
+
+    public override void Load()
+    {
+        On.Terraria.Player.Ghost += On_Player_Ghost; // 幽灵化后依旧更新来保证0血0魔
+    }
+
+    public override void Unload()
+    {
+        On.Terraria.Player.Ghost -= On_Player_Ghost;
+    }
+
+    private void On_Player_Ghost(On.Terraria.Player.orig_Ghost invoke, Player self)
+    {
+        var i = self.FindBuffIndex(Type);
+        if (i != -1)
+        {
+            Update(self, ref i);
+        }
+
+        invoke(self);
+    }
 }

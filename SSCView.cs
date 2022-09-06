@@ -11,8 +11,8 @@ namespace SSC;
 
 public class SSCView : UIState
 {
-    private UIList _listView;
-    private UIPanel _createView;
+    private UIList _list;
+    private UIPanel _panel;
 
     public override void OnActivate()
     {
@@ -35,26 +35,26 @@ public class SSCView : UIState
         };
         panel.Append(scrollbar);
 
-        _listView = new UIList
+        _list = new UIList
         {
             Width = new StyleDimension(-25, 1),
             Height = new StyleDimension(0, 1),
         };
-        _listView.SetScrollbar(scrollbar);
-        panel.Append(_listView);
+        _list.SetScrollbar(scrollbar);
+        panel.Append(_list);
 
-        _createView = new Kit.CreateView
+        _panel = new Kit.CreateView
         {
             Width = new StyleDimension(0, 1),
             Height = new StyleDimension(180, 0)
         };
-        _createView.SetPadding(10);
-        _listView.Append(_createView);
+        _panel.SetPadding(10);
+        _list.Append(_panel);
     }
 
     public void RedrawList(TagCompound binary)
     {
-        _listView.Clear();
+        _list.Clear();
         foreach (var compound in binary.Get<List<TagCompound>>(SSC.ClientID.ToString()))
         {
             var item = new UIPanel
@@ -73,7 +73,7 @@ public class SSCView : UIState
                 item.BackgroundColor = new Color(63, 82, 151) * 0.7f;
                 item.BorderColor = new Color(89, 116, 213) * 0.7f;
             };
-            _listView.Add(item);
+            _list.Add(item);
 
             item.Append(new UIText(compound.GetString("name"))
             {
@@ -151,6 +151,6 @@ public class SSCView : UIState
             item.Append(removeView);
         }
 
-        _listView.Add(_createView);
+        _list.Add(_panel);
     }
 }

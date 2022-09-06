@@ -63,18 +63,17 @@ public class SSC : Mod
                     return;
                 }
 
-                Directory.CreateDirectory(Path.Combine(SavePath, id.ToString()));
-
-                var data = new PlayerFileData(Path.Combine(SavePath, id.ToString(), $"{name}.plr"), false)
-                {
-                    Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
-                    Player = new Player { name = name, difficulty = mode }
-                };
-
                 try
                 {
+                    Directory.CreateDirectory(Path.Combine(SavePath, id.ToString()));
+
+                    var data = new PlayerFileData(Path.Combine(SavePath, id.ToString(), $"{name}.plr"), false)
+                    {
+                        Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
+                        Player = new Player { name = name, difficulty = mode }
+                    };
                     SSCKit.SetupPlayerStatsAndInventoryBasedOnDifficulty(data.Player);
-                    // 保存并不一定成功,如果其他mod的数据涉及到服务端未加载的内容,会导致异常并且无法正常生成TML存档
+                    // 保存并不一定成功,如果其他mod的数据涉及到服务端未加载的内容,会导致异常并且无法正常生成tplr文件
                     SSCKit.InternalSavePlayer(data);
                 }
                 catch (Exception e)
@@ -105,6 +104,14 @@ public class SSC : Mod
                 var id = bin.ReadUInt64();
                 var name = bin.ReadString();
 
+                // Boss存活期间禁止复活
+                if (ModContent.GetInstance<SSCSet>().NoSpawnWhenBossFight && Main.npc.Any(npc => npc.boss && npc.active))
+                {
+                    // TODO
+                    ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral("You are cursed, boss is still alive!"), Color.Yellow, who);
+                    return;
+                }
+
                 // 防止在线玩家名称重复
                 if (Netplay.Clients.Where(x => x.IsActive).Any(x => Main.player[x.Id].name == name))
                 {
@@ -114,20 +121,19 @@ public class SSC : Mod
 
                 var data = Player.LoadPlayer(Path.Combine(SavePath, id.ToString(), $"{name}.plr"), false);
 
-                // 虽然可以绕过限制,但因为旅程和非旅程角色的数据不同,很容易造成异常和崩溃,这里默认禁止.
-                if (data.Player.difficulty == 3 && !Main.GameModeInfo.IsJourneyMode)
+                if (data.Player.difficulty == PlayerDifficultyID.Creative && !Main.GameModeInfo.IsJourneyMode)
                 {
                     ChatHelper.SendChatMessageToClient(NetworkText.FromKey("Net.PlayerIsCreativeAndWorldIsNotCreative"), Color.Red, who);
                     return;
                 }
 
-                if (data.Player.difficulty != 3 && Main.GameModeInfo.IsJourneyMode)
+                if (data.Player.difficulty != PlayerDifficultyID.Creative && Main.GameModeInfo.IsJourneyMode)
                 {
                     ChatHelper.SendChatMessageToClient(NetworkText.FromKey("Net.PlayerIsNotCreativeAndWorldIsCreative"), Color.Red, who);
                     return;
                 }
 
-                // 兼容其他mod的进入规则.或许可以放在客户端的OnEnterWorld???
+                // 兼容其他mod的进入规则.
                 if (!SystemLoader.CanWorldBePlayed(data, Main.ActiveWorldFileData, out var mod))
                 {
                     ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral(
@@ -188,6 +194,10 @@ public class SSC : Mod
                 if (File.Exists(name))
                 {
                     SSCKit.Byte2Plr(bytes, name);
+                }
+                else
+                {
+                    ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral("Can't Save SSC."), Color.Red, who);
                 }
 
                 break;

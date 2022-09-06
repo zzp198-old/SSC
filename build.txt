@@ -1,6 +1,6 @@
-displayName = Server Side Character
+displayName = SSC
 author = zzp198
-version = 2022.9.1
+version = 2022.9.25
 dllReferences =
 modReferences =
 weakReferences =

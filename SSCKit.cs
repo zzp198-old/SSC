@@ -78,11 +78,10 @@ public static class SSCKit
 
     public static byte[] Plr2Byte(string name)
     {
-        var tag = new TagCompound();
-        tag.Set("T", File.ReadAllBytes(name));
-        if (File.Exists(Path.ChangeExtension(name, "*.tplr")))
+        var tag = new TagCompound { { "T", File.ReadAllBytes(name) } };
+        if (File.Exists(Path.ChangeExtension(name, ".tplr")))
         {
-            tag.Set("TML", Path.ChangeExtension(name, "*.tplr"));
+            tag.Set("TML", File.ReadAllBytes(Path.ChangeExtension(name, ".tplr")));
         }
 
         var memory = new MemoryStream();
@@ -96,7 +95,7 @@ public static class SSCKit
         File.WriteAllBytes(name, tag.GetByteArray("T"));
         if (tag.ContainsKey("TML"))
         {
-            File.WriteAllBytes(Path.ChangeExtension(name, "*.tplr"), tag.GetByteArray("TML"));
+            File.WriteAllBytes(Path.ChangeExtension(name, ".tplr"), tag.GetByteArray("TML"));
         }
     }
 }
