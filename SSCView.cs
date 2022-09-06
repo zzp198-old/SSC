@@ -11,8 +11,8 @@ namespace SSC;
 
 public class SSCView : UIState
 {
-    private UIList _list;
-    private UIPanel _panel;
+    private static UIPanel _panel;
+    private static UIList _list;
 
     public override void OnActivate()
     {
@@ -152,5 +152,13 @@ public class SSCView : UIState
         }
 
         _list.Add(_panel);
+    }
+
+    private void CachePanel()
+    {
+    }
+
+    private void CacheSubPanel()
+    {
     }
 }
