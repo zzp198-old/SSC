@@ -19,7 +19,16 @@ public class SSCPlr : ModPlayer
     {
         if (Player.whoAmI == Main.myPlayer)
         {
-            _lastFrame = Main.npc.Where(npc => npc.boss && npc.active).Select(npc => npc.whoAmI).ToList();
+            _lastFrame = new List<int>();
+            var rectangle = new Rectangle((int)Main.screenPosition.X, (int)Main.screenPosition.Y, Main.screenWidth, Main.screenHeight);
+            rectangle.Inflate(5000, 5000);
+            foreach (var boss in Main.npc.Where(npc => npc.boss && npc.active))
+            {
+                if (boss.getRect().Intersects(rectangle))
+                {
+                    _lastFrame.Add(boss.whoAmI);
+                }
+            }
         }
     }
 
@@ -71,10 +80,11 @@ public class SSCPlr : ModPlayer
                         var coordinate = pos.ToTileCoordinates();
                         if (WorldGen.InWorld(coordinate.X, coordinate.Y))
                         {
-                            if (Vector2.Distance(Player.Center, pos) < 50) // 减少同步次数,减轻因为延迟造成的短距离抖动
+                            if (Vector2.Distance(Player.Center, pos) < 50) // 减轻因为延迟造成的短距离抖动
                             {
+                                Player.Center = Vector2.Lerp(Player.Center, pos, 0.05f);
                             }
-                            else if (Vector2.Distance(Player.Center, pos) < Main.ScreenSize.ToVector2().Length()) // 在一个屏幕内平滑
+                            else if (Vector2.Distance(Player.Center, pos) < Main.ScreenSize.ToVector2().Length() / 2) // 在半个屏幕内平滑
                             {
                                 Player.Center = Vector2.Lerp(Player.Center, pos, 0.1f);
                             }
