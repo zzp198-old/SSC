@@ -1,3 +1,0 @@
-﻿Server Side Character
-No spawn when boss fight
-Spectator mode

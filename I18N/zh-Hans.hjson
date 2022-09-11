@@ -1,0 +1,25 @@
+﻿{
+  "Mods": {
+    "QOS": {
+      "QOS": "更好的服务",
+      "Config": {
+        "ClientConfig": "客户端配置",
+        "Smooth": {
+          "Label": "视觉优化",
+          "Tooltip": "Boss战期间屏蔽友军弹幕和所有无关特效"
+        },
+        "ServerConfig": "服务端配置",
+        "SSC": {
+          "Label": "强制开荒",
+          "Tooltip": "阿巴阿巴......"
+        },
+        "ReviveSeal": {
+          "Label": "复活封印",
+          "Tooltip": "来自JO级生物的诅咒,你永远无法达到复活的真实"
+        }
+      },
+      "SSC": {
+      }
+    }
+  }
+}

@@ -1,11 +1,11 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
-namespace SSC.Kit;
+namespace QOS.Common.Views.Kits;
 
-public class AdsorbView : UIPanel
+public class UIFixedPanel : UIPanel
 {
     private bool _move;
     private Vector2 _moveVec2;

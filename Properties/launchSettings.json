@@ -1,9 +1,15 @@
 {
   "profiles": {
-    "tModLoader": {
+    "Terraria": {
       "commandName": "Executable",
-      "executablePath": "dotnet\\6.0.0\\dotnet.exe",
+      "executablePath": "dotnet//6.0.0//dotnet.exe",
       "commandLineArgs": "$(tMLPath)",
+      "workingDirectory": "$(tMLSteamPath)"
+    },
+    "TerrariaServer": {
+      "commandName": "Executable",
+      "executablePath": "dotnet//6.0.0//dotnet.exe",
+      "commandLineArgs": "$(tMLServerPath)",
       "workingDirectory": "$(tMLSteamPath)"
     }
   }

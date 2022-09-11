@@ -1,7 +1,8 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
@@ -11,9 +12,9 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.Utilities;
 
-namespace SSC;
+namespace QOS;
 
-public static class SSCKit
+public static class QOSKit
 {
     public static void Boot(int plr, string msg)
     {
@@ -47,12 +48,15 @@ public static class SSCKit
             case PlayerDifficultyID.SoftCore:
             case PlayerDifficultyID.MediumCore:
             case PlayerDifficultyID.Hardcore:
+            {
                 player.inventory[0].SetDefaults(ItemID.CopperShortsword);
                 player.inventory[1].SetDefaults(ItemID.CopperPickaxe);
                 player.inventory[2].SetDefaults(ItemID.CopperAxe);
                 player.inventory[3].SetDefaults(ItemID.Carrot);
                 break;
+            }
             case PlayerDifficultyID.Creative:
+            {
                 player.inventory[0].SetDefaults(ItemID.IronShortsword);
                 player.inventory[1].SetDefaults(ItemID.IronPickaxe);
                 player.inventory[2].SetDefaults(ItemID.IronAxe);
@@ -68,6 +72,7 @@ public static class SSCKit
                 player.armor[3].SetDefaults(ItemID.CreativeWings);
                 player.AddBuff(BuffID.BabyBird, 3600);
                 break;
+            }
         }
 
         player.savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules();
@@ -78,10 +83,10 @@ public static class SSCKit
 
     public static byte[] Plr2Byte(string name)
     {
-        var tag = new TagCompound { { "T", File.ReadAllBytes(name) } };
+        var tag = new TagCompound { { "plr", File.ReadAllBytes(name) } };
         if (File.Exists(Path.ChangeExtension(name, ".tplr")))
         {
-            tag.Set("TML", File.ReadAllBytes(Path.ChangeExtension(name, ".tplr")));
+            tag.Set("tplr", File.ReadAllBytes(Path.ChangeExtension(name, ".tplr")));
         }
 
         var memory = new MemoryStream();
@@ -92,10 +97,29 @@ public static class SSCKit
     public static void Byte2Plr(byte[] data, string name)
     {
         var tag = TagIO.FromStream(new MemoryStream(data));
-        File.WriteAllBytes(name, tag.GetByteArray("T"));
-        if (tag.ContainsKey("TML"))
+        File.WriteAllBytes(name, tag.GetByteArray("plr"));
+        if (tag.ContainsKey("tplr"))
         {
-            File.WriteAllBytes(Path.ChangeExtension(name, ".tplr"), tag.GetByteArray("TML"));
+            File.WriteAllBytes(Path.ChangeExtension(name, ".tplr"), tag.GetByteArray("tplr"));
         }
+    }
+
+    public static string DifficultyTextValue(byte difficulty)
+    {
+        return Language.GetTextValue(difficulty switch
+        {
+            0 => "UI.Softcore", 1 => "UI.Mediumcore",
+            2 => "UI.Hardcore", 3 => "UI.Creative",
+            _ => "Unknown"
+        });
+    }
+
+    public static Color DifficultyColor(byte difficulty)
+    {
+        return difficulty switch
+        {
+            1 => Main.mcColor, 2 => Main.hcColor,
+            3 => Main.creativeModeColor, _ => Color.White
+        };
     }
 }
