@@ -29,7 +29,7 @@ public class ReviveSealSystem : ModSystem
     {
         if (QOS.My.dead && Sealers.Count > 0 && QOS.My.respawnTimer < 180)
         {
-            QOS.My.respawnTimer++;
+            QOS.My.respawnTimer = 180; // 避免一些mod因为缩短复活时间导致绕过
         }
     }
 
