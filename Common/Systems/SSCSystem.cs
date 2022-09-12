@@ -19,7 +19,7 @@ public class SSCSystem : ModSystem
 
     public override bool IsLoadingEnabled(Mod mod)
     {
-        return QOS.SC.SSC; // 双端同时执行
+        return QOS.SC.SSC;
     }
 
     public override void Load()

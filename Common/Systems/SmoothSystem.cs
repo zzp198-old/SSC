@@ -1,28 +1,56 @@
-﻿using System;
-using Terraria;
+﻿using Terraria;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 
 namespace QOS.Common.Systems;
 
 public class SmoothSystem : ModSystem
 {
-    // public override bool IsLoadingEnabled(Mod mod)
-    // {
-    //     return !Main.dedServ;
-    // }
-
     public override void Load()
     {
-        // TODO
+        On.Terraria.Main.DrawDust += On_Main_DrawDust; // 只是隐藏,不影响生成,后续关闭仍可见原有特效
+        On.Terraria.Main.DrawGore += On_Main_DrawGore;
+        On.Terraria.Main.DrawProj += On_Main_DrawProj;
     }
 
     public override void Unload()
     {
-        base.Unload();
+        On.Terraria.Main.DrawDust -= On_Main_DrawDust;
+        On.Terraria.Main.DrawGore -= On_Main_DrawGore;
+        On.Terraria.Main.DrawProj -= On_Main_DrawProj;
     }
 
-    public override void PostUpdatePlayers()
+    private void On_Main_DrawDust(On.Terraria.Main.orig_DrawDust invoke, Main self)
     {
+        if (QOS.CC.Smooth && Main.CurrentFrameFlags.AnyActiveBossNPC)
+        {
+            return;
+        }
+
+        invoke(self);
+    }
+
+    private void On_Main_DrawGore(On.Terraria.Main.orig_DrawGore invoke, Main self)
+    {
+        if (QOS.CC.Smooth && Main.CurrentFrameFlags.AnyActiveBossNPC)
+        {
+            return;
+        }
+
+        invoke(self);
+    }
+
+    private void On_Main_DrawProj(On.Terraria.Main.orig_DrawProj invoke, Main self, int i)
+    {
+        if (QOS.CC.Smooth && Main.CurrentFrameFlags.AnyActiveBossNPC)
+        {
+            var proj = Main.projectile[i];
+            if (proj.friendly && proj.owner != Main.myPlayer && proj.owner != byte.MaxValue && QOS.My.dead) // 友军弹幕并且死亡期间可以看到
+            {
+                invoke(self, i);
+                return;
+            }
+        }
+
+        invoke(self, i);
     }
 }

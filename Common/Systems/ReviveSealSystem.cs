@@ -12,7 +12,7 @@ public class ReviveSealSystem : ModSystem
 
     public override bool IsLoadingEnabled(Mod mod)
     {
-        return !Main.dedServ && QOS.SC.ReviveSeal; // 仅在本地客户端执行
+        return QOS.SC.ReviveSeal;
     }
 
     public override void OnWorldLoad()
