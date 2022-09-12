@@ -44,9 +44,13 @@ public class SmoothSystem : ModSystem
         if (QOS.CC.Smooth && Main.CurrentFrameFlags.AnyActiveBossNPC)
         {
             var proj = Main.projectile[i];
-            if (proj.friendly && proj.owner != Main.myPlayer && proj.owner != byte.MaxValue && QOS.My.dead) // 友军弹幕并且死亡期间可以看到
+            if (proj.friendly && proj.owner != Main.myPlayer && proj.owner != byte.MaxValue) // 友军弹幕
             {
-                invoke(self, i);
+                if (QOS.My.dead) // 特例,死亡时可见
+                {
+                    invoke(self, i);
+                }
+
                 return;
             }
         }
