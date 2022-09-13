@@ -177,10 +177,10 @@ public class SSCSystem : ModSystem
         {
             if (QOS.My.ghost) // 幽灵模式下禁止其他操作,影响服务端同步和条件判断
             {
-                // layers.ForEach(layer => layer.Active = layer.Name switch
-                // {
-                //     _ => layer.Name.StartsWith("Vanilla")
-                // });
+                layers.ForEach(layer => layer.Active = layer.Name switch
+                {
+                    _ => layer.Name.StartsWith("Vanilla")
+                });
             }
 
             return layers;
