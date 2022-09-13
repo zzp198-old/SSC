@@ -6,16 +6,20 @@
         "ClientConfig": "客户端配置",
         "Smooth": {
           "Label": "视觉优化",
-          "Tooltip": "Boss战期间屏蔽友军弹幕和所有无关特效"
+          "Tooltip": "BOSS战期间屏蔽友军弹幕和所有无关特效(特指Fargo.jpg)"
         },
         "ServerConfig": "服务端配置",
         "SSC": {
           "Label": "强制开荒",
-          "Tooltip": "阿巴阿巴......"
+          "Tooltip": "大家都叫它为强制开荒,阿巴阿巴......"
         },
         "ReviveSeal": {
-          "Label": "复活封印",
+          "Label": "复活节制",
           "Tooltip": "来自JO级生物的诅咒,你永远无法达到复活的真实"
+        },
+        "Observer": {
+          "Label": "观战模式",
+          "Tooltip": "死亡期间可以观战BOSS(非参战者不可见)"
         }
       },
       "SSC": {

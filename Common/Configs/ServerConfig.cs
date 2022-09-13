@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using Terraria.ModLoader.Config;
 
-// ReSharper disable UnassignedField.Global
 namespace QOS.Common.Configs;
 
 [Label("$Mods.QOS.Config.ServerConfig")]
@@ -20,4 +19,10 @@ public class ServerConfig : ModConfig
     [DefaultValue(false)]
     [ReloadRequired]
     public bool ReviveSeal;
+
+    [Label("$Mods.QOS.Config.Observer.Label"),
+     Tooltip("$Mods.QOS.Config.Observer.Tooltip")]
+    [DefaultValue(false)]
+    [ReloadRequired]
+    public bool Observer;
 }

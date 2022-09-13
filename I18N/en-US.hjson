@@ -1,0 +1,29 @@
+{
+  "Mods": {
+    "QOS": {
+      "QOS": "Quality of Service",
+      "Config": {
+        "ClientConfig": "Client Config",
+        "Smooth": {
+          "Label": "Smooth Effect",
+          "Tooltip": "Todo... Need Englisher Help"
+        },
+        "ServerConfig": "Server Config",
+        "SSC": {
+          "Label": "Server Side Character",
+          "Tooltip": "Todo... Need Englisher Help"
+        },
+        "ReviveSeal": {
+          "Label": "Revive Seal",
+          "Tooltip": "Todo... Need Englisher Help"
+        },
+        "Observer": {
+          "Label": "Observer",
+          "Tooltip": "Todo... Need Englisher Help"
+        }
+      },
+      "SSC": {
+      }
+    }
+  }
+}

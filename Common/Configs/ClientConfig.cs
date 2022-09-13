@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using Terraria.ModLoader.Config;
 
-// ReSharper disable UnassignedField.Global
 namespace QOS.Common.Configs;
 
 [Label("$Mods.QOS.Config.ClientConfig")]

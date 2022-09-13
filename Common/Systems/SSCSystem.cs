@@ -152,7 +152,10 @@ public class SSCSystem : ModSystem
                     Player = new Player
                     {
                         name = QOS.ClientID.ToString(), difficulty = i.ReadByte(),
-                        statLife = 0, dead = true, ghost = true, immune = true, immuneTime = int.MaxValue,
+                        // StatLift由16同步,Ghost由13同步.Dead由12和16计算得出.
+                        statLife = 0, dead = true, ghost = true,
+                        // 避免因为AdjustRespawnTimerForWorldJoining导致Spawn时误修改Dead.不然尽管设置了Ghost,还是会被弹幕判断击杀并重置Dead.
+                        respawnTimer = int.MaxValue, lastTimePlayerWasSaved = long.MaxValue,
                         savedPerPlayerFieldsThatArentInThePlayerClass = new Player.SavedPlayerDataWithAnnoyingRules()
                     }
                 };
@@ -172,15 +175,12 @@ public class SSCSystem : ModSystem
         c.GotoNext(MoveType.After, i => i.MatchCall(typeof(SystemLoader), nameof(SystemLoader.ModifyInterfaceLayers)));
         c.EmitDelegate<Func<List<GameInterfaceLayer>, List<GameInterfaceLayer>>>(layers =>
         {
-            if (QOS.My.ghost)
+            if (QOS.My.ghost) // 幽灵模式下禁止其他操作,影响服务端同步和条件判断
             {
-                foreach (var layer in layers)
-                {
-                    layer.Active = layer.Name switch
-                    {
-                        _ => layer.Name.StartsWith("Vanilla")
-                    };
-                }
+                // layers.ForEach(layer => layer.Active = layer.Name switch
+                // {
+                //     _ => layer.Name.StartsWith("Vanilla")
+                // });
             }
 
             return layers;
@@ -191,7 +191,7 @@ public class SSCSystem : ModSystem
     {
         var c = new ILCursor(il);
         c.GotoNext(MoveType.After, i => i.MatchLdcI4(300000));
-        c.EmitDelegate<Func<long, long>>(_ => 30000);
+        c.EmitDelegate<Func<long, long>>(_ => 30000); // 30秒保存间隔
     }
 
     private void IL_Player_InternalSavePlayerFile(ILContext il)
@@ -209,7 +209,6 @@ public class SSCSystem : ModSystem
                     Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
                     Player = data.Player
                 });
-
                 var binary = QOSKit.Plr2Byte(name);
 
                 var mp = QOS.Mod.GetPacket();
@@ -236,7 +235,9 @@ public class SSCSystem : ModSystem
                 mp.Write(QOS.ClientID);
                 mp.Write(data.Player.name);
                 mp.Send();
-                Main.ActivePlayerFileData = new PlayerFileData();
+
+                data = new PlayerFileData();
+                data.MarkAsServerSide();
             }
 
             return data;

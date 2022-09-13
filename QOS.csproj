@@ -13,5 +13,6 @@
   <ItemGroup>
     <Folder Include="Assets" />
     <Folder Include="Common\Players" />
+    <Folder Include="Content\Buffs" />
   </ItemGroup>
 </Project>

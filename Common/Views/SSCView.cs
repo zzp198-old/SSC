@@ -38,7 +38,7 @@ public class SSCView : UIState
         UiList = new UIList
         {
             Width = new StyleDimension(-25, 1),
-            Height = new StyleDimension(0, 1),
+            Height = new StyleDimension(0, 1)
         };
         UiList.SetScrollbar(scrollbar);
         panel.Append(UiList);
@@ -65,16 +65,18 @@ public class SSCView : UIState
         };
         dummyNameButton.OnUpdate += _ =>
         {
-            if (Main.mouseLeft)
+            if (!Main.mouseLeft)
             {
-                switch (dummyNameButton.IsMouseHovering)
+                return;
+            }
+
+            switch (dummyNameButton.IsMouseHovering)
+            {
+                case true when !dummyNameSearchBar.IsWritingText:
+                case false when dummyNameSearchBar.IsWritingText:
                 {
-                    case true when !dummyNameSearchBar.IsWritingText:
-                    case false when dummyNameSearchBar.IsWritingText:
-                    {
-                        dummyNameSearchBar.ToggleTakingText();
-                        break;
-                    }
+                    dummyNameSearchBar.ToggleTakingText();
+                    break;
                 }
             }
         };
@@ -103,7 +105,8 @@ public class SSCView : UIState
             Height = new StyleDimension(26, 0),
             Top = new StyleDimension(80, 0)
         });
-        UiPanel.Append(new UIDifficultyButton(Dummy, Language.GetText("UI.Creative"), null, PlayerDifficultyID.Creative, Main.creativeModeColor)
+        UiPanel.Append(new UIDifficultyButton(Dummy, Language.GetText("UI.Creative"), null, PlayerDifficultyID.Creative,
+            Main.creativeModeColor)
         {
             Width = new StyleDimension(-5, 0.5f),
             Height = new StyleDimension(26, 0),

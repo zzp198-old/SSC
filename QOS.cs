@@ -20,7 +20,7 @@ public partial class QOS : Mod
     internal static Common.Configs.ClientConfig CC => ModContent.GetInstance<Common.Configs.ClientConfig>();
     internal static Common.Configs.ServerConfig SC => ModContent.GetInstance<Common.Configs.ServerConfig>();
     internal static ulong ClientID => SteamUser.GetSteamID().m_SteamID;
-    internal static Player My => Main.LocalPlayer;
+    internal static Player My => Main.player[Main.myPlayer];
 
     public override void Load()
     {
@@ -52,7 +52,8 @@ public partial class QOS : Mod
 
                 if (name.IndexOfAny(Path.GetInvalidFileNameChars()) != -1)
                 {
-                    ChatHelper.SendChatMessageToClient(NetworkText.FromKey("Illegal characters in name"), Color.Red, plr);
+                    ChatHelper.SendChatMessageToClient(NetworkText.FromKey("Illegal characters in name"), Color.Red,
+                        plr);
                     return;
                 }
 
@@ -102,6 +103,14 @@ public partial class QOS : Mod
                 var id = bin.ReadUInt64();
                 var name = bin.ReadString();
 
+                if (SC.ReviveSeal &&
+                    Main.npc.Any(npc => npc.active && npc.boss)) // 不能使用CurrentFrameFlags,需要排除常驻的四柱和随时刷新的探测器
+                {
+                    ChatHelper.SendChatMessageToClient(NetworkText.FromKey("Mods.QOS.Config.ReviveSeal.Tooltip"),
+                        Color.Red, plr);
+                    return;
+                }
+
                 if (Netplay.Clients.Where(x => x.IsActive).Any(x => Main.player[x.Id].name == name)) // 防止在线玩家重复
                 {
                     ChatHelper.SendChatMessageToClient(NetworkText.FromKey(Lang.mp[5].Key, name), Color.Red, plr);
@@ -112,13 +121,15 @@ public partial class QOS : Mod
 
                 if (data.Player.difficulty == PlayerDifficultyID.Creative && !Main.GameModeInfo.IsJourneyMode)
                 {
-                    ChatHelper.SendChatMessageToClient(NetworkText.FromKey("Net.PlayerIsCreativeAndWorldIsNotCreative"), Color.Red, plr);
+                    ChatHelper.SendChatMessageToClient(NetworkText.FromKey("Net.PlayerIsCreativeAndWorldIsNotCreative"),
+                        Color.Red, plr);
                     return;
                 }
 
                 if (data.Player.difficulty != PlayerDifficultyID.Creative && Main.GameModeInfo.IsJourneyMode)
                 {
-                    ChatHelper.SendChatMessageToClient(NetworkText.FromKey("Net.PlayerIsNotCreativeAndWorldIsCreative"), Color.Red, plr);
+                    ChatHelper.SendChatMessageToClient(NetworkText.FromKey("Net.PlayerIsNotCreativeAndWorldIsCreative"),
+                        Color.Red, plr);
                     return;
                 }
 
@@ -156,7 +167,7 @@ public partial class QOS : Mod
                 data.MarkAsServerSide();
                 data.SetAsActive();
 
-                data.Player.Spawn(PlayerSpawnContext.SpawningIntoWorld); // SetPlayerDataToOutOfClassFields
+                data.Player.Spawn(PlayerSpawnContext.SpawningIntoWorld); // SetPlayerDataToOutOfClassFields,设置临时物品
                 try
                 {
                     Player.Hooks.EnterWorld(Main.myPlayer); // 其他mod如果没有防御性编程可能会报错
@@ -192,7 +203,7 @@ public partial class QOS : Mod
             }
             default:
             {
-                QOSKit.Boot(plr, $"Invalid Package ID");
+                QOSKit.Boot(plr, "Invalid Package ID");
                 break;
             }
         }

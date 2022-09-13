@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace QOS.Common.Systems;
@@ -29,7 +28,7 @@ public class ReviveSealSystem : ModSystem
     {
         if (QOS.My.dead && Sealers.Count > 0 && QOS.My.respawnTimer < 180)
         {
-            QOS.My.respawnTimer = 180; // 避免一些mod因为缩短复活时间导致绕过
+            QOS.My.respawnTimer = 180; // 不使用++,避免一些mod加速缩短绕过
         }
     }
 
@@ -40,27 +39,20 @@ public class ReviveSealSystem : ModSystem
             return;
         }
 
-        Sealers = Sealers.Where(npc => npc.active && (npc.boss || NPCID.Sets.DangerThatPreventsOtherDangers[npc.type])).ToHashSet();
-        if (!Main.CurrentFrameFlags.AnyActiveBossNPC || QOS.My.DeadOrGhost) // 函数调用前刚好为CurrentFrameFlags赋值
+        Sealers = Sealers.Where(npc => npc.active && npc.boss).ToHashSet();
+        if (!Main.CurrentFrameFlags.AnyActiveBossNPC || QOS.My.DeadOrGhost) // 节省运算,虽然四柱和外星探测器会绕过快速过滤,但无伤大雅.不会因为SSC漏帧.
         {
             return;
         }
 
-        foreach (var npc in Main.npc.Where(npc => npc.active && (npc.boss || NPCID.Sets.DangerThatPreventsOtherDangers[npc.type])))
+        foreach (var npc in Main.npc.Where(npc => npc.active && npc.boss))
         {
-            if (Sealers.Contains(npc))
-            {
-                continue;
-            }
-
             var box = Utils.CenteredRectangle(QOS.My.Hitbox.Center(), Main.ScreenSize.ToVector2());
             box.Inflate(5000, 5000);
-            if (!box.Intersects(npc.Hitbox))
+            if (box.Intersects(npc.Hitbox))
             {
-                continue;
+                Sealers.Add(npc);
             }
-
-            Sealers.Add(npc);
         }
     }
 }

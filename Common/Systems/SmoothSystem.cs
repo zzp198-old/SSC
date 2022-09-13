@@ -41,7 +41,7 @@ public class SmoothSystem : ModSystem
 
     private void On_Main_DrawProj(On.Terraria.Main.orig_DrawProj invoke, Main self, int i)
     {
-        if (QOS.CC.Smooth && Main.CurrentFrameFlags.AnyActiveBossNPC)
+        if (QOS.CC.Smooth && Main.CurrentFrameFlags.AnyActiveBossNPC) // 四柱事件同样会屏蔽
         {
             var proj = Main.projectile[i];
             if (proj.friendly && proj.owner != Main.myPlayer && proj.owner != byte.MaxValue) // 友军弹幕
