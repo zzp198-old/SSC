@@ -106,8 +106,7 @@ public partial class QOS : Mod
                 if (SC.ReviveSeal &&
                     Main.npc.Any(npc => npc.active && npc.boss)) // 不能使用CurrentFrameFlags,需要排除常驻的四柱和随时刷新的探测器
                 {
-                    ChatHelper.SendChatMessageToClient(NetworkText.FromKey("Mods.QOS.Config.ReviveSeal.Tooltip"),
-                        Color.Red, plr);
+                    ChatHelper.SendChatMessageToClient(NetworkText.FromKey("Mods.QOS.Config.ReviveSeal.Tooltip"), Color.Red, plr);
                     return;
                 }
 
@@ -121,15 +120,13 @@ public partial class QOS : Mod
 
                 if (data.Player.difficulty == PlayerDifficultyID.Creative && !Main.GameModeInfo.IsJourneyMode)
                 {
-                    ChatHelper.SendChatMessageToClient(NetworkText.FromKey("Net.PlayerIsCreativeAndWorldIsNotCreative"),
-                        Color.Red, plr);
+                    ChatHelper.SendChatMessageToClient(NetworkText.FromKey("Net.PlayerIsCreativeAndWorldIsNotCreative"), Color.Red, plr);
                     return;
                 }
 
                 if (data.Player.difficulty != PlayerDifficultyID.Creative && Main.GameModeInfo.IsJourneyMode)
                 {
-                    ChatHelper.SendChatMessageToClient(NetworkText.FromKey("Net.PlayerIsNotCreativeAndWorldIsCreative"),
-                        Color.Red, plr);
+                    ChatHelper.SendChatMessageToClient(NetworkText.FromKey("Net.PlayerIsNotCreativeAndWorldIsCreative"), Color.Red, plr);
                     return;
                 }
 
