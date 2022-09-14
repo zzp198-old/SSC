@@ -87,7 +87,7 @@ public class SSCSystem : ModSystem
                     binary.Get<List<TagCompound>>(i.Name).Add(new TagCompound
                     {
                         { "name", data.Player.name },
-                        { "difficulty", data.Player.difficulty },
+                        { "difficulty", data.Player.difficulty }
                     });
                 }
                 catch (Exception e)

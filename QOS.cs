@@ -24,8 +24,11 @@ public partial class QOS : Mod
 
     public override void Load()
     {
-        Utils.TryCreatingDirectory(QOSSavePath);
-        Utils.TryCreatingDirectory(SSCSavePath);
+        if (Main.dedServ)
+        {
+            Utils.TryCreatingDirectory(QOSSavePath);
+            Utils.TryCreatingDirectory(SSCSavePath);
+        }
     }
 
     public override void HandlePacket(BinaryReader bin, int plr)
