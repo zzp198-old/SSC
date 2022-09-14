@@ -23,6 +23,10 @@
         }
       },
       "SSC": {
+        "InvalidFileName": "The file name has illegal characters, please rename.",
+        "CreateException": "It seems something wrong with player creation. Your initial item may be lost. You have two solutions.",
+        "CreateExceptionSolution": "Close the problematic mod according to the error message, or create a player locally and upload it to the specified location on the server.",
+        "FileNotFound": "SSC file does not exist/has been deleted, saving failed."
       }
     }
   }

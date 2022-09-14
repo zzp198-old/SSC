@@ -52,8 +52,7 @@ public partial class QOS : Mod
 
                 if (name.IndexOfAny(Path.GetInvalidFileNameChars()) != -1)
                 {
-                    ChatHelper.SendChatMessageToClient(NetworkText.FromKey("Illegal characters in name"), Color.Red,
-                        plr);
+                    ChatHelper.SendChatMessageToClient(NetworkText.FromKey("Mods.QOS.SSC.InvalidFileName"), Color.Red, plr);
                     return;
                 }
 
@@ -71,13 +70,15 @@ public partial class QOS : Mod
                         Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
                         Player = new Player { name = name, difficulty = difficulty }
                     };
-                    QOSKit.SetupPlayerStatsAndInventoryBasedOnDifficulty(data.Player);
+                    QOSKit.SetupPlayerStatsAndInventoryBasedOnDifficulty(data.Player); // savedPerPlayerFieldsThatArentInThePlayerClass
                     // 保存并不一定成功,如果其他mod的数据涉及到服务端未加载的内容,会导致异常并且丢失所有mod数据
                     QOSKit.InternalSavePlayer(data);
                 }
                 catch (Exception e)
                 {
                     ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral(e.ToString()), Color.Red, plr);
+                    ChatHelper.SendChatMessageToClient(NetworkText.FromKey("Mods.QOS.SSC.CreateException"), Color.Yellow, plr);
+                    ChatHelper.SendChatMessageToClient(NetworkText.FromKey("Mods.QOS.SSC.CreateExceptionSolution"), Color.Yellow, plr);
                     throw;
                 }
                 finally
@@ -103,8 +104,7 @@ public partial class QOS : Mod
                 var id = bin.ReadUInt64();
                 var name = bin.ReadString();
 
-                if (SC.ReviveSeal &&
-                    Main.npc.Any(npc => npc.active && npc.boss)) // 不能使用CurrentFrameFlags,需要排除常驻的四柱和随时刷新的探测器
+                if (SC.ReviveSeal && Main.npc.Any(npc => npc.active && npc.boss)) // 不能使用CurrentFrameFlags,需要排除常驻的四柱和随时刷新的探测器
                 {
                     ChatHelper.SendChatMessageToClient(NetworkText.FromKey("Mods.QOS.Config.ReviveSeal.Tooltip"), Color.Red, plr);
                     return;
@@ -132,9 +132,8 @@ public partial class QOS : Mod
 
                 if (!SystemLoader.CanWorldBePlayed(data, Main.ActiveWorldFileData, out var mod)) // 兼容其他mod的游玩规则
                 {
-                    ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral(
-                        mod.WorldCanBePlayedRejectionMessage(data, Main.ActiveWorldFileData)
-                    ), Color.Red, plr);
+                    ChatHelper.SendChatMessageToClient(
+                        NetworkText.FromLiteral(mod.WorldCanBePlayedRejectionMessage(data, Main.ActiveWorldFileData)), Color.Red, plr);
                     return;
                 }
 
@@ -193,7 +192,7 @@ public partial class QOS : Mod
                 }
                 else
                 {
-                    ChatHelper.SendChatMessageToClient(NetworkText.FromLiteral("Can't Save SSC."), Color.Red, plr);
+                    ChatHelper.SendChatMessageToClient(NetworkText.FromKey("Mods.QOS.SSC.FileNotFound"), Color.Red, plr);
                 }
 
                 break;

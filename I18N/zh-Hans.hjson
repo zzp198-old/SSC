@@ -23,6 +23,10 @@
         }
       },
       "SSC": {
+        "InvalidFileName": "文件名包含非法字符,请重命名.",
+        "CreateException": "看起来在创建角色时出了些问题,你的初始物品可能会丢失,你有两种解决办法.",
+        "CreateExceptionSolution": "根据报错信息关闭有问题的mod,或者在本地创建玩家,并上传到服务器的指定位置.",
+        "FileNotFound": "服务端角色文件不存在/已删除,保存失败."
       }
     }
   }
