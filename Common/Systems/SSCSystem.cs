@@ -145,7 +145,7 @@ public class SSCSystem : ModSystem
         {
             if (Netplay.Connection.State == 2)
             {
-                // 在接收到3之前,客户端已经Reload完成.后续不会再进行重加载导致Player被覆盖.
+                // 在接收到3之前,客户端已经Reload完成.后续不会再进行重加载,使用ActivePlayerFileData覆盖Player并修改whoAmI/myPlayer.
                 var data = new PlayerFileData(Path.Combine(Main.PlayerPath, $"{QOS.ClientID}.plr"), false)
                 {
                     Metadata = FileMetadata.FromCurrentSettings(FileType.Player),
