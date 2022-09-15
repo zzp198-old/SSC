@@ -10,6 +10,8 @@ It is recommended to use the "Minecraft" material package. In addition to high-q
 In multiplayer, special effects and bullet screens often make you unable to see the boss's attack clearly.
 After being turned on, you can shield friendly bullets and special effects (including four pillars and alien detectors).
 
+[h2]Auto Join Team[/h2]
+
 [h2]Server Side Character (SSC)[/h2]
 
 Force players to use new characters to reclaim land, and save player data on the server.

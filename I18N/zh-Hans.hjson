@@ -8,6 +8,10 @@
           "Label": "视觉优化",
           "Tooltip": "BOSS战期间屏蔽友军弹幕和所有无关特效(特指Fargo.jpg)"
         },
+        "JoinTeam": {
+          "Label": "加入队伍",
+          "Tooltip": "进入世界后自动尝试加入所选队伍"
+        },
         "ServerConfig": "服务端配置",
         "SSC": {
           "Label": "强制开荒",

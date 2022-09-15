@@ -14,6 +14,7 @@ namespace QOS;
 
 public partial class QOS : Mod
 {
+    // 因为功能烦杂,并且相互之间还会产生联动,代码很乱,暂时没找到好的管理架构.
     internal static string QOSSavePath => Path.Combine(Main.SavePath, "QOS");
     internal static string SSCSavePath => Path.Combine(QOSSavePath, "SSC");
     internal static Mod Mod => ModContent.GetInstance<QOS>();
@@ -24,11 +25,13 @@ public partial class QOS : Mod
 
     public override void Load()
     {
-        if (Main.dedServ)
+        if (!Main.dedServ)
         {
-            Utils.TryCreatingDirectory(QOSSavePath);
-            Utils.TryCreatingDirectory(SSCSavePath);
+            return;
         }
+
+        Utils.TryCreatingDirectory(QOSSavePath);
+        Utils.TryCreatingDirectory(SSCSavePath);
     }
 
     public override void HandlePacket(BinaryReader bin, int plr)

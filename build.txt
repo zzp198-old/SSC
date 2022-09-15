@@ -1,6 +1,6 @@
 displayName = Quality of Service
 author = zzp198
-version = 2022.10.3
+version = 2022.10.4
 dllReferences =
 modReferences =
 weakReferences =

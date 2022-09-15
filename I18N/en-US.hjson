@@ -6,20 +6,24 @@
         "ClientConfig": "Client Config",
         "Smooth": {
           "Label": "Smooth Effect",
-          "Tooltip": "Todo... Need Englisher Help"
+          "Tooltip": "Smooth Effect. Todo... Need Englisher Help"
+        },
+        "JoinTeam": {
+          "Label": "Join Team",
+          "Tooltip": "Auto join the selected team after entering the world."
         },
         "ServerConfig": "Server Config",
         "SSC": {
           "Label": "Server Side Character",
-          "Tooltip": "Todo... Need Englisher Help"
+          "Tooltip": "Server Side Character. Todo... Need Englisher Help"
         },
         "ReviveSeal": {
           "Label": "Revive Seal",
-          "Tooltip": "Todo... Need Englisher Help"
+          "Tooltip": "Revive Seal. Todo... Need Englisher Help"
         },
         "Observer": {
           "Label": "Observer",
-          "Tooltip": "Todo... Need Englisher Help"
+          "Tooltip": "Observer. Todo... Need Englisher Help"
         }
       },
       "SSC": {

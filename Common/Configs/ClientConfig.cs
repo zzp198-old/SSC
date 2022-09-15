@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Terraria.Enums;
 using Terraria.ModLoader.Config;
 
 namespace QOS.Common.Configs;
@@ -12,4 +13,9 @@ public class ClientConfig : ModConfig
      Tooltip("$Mods.QOS.Config.Smooth.Tooltip")]
     [DefaultValue(false)]
     public bool Smooth;
+
+    [Label("$Mods.QOS.Config.JoinTeam.Label"),
+     Tooltip("$Mods.QOS.Config.JoinTeam.Tooltip")]
+    [DefaultValue(Team.Red)]
+    public Team JoinTeam;
 }
