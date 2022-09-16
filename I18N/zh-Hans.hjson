@@ -24,6 +24,10 @@
         "Observer": {
           "Label": "观战模式",
           "Tooltip": "死亡期间可以观战BOSS(非参战者不可见)"
+        },
+        "ForcePVP": {
+          "Label": "强制PVP",
+          "Tooltip": "强制开启/关闭PVP同时锁定"
         }
       },
       "SSC": {

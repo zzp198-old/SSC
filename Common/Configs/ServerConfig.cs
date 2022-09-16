@@ -25,4 +25,16 @@ public class ServerConfig : ModConfig
     [DefaultValue(false)]
     [ReloadRequired]
     public bool Observer;
+
+    public enum EForcePVP
+    {
+        Normal,
+        On,
+        Off
+    }
+
+    [Label("$Mods.QOS.Config.ForcePVP.Label"),
+     Tooltip("$Mods.QOS.Config.ForcePVP.Tooltip")]
+    [DefaultValue(EForcePVP.Normal)]
+    public EForcePVP ForcePVP;
 }

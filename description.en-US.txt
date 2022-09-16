@@ -12,6 +12,8 @@ After being turned on, you can shield friendly bullets and special effects (incl
 
 [h2]Auto Join Team[/h2]
 
+[h2]Force PVP[/h2]
+
 [h2]Server Side Character (SSC)[/h2]
 
 Force players to use new characters to reclaim land, and save player data on the server.

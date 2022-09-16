@@ -11,7 +11,7 @@ public class JoinTeamPlayer : ModPlayer
 
     public override void PostUpdate()
     {
-        if (Joined)
+        if (Player.whoAmI != Main.myPlayer || Joined)
         {
             return;
         }

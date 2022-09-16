@@ -24,6 +24,10 @@
         "Observer": {
           "Label": "Observer",
           "Tooltip": "Observer. Todo... Need Englisher Help"
+        },
+        "ForcePVP": {
+          "Label": "Force PVP",
+          "Tooltip": "Force on/off PVP and prohibit modification"
         }
       },
       "SSC": {
