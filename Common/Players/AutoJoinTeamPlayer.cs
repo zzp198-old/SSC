@@ -5,11 +5,11 @@ using Terraria.ModLoader;
 
 namespace QOS.Common.Players;
 
-public class JoinTeamPlayer : ModPlayer
+public class AutoJoinTeamPlayer : ModPlayer
 {
-    internal bool Joined;
+    public bool Joined;
 
-    public override void PostUpdate()
+    public override void PreUpdate()
     {
         if (Player.whoAmI != Main.myPlayer || Joined)
         {
@@ -17,12 +17,12 @@ public class JoinTeamPlayer : ModPlayer
         }
 
         Joined = true;
-        if (Main.netMode != NetmodeID.MultiplayerClient || QOS.CC.JoinTeam == Team.None)
+        if (Main.netMode != NetmodeID.MultiplayerClient || QOS.SC.AutoJoinTeam == Team.None)
         {
             return;
         }
 
-        Player.team = (byte)QOS.CC.JoinTeam;
+        Player.team = (byte)QOS.SC.AutoJoinTeam;
         NetMessage.SendData(MessageID.PlayerTeam, number: Player.whoAmI);
     }
 }

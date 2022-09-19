@@ -2,33 +2,37 @@
 
 This mod is mainly used in the multiplayer. All the following functions are turned off by default. Please turn them on as needed.
 It is recommended to use the "Minecraft" material package. In addition to high-quality content, it is easier to judge the collision body of the boss (especially slime.JPG).
+Add the player name to OQS/Admin.txt to obtain administrator permissions. Only one person is allowed in a row.
 
 [hr][/hr]
 
-[h2]Smooth Effect[/h2]
+[h3]Visual Optimize[/h3]
 
-In multiplayer, special effects and bullet screens often make you unable to see the boss's attack clearly.
-After being turned on, you can shield friendly bullets and special effects (including four pillars and alien detectors).
+[h3]Auto Join Team[/h3]
 
-[h2]Auto Join Team[/h2]
+[h3]Force Hostile[/h3]
 
-[h2]Force PVP[/h2]
+[h3]Start Item[/h3]
 
-[h2]Server Side Character (SSC)[/h2]
+[h3]Server Side Character (SSC)[/h3]
 
 Force players to use new characters to reclaim land, and save player data on the server.
 Location: [...]\My Games\Terraria\tModLoader\QOS\SSC\[SteamID64]\[Name].plr
 
-[h2]Revive Seal[/h2]
+[h3]Revive Seal[/h3]
 
 Once you have been close enough to the boss (roughly the display distance of the blood bar), you will be cursed and cannot be revived before the boss disappears.
 At the same time, "SSC" will be restricted, and login will be prohibited when BOSS exists to prevent from being revived.
 
-[h2]Observation[/h2]
+[h3]Observation[/h3]
 
 When you die, you can watch the boss/boss target, left click to switch the boss, and right click to switch the watching mode.
 If "Revive Seal" is enabled, you will have priority to watch the boss/boss target that applies the resurrection curse to you.
 You are not allowed to watch other players directly.
+
+[h3]Reinforced Tile[/h3]
+
+[h3]Creative Shock[/h3]
 
 [hr][/hr]
 

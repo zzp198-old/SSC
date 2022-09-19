@@ -1,41 +1,108 @@
 {
-  "Mods": {
-    "QOS": {
-      "QOS": "Quality of Service",
-      "Config": {
-        "ClientConfig": "Client Config",
-        "Smooth": {
-          "Label": "Smooth Effect",
-          "Tooltip": "Smooth Effect. Todo... Need Englisher Help"
+  Mods: {
+    QOS: {
+      QOS: "Quality of Service",
+      Enable: "Enable",
+      Disable: "Disable",
+      Config: {
+        ClientConfig: "Client Config",
+        VisualConfig: {
+          Label: "Visual Config",
+          Tooltip: "",
+          DustTransparency: {
+            Label: "Dust Transparency",
+            Tooltip: "",
+          },
+          GoreTransparency: {
+            Label: "Gore Transparency",
+            Tooltip: "",
+          },
+          PlayerProjTransparency: {
+            Label: "Player Proj Transparency",
+            Tooltip: "",
+          },
+          TeammateProjTransparency: {
+            Label: "Teammate Proj Transparency",
+            Tooltip: "",
+          },
+          UnfriendlyProjTransparency: {
+            Label: "Unfriendly Proj Transparency",
+            Tooltip: "",
+          }
         },
-        "JoinTeam": {
-          "Label": "Join Team",
-          "Tooltip": "Auto join the selected team after entering the world."
+        ServerConfig: "Server Config",
+        RejectClientChange: "You do not have permission to modify settings. Please add the player name to QOS/Admin.txt to obtain administrator permission",
+        StartItemConfig: {
+          Label: "Start Item Config",
+          Tooltip: "",
+          StartItems: {
+            Label: "Start Items",
+            Tooltip: ""
+          },
+          RemoveItems: {
+            Label: "Remove Items",
+            Tooltip: ""
+          }
         },
-        "ServerConfig": "Server Config",
-        "SSC": {
-          "Label": "Server Side Character",
-          "Tooltip": "Server Side Character. Todo... Need Englisher Help"
+        SSCConfig: {
+          Label: "SSC Config",
+          Tooltip: "",
+          SSC: {
+            Label: "SSC",
+            Tooltip: ""
+          },
+          CollectorsEdition: {
+            Label: "Collectors Edition",
+            Tooltip: "Obtain exclusive items to summon rabbit pets that are only available in Terraria Collection.\nThe fur color of rabbit is determined by the coat color selected when the character is created."
+          },
+          StartLife: {
+            Label: "Start Life",
+            Tooltip: ""
+          },
+          StartMana: {
+            Label: "Start Mana",
+            Tooltip: ""
+          },
         },
-        "ReviveSeal": {
-          "Label": "Revive Seal",
-          "Tooltip": "Revive Seal. Todo... Need Englisher Help"
+        ReviveSeal: {
+          Label: "Revive Seal",
+          Tooltip: "",
         },
-        "Observer": {
-          "Label": "Observer",
-          "Tooltip": "Observer. Todo... Need Englisher Help"
+        Observer: {
+          Label: "Observer",
+          Tooltip: "",
         },
-        "ForcePVP": {
-          "Label": "Force PVP",
-          "Tooltip": "Force on/off PVP and prohibit modification"
+        ReinforcedTile: {
+          Label: "Reinforced Tile",
+          Tooltip: "",
+        },
+        CreativeShock: {
+          Label: "Creative Shock",
+          Tooltip: "",
+        },
+        AutoJoinTeam: {
+          Label: "Auto Join Team",
+          Tooltip: "",
+        },
+        ForceHostile: {
+          Label: "Force Hostile",
+          Tooltip: "",
         }
       },
-      "SSC": {
-        "InvalidFileName": "The file name has illegal characters, please rename.",
-        "CreateException": "It seems something wrong with player creation. Your initial item may be lost. You have two solutions.",
-        "CreateExceptionSolution": "Close the problematic mod according to the error message, or create a player locally and upload it to the specified location on the server.",
-        "FileNotFound": "SSC file does not exist/has been deleted, saving failed."
-      }
+      SSC: {
+        InvalidFileName: "The file name contains illegal characters. Please rename it.",
+        CreateException: "It seems that there is something wrong with character creation. Your initial item may be lost. You have two solutions.",
+        CreateExceptionSolution: "Close the problematic mod according to the error message, or create a player locally and upload it to the specified location on the server.",
+        FileNotFound: "The server player file does not exist/has been deleted, saving failed."
+      },
+      ItemName: {},
+      ItemTooltip: {},
+      BuffName: {},
+      BuffDescription: {},
+      ProjectileName: {},
+      NPCName: {},
+      MapObject: {},
+      Prefix: {}
     }
   }
 }

@@ -13,5 +13,9 @@
   <ItemGroup>
     <Folder Include="Assets" />
     <Folder Include="Content\Buffs" />
+    <Folder Include="Content\Dusts" />
+    <Folder Include="Content\Gores" />
+    <Folder Include="Content\NPCs" />
+    <Folder Include="Content\Projs" />
   </ItemGroup>
 </Project>

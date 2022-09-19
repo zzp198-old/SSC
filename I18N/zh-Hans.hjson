@@ -1,41 +1,108 @@
 ﻿{
-  "Mods": {
-    "QOS": {
-      "QOS": "更好的服务",
-      "Config": {
-        "ClientConfig": "客户端配置",
-        "Smooth": {
-          "Label": "视觉优化",
-          "Tooltip": "BOSS战期间屏蔽友军弹幕和所有无关特效(特指Fargo.jpg)"
+  Mods: {
+    QOS: {
+      QOS: "更好的服务",
+      Enable: "启用",
+      Disable: "禁用",
+      Config: {
+        ClientConfig: "客户端设置",
+        VisualConfig: {
+          Label: "视觉设置",
+          Tooltip: "",
+          DustTransparency: {
+            Label: "粒子透明度",
+            Tooltip: "",
+          },
+          GoreTransparency: {
+            Label: "尸块透明度",
+            Tooltip: "",
+          },
+          PlayerProjTransparency: {
+            Label: "玩家弹幕透明度",
+            Tooltip: "",
+          },
+          TeammateProjTransparency: {
+            Label: "队友弹幕透明度",
+            Tooltip: "",
+          },
+          UnfriendlyProjTransparency: {
+            Label: "非友好弹幕透明度",
+            Tooltip: "",
+          }
         },
-        "JoinTeam": {
-          "Label": "加入队伍",
-          "Tooltip": "进入世界后自动尝试加入所选队伍"
+        ServerConfig: "服务端设置",
+        RejectClientChange: "你没有权限修改设置,请添加玩家名到QOS/Admin.txt来获取管理员权限",
+        StartItemConfig: {
+          Label: "初始物品设置",
+          Tooltip: "",
+          StartItems: {
+            Label: "初始物品",
+            Tooltip: ""
+          },
+          RemoveItems: {
+            Label: "移除物品",
+            Tooltip: ""
+          }
         },
-        "ServerConfig": "服务端配置",
-        "SSC": {
-          "Label": "强制开荒",
-          "Tooltip": "大家都叫它为强制开荒,阿巴阿巴......"
+        SSCConfig: {
+          Label: "云存档设置",
+          Tooltip: "",
+          SSC: {
+            Label: "云存档",
+            Tooltip: ""
+          },
+          CollectorsEdition: {
+            Label: "收藏版",
+            Tooltip: "获得专属物品,召唤仅在泰拉瑞亚收藏版中可用的兔兔宠物.\n兔兔的毛色由角色创建时所选择的上衣颜色决定."
+          },
+          StartLife: {
+            Label: "初始生命",
+            Tooltip: ""
+          },
+          StartMana: {
+            Label: "初始魔力",
+            Tooltip: ""
+          },
         },
-        "ReviveSeal": {
-          "Label": "复活节制",
-          "Tooltip": "来自JO级生物的诅咒,你永远无法达到复活的真实"
+        ReviveSeal: {
+          Label: "复活封印",
+          Tooltip: "",
         },
-        "Observer": {
-          "Label": "观战模式",
-          "Tooltip": "死亡期间可以观战BOSS(非参战者不可见)"
+        Observer: {
+          Label: "观战模式",
+          Tooltip: "",
         },
-        "ForcePVP": {
-          "Label": "强制PVP",
-          "Tooltip": "强制开启/关闭PVP同时锁定"
+        ReinforcedTile: {
+          Label: "防爆方块",
+          Tooltip: "",
+        },
+        CreativeShock: {
+          Label: "创意震撼",
+          Tooltip: "",
+        },
+        AutoJoinTeam: {
+          Label: "自动入队",
+          Tooltip: "",
+        },
+        ForceHostile: {
+          Label: "强制PVP",
+          Tooltip: "",
         }
       },
-      "SSC": {
-        "InvalidFileName": "文件名包含非法字符,请重命名.",
-        "CreateException": "看起来在创建角色时出了些问题,你的初始物品可能会丢失,你有两种解决办法.",
-        "CreateExceptionSolution": "根据报错信息关闭有问题的mod,或者在本地创建玩家,并上传到服务器的指定位置.",
-        "FileNotFound": "服务端角色文件不存在/已删除,保存失败."
-      }
+      SSC: {
+        InvalidFileName: "文件名包含非法字符,请重命名.",
+        CreateException: "看起来在创建角色时出了些问题,你的初始物品可能会丢失,你有两种解决办法.",
+        CreateExceptionSolution: "根据报错信息关闭有问题的mod,或者在本地创建玩家,并上传到服务器的指定位置.",
+        FileNotFound: "服务端角色文件不存在/已删除,保存失败."
+      },
+      ItemName: {},
+      ItemTooltip: {},
+      BuffName: {},
+      BuffDescription: {},
+      ProjectileName: {},
+      NPCName: {},
+      MapObject: {},
+      Prefix: {}
     }
   }
 }

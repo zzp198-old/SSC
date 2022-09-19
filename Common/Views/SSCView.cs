@@ -171,14 +171,14 @@ public class SSCView : UIState
             item.Append(new UIText(tag.GetString("name"))
             {
                 Height = new StyleDimension(30, 0),
-                TextColor = QOSKit.DifficultyColor(tag.GetByte("difficulty"))
+                TextColor = QOSKit.DifficultyTextColor(tag.GetByte("difficulty"))
             });
 
             item.Append(new UIText(QOSKit.DifficultyTextValue(tag.GetByte("difficulty")))
             {
                 Height = new StyleDimension(30, 0),
                 HAlign = 1,
-                TextColor = QOSKit.DifficultyColor(tag.GetByte("difficulty"))
+                TextColor = QOSKit.DifficultyTextColor(tag.GetByte("difficulty"))
             });
 
             item.Append(new UIImage(Main.Assets.Request<Texture2D>("Images/UI/Divider"))
