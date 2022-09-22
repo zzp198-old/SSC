@@ -1,11 +1,11 @@
-displayName = Quality of Service
+displayName = 更好的服务
 author = zzp198
-version = 2022.10.8
+version = 2022.10.10
 dllReferences =
 modReferences =
 weakReferences =
 noCompile = false
-homepage = https://github.com/zzp198/QOS
+homepage = https://steamcommunity.com/sharedfiles/filedetails/?id=2862484565
 hideCode = true
 hideResources = true
 includeSource = false
