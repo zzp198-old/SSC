@@ -9,7 +9,7 @@ homepage = https://steamcommunity.com/sharedfiles/filedetails/?id=2862484565
 hideCode = true
 hideResources = true
 includeSource = false
-buildIgnore = Properties/*, Assets/icon.psd, Assets/Fonts/*
+buildIgnore = Properties/*, Assets/icon.psd
 includePDB = false
 side = Both
 sortAfter =

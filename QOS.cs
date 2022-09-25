@@ -9,16 +9,16 @@ public class QOS : Mod
 {
     internal static string SavePath => Path.Combine(Main.SavePath, nameof(QOS));
     internal static ulong ClientID => SteamUser.GetSteamID().m_SteamID;
-    internal static Common.Configs.ClientConfig ClientConfig => ModContent.GetInstance<Common.Configs.ClientConfig>();
-    internal static Common.Configs.ServerConfig ServerConfig => ModContent.GetInstance<Common.Configs.ServerConfig>();
 
     public override void Load()
     {
-        Main.runningCollectorsEdition = true;
         if (Main.dedServ)
         {
             Utils.TryCreatingDirectory(SavePath);
         }
+
+        // Config, I18N, System/Player, Mod, Recipe, Content......
+        Common.Configs.ClassConfig.Instance.DynamicModify();
     }
 
     internal enum PID : byte

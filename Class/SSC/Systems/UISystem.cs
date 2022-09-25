@@ -10,6 +10,11 @@ public class UISystem : ModSystem
 {
     internal static UserInterface UI; // 单边System资源允许使用Static标记
 
+    public override bool IsLoadingEnabled(Mod mod)
+    {
+        return Configs.SSCConfig.Instance != null;
+    }
+
     public override void Load()
     {
         if (!Main.dedServ)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Mono.Cecil.Cil;
@@ -16,8 +17,14 @@ namespace QOS.Class.SSC.Systems;
 
 public class HookSystem : ModSystem
 {
+    public override bool IsLoadingEnabled(Mod mod)
+    {
+        return Configs.SSCConfig.Instance != null;
+    }
+
     public override void Load()
     {
+        Debug.WriteLine($"{GetType()} Loading......");
         IL.Terraria.NetMessage.SendData += IL_NetMessage_SendData; // 加入世界时无视GameMode
         IL.Terraria.MessageBuffer.GetData += IL_MessageBuffer_GetData; // SSC初始化
         IL.Terraria.Main.DrawInterface += IL_Main_DrawInterface; // SSC界面下,隐藏无关界面
@@ -88,11 +95,6 @@ public class HookSystem : ModSystem
             };
             data.MarkAsServerSide();
             data.SetAsActive();
-            if (QOS.ServerConfig.SSCProperty.ShowMessage)
-            {
-                ChatHelper.DisplayMessage(NetworkText.FromLiteral("SSC初始化成功"), Color.Green, byte.MaxValue);
-            }
-
             UISystem.UI.SetState(new Views.SSCView()); // 唯一设置,界面只会在此时启用
         });
     }

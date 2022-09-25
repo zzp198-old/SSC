@@ -12,8 +12,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Class\Commands" />
+    <Folder Include="Common\Configs\Elements" />
+    <Folder Include="Common\Players" />
     <Folder Include="Content\Buffs" />
-    <Folder Include="I18N" />
     <Folder Include="Wiki" />
   </ItemGroup>
 </Project>

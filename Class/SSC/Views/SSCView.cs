@@ -6,13 +6,14 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader.IO;
+using Terraria.ModLoader.UI.Elements;
 using Terraria.UI;
 
 namespace QOS.Class.SSC.Views;
 
 public class SSCView : UIState
 {
-    internal UIList UiList;
+    internal UIGrid UiGrid;
     internal UIPanel UiPanel;
     internal Player Dummy;
 
@@ -35,13 +36,13 @@ public class SSCView : UIState
         };
         panel.Append(scrollbar);
 
-        UiList = new UIList
+        UiGrid = new UIGrid
         {
             Width = new StyleDimension(-25, 1),
             Height = new StyleDimension(0, 1)
         };
-        UiList.SetScrollbar(scrollbar);
-        panel.Append(UiList);
+        UiGrid.SetScrollbar(scrollbar);
+        panel.Append(UiGrid);
 
         UiPanel = new UIPanel
         {
@@ -49,7 +50,7 @@ public class SSCView : UIState
             Height = new StyleDimension(180, 0)
         };
         UiPanel.SetPadding(10);
-        UiList.Append(UiPanel);
+        UiGrid.Append(UiPanel);
 
         Dummy = new Player();
         var dummyNameButton = new UICharacterNameButton(Language.GetText("UI.WorldCreationName"), LocalizedText.Empty)
@@ -140,7 +141,7 @@ public class SSCView : UIState
 
     public void FlushList(TagCompound bin)
     {
-        UiList.Clear();
+        UiGrid.Clear();
         foreach (var tag in bin.Get<List<TagCompound>>(QOS.ClientID.ToString()))
         {
             var item = new UIPanel
@@ -159,7 +160,7 @@ public class SSCView : UIState
                 item.BackgroundColor = new Color(63, 82, 151) * 0.7f;
                 item.BorderColor = new Color(89, 116, 213) * 0.7f;
             };
-            UiList.Add(item);
+            UiGrid.Add(item);
 
             item.Append(new UIText(tag.GetString("name"))
             {
@@ -225,6 +226,6 @@ public class SSCView : UIState
             item.Append(itemDeleteButton);
         }
 
-        UiList.Add(UiPanel);
+        UiGrid.Add(UiPanel);
     }
 }
