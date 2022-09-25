@@ -12,3 +12,4 @@
 //      Tooltip("$Mods.QOS.Config.VisualConfig.Tooltip")]
 //     public VisualConfig VisualConfig = new();
 // }
+

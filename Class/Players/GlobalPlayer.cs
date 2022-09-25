@@ -15,10 +15,7 @@ public class GlobalPlayer : ModPlayer
 
     public override void LoadData(TagCompound tag)
     {
-        if (tag.ContainsKey(nameof(DeathCount)))
-        {
-            DeathCount = tag.Get<int>(nameof(DeathCount));
-        }
+        if (tag.ContainsKey(nameof(DeathCount))) DeathCount = tag.Get<int>(nameof(DeathCount));
     }
 
     public override void Kill(double damage, int hitDirection, bool pvp, PlayerDeathReason damageSource)

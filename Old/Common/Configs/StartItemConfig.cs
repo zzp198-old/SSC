@@ -15,3 +15,4 @@
 //      Tooltip("$Mods.QOS.Config.StartItemConfig.RemoveItems.Tooltip")]
 //     public HashSet<ItemDefinition> RemoveItems = new();
 // }
+

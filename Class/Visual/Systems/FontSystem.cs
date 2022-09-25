@@ -1,4 +1,4 @@
-using System.IO;
+using QOS.Class.Visual.Configs;
 using ReLogic.Content;
 using ReLogic.Graphics;
 using Terraria;
@@ -11,7 +11,7 @@ public class FontSystem : ModSystem
 {
     public override bool IsLoadingEnabled(Mod mod)
     {
-        return Configs.VisualConfig.Instance.HuaWenYuanTi;
+        return VisualConfig.Instance.HuaWenYuanTi;
     }
 
     public override void Load()

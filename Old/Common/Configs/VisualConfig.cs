@@ -30,3 +30,4 @@
 //     [Range(0, 1), Increment(0.05f), DefaultValue(1)]
 //     public float UnfriendlyProjTransparency = 1;
 // }
+

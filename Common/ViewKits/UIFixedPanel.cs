@@ -23,10 +23,7 @@ public class UIFixedPanel : UIPanel
 
     public override void Update(GameTime gameTime)
     {
-        if (ContainsPoint(Main.MouseScreen))
-        {
-            Main.LocalPlayer.mouseInterface = true;
-        }
+        if (ContainsPoint(Main.MouseScreen)) Main.LocalPlayer.mouseInterface = true;
 
         if (_move)
         {

@@ -49,3 +49,4 @@
 //         return invoke(self, newColor) * QOS.ClientConfig.ProjectileTransparency;
 //     }
 // }
+

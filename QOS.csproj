@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\tModLoader.targets" />
-  <PropertyGroup>
-    <AssemblyName>QOS</AssemblyName>
-    <TargetFramework>net6.0</TargetFramework>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Class\Commands" />
-    <Folder Include="Common\Configs\Elements" />
-    <Folder Include="Common\Players" />
-    <Folder Include="Content\Buffs" />
-    <Folder Include="Wiki" />
-  </ItemGroup>
+    <Import Project="..\tModLoader.targets" />
+    <PropertyGroup>
+        <AssemblyName>QOS</AssemblyName>
+        <TargetFramework>net6.0</TargetFramework>
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
+    </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Class\Commands" />
+        <Folder Include="Class\Creative\Configs" />
+        <Folder Include="Class\Creative\Systems" />
+        <Folder Include="Common\Configs\Elements" />
+        <Folder Include="Common\Players" />
+        <Folder Include="Content\Buffs" />
+        <Folder Include="Wiki" />
+    </ItemGroup>
 </Project>

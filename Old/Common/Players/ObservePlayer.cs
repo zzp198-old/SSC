@@ -130,3 +130,4 @@
 //         return invoke(self, newColor) * (1 - ShowCountdown / 100);
 //     }
 // }
+

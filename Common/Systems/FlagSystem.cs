@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using MonoMod.Cil;
 using Terraria;
 using Terraria.ModLoader;
@@ -30,6 +31,7 @@ public class FlagSystem : ModSystem
         ilCursor.EmitDelegate(() =>
         {
             ActiveBoss.Clear();
+            Main.npc.Where(npc => npc.active && npc.boss);
             foreach (var npc in Main.npc)
             {
                 if (npc.active && npc.boss)
