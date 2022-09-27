@@ -11,12 +11,7 @@
         <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
     </ItemGroup>
     <ItemGroup>
-        <Folder Include="Class\Commands" />
-        <Folder Include="Class\Creative\Configs" />
-        <Folder Include="Class\Creative\Systems" />
-        <Folder Include="Common\Configs\Elements" />
-        <Folder Include="Common\Players" />
-        <Folder Include="Content\Buffs" />
-        <Folder Include="Wiki" />
+        <Folder Include="Assets\Fonts" />
+        <Folder Include="Content" />
     </ItemGroup>
 </Project>

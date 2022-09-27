@@ -1,6 +1,24 @@
 {
   Mods: {
     QOS: {
-    }
+      Common: {
+        Configs: {
+          VisualConfig: {
+            Label: "视觉配置",
+            HuaWenYuanTi: {
+              Label: "华文圆体",
+              Tooltip: "123123"
+            }
+          },
+          UnityConfig: {
+            Label: "全局配置",
+            SSC: {
+              Label: "云存档",
+              Tooltip: "123123"
+            }
+          }
+        }
+      },
+    },
   }
 }
