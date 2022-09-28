@@ -1,8 +1,0 @@
-如何管理保存和加载,尤其是在两个文件的情况下.
-
-保存可以通过Hook来选择本地或云端.
-
-加载会经过FileUtilities.Exists和FileUtilities.ReadAllBytes,
-可构建一种特殊的表达形式,SSC.[T].[TML].plr,字节转字符串,同时Base64加密避免出现“.”的情况.
-
-之间的文件传输则以字节的方式

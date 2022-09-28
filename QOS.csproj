@@ -12,6 +12,9 @@
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Assets\Fonts" />
+        <Folder Include="Common\Configs\Elements" />
+        <Folder Include="Common\Players" />
         <Folder Include="Content" />
+        <Folder Include="Wiki" />
     </ItemGroup>
 </Project>
