@@ -1,16 +1,10 @@
-displayName = 更好的服务
+displayName = SSC - 云存档
 author = zzp198
 version = 2022.10.0
-dllReferences =
-modReferences =
+dllReferences = 
+modReferences = 
 weakReferences =
-noCompile = false
-homepage = https://steamcommunity.com/sharedfiles/filedetails/?id=2862484565
-hideCode = true
-hideResources = true
-includeSource = false
-buildIgnore = Properties/*, Assets/icon.psd, Old/*
-includePDB = false
+homepage = 
+buildIgnore = 
 side = Both
-sortAfter =
-sortBefore =
+playableOnPreview = true

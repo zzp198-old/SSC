@@ -3,22 +3,22 @@ using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
-namespace QOS.Common.Views.Kits;
+namespace SSC.Common.Views.Kits;
 
-internal class UIContainer : UIPanel
+public class UIContainer : UIPanel
 {
-    internal bool Move;
-    internal Vector2 MoveVec2;
+    public new bool Click;
+    public Vector2 ClickV2;
 
     public override void MouseDown(UIMouseEvent evt)
     {
-        MoveVec2 = new Vector2(evt.MousePosition.X - Left.Pixels, evt.MousePosition.Y - Top.Pixels);
-        Move = true;
+        Click = true;
+        ClickV2 = new Vector2(evt.MousePosition.X - Left.Pixels, evt.MousePosition.Y - Top.Pixels);
     }
 
     public override void MouseUp(UIMouseEvent evt)
     {
-        Move = false;
+        Click = false;
     }
 
     public override void Update(GameTime gameTime)
@@ -28,24 +28,38 @@ internal class UIContainer : UIPanel
             Main.LocalPlayer.mouseInterface = true;
         }
 
-        if (Move)
+        if (Click)
         {
-            Left.Set(Main.mouseX - MoveVec2.X, 0f);
-            Top.Set(Main.mouseY - MoveVec2.Y, 0f);
-            Recalculate();
+            Left.Set(Main.mouseX - ClickV2.X, 0f);
+            Top.Set(Main.mouseY - ClickV2.Y, 0f);
         }
 
-        var pa = Parent.GetViewCullingArea();
-        var a = GetViewCullingArea();
-        if (!pa.Contains(a))
+        var space = Parent.GetViewCullingArea();
+        var area = GetViewCullingArea();
+        if (!space.Contains(area))
         {
-            if (a.X < pa.X) Left.Pixels += pa.X - a.X;
-            if (a.X + a.Width > pa.Width) Left.Pixels -= a.X + a.Width - pa.Width;
-            if (a.Y < pa.Y) Top.Pixels += pa.Y - a.Y;
-            if (a.Y + a.Height > pa.Height) Top.Pixels -= a.Y + a.Height - pa.Height;
-            Recalculate();
+            if (area.X < space.X)
+            {
+                Left.Pixels += space.X - area.X;
+            }
+
+            if (area.X + area.Width > space.Width)
+            {
+                Left.Pixels -= area.X + area.Width - space.Width;
+            }
+
+            if (area.Y < space.Y)
+            {
+                Top.Pixels += space.Y - area.Y;
+            }
+
+            if (area.Y + area.Height > space.Height)
+            {
+                Top.Pixels -= area.Y + area.Height - space.Height;
+            }
         }
 
+        Recalculate();
         base.Update(gameTime); // don't remove.
     }
 }
