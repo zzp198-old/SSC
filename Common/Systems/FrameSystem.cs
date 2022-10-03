@@ -7,7 +7,7 @@ namespace SSC.Common.Systems;
 
 public class FrameSystem : ModSystem
 {
-    public static List<NPC> ActiveBoss = new();
+    public static readonly List<NPC> ActiveBoss = new();
     public static bool AnyActiveBoss => ActiveBoss.Count != 0; // AnyActiveBossNPC > AnyDanger > AnyActiveBoss
 
     public override void Load()

@@ -1,9 +1,12 @@
 using System.IO;
+using System.Reflection;
 using Microsoft.Xna.Framework;
 using Steamworks;
 using Terraria;
 using Terraria.ID;
+using Terraria.IO;
 using Terraria.Localization;
+using Terraria.Utilities;
 
 namespace SSC.Common;
 
@@ -27,7 +30,7 @@ public static class SSCKit
         }
     }
 
-    internal static string DifficultyTextValue(byte difficulty)
+    public static string DifficultyTextValue(byte difficulty)
     {
         return Language.GetTextValue(difficulty switch
         {
@@ -39,7 +42,7 @@ public static class SSCKit
         });
     }
 
-    internal static Color DifficultyTextColor(byte difficulty)
+    public static Color DifficultyTextColor(byte difficulty)
     {
         return difficulty switch
         {
@@ -48,5 +51,11 @@ public static class SSCKit
             3 => Main.creativeModeColor,
             _ => Color.White
         };
+    }
+
+    public static void InternalSavePlayerFile(PlayerFileData data)
+    {
+        var invoke = typeof(Player).GetMethod("InternalSavePlayerFile", (BindingFlags)40);
+        FileUtilities.ProtectedInvoke(() => invoke?.Invoke(null, new object[] { data }));
     }
 }

@@ -4,7 +4,7 @@ version = 2022.10.0
 dllReferences = 
 modReferences = 
 weakReferences =
-homepage = 
+homepage = https://steamcommunity.com/sharedfiles/filedetails/?id=2862484565
 buildIgnore = 
 side = Both
 playableOnPreview = true

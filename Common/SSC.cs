@@ -1,17 +1,12 @@
 ﻿using System.IO;
 using Terraria;
 using Terraria.ModLoader;
-using Terraria.ModLoader.Config;
 
 namespace SSC.Common;
 
-public class SSC : Mod
+public partial class SSC : Mod
 {
     public SSC()
-    {
-    }
-
-    ~SSC()
     {
     }
 
@@ -44,17 +39,12 @@ public class SSC : Mod
                 Systems.NetworkSystem.SaveSSC(bin, plr);
                 break;
             default:
-                SSCKit.BootPlayer(plr, "");
+                SSCKit.BootPlayer(plr, $"Unexpected message id:{type}");
                 break;
         }
     }
 
-    public enum PID : byte
+    ~SSC()
     {
-        CreateSSC,
-        RemoveSSC,
-        ChooseSSC,
-        LoadSSC,
-        SaveSSC
     }
 }

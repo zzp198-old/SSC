@@ -14,6 +14,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.ModLoader.UI.Elements;
 using Terraria.UI;
+using Terraria.Utilities;
 
 namespace SSC.Common.Views;
 
@@ -153,7 +154,7 @@ public class SSCView : UIState
                 Metadata = FileMetadata.FromCurrentSettings(FileType.Player), Player = Character
             };
             data.MarkAsServerSide();
-            Player.SavePlayer(data);
+            SSCKit.InternalSavePlayerFile(data);
 
             NameSearchBar.SetContents("");
             Character.difficulty = PlayerDifficultyID.Creative;
