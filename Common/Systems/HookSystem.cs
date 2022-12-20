@@ -15,7 +15,7 @@ namespace SSC.Common.Systems;
 public class HookSystem : ModSystem
 {
     public const string Base64 = @"[A-Za-z\d+/]*[=]{0,2}";
-    private static readonly Regex Regex = new($@"^SSC:(?<plr>{Base64}):(?<tplr>{Base64}):\.(?<type>plr|tplr)$");
+    private readonly static Regex Regex = new($@"^SSC:(?<plr>{Base64}):(?<tplr>{Base64}):\.(?<type>plr|tplr)$");
 
     public override void Load()
     {

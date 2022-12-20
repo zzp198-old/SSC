@@ -4,6 +4,7 @@ using Terraria.ModLoader.Config;
 
 namespace SSC.Common.Configs;
 
+[Label("SSC Main Config")]
 public class UnityConfig : ModConfig
 {
     public override ConfigScope Mode => ConfigScope.ServerSide;
@@ -25,6 +26,8 @@ public class UnityConfig : ModConfig
 
     [ReloadRequired] //
     public List<Elements.ItemsDefinition> StartingItems = new();
+
+    public List<string> AdminPlayer;
 
     [Header("Third Functions")] //
     [DefaultValue(false)]
