@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace SSC.Common;
 
-public partial class SSC : Mod
+public class SSC : Mod
 {
     public SSC()
     {
@@ -46,5 +46,14 @@ public partial class SSC : Mod
 
     ~SSC()
     {
+    }
+
+    public enum PID : byte
+    {
+        CreateSSC,
+        RemoveSSC,
+        ChooseSSC,
+        LoadSSC,
+        SaveSSC
     }
 }

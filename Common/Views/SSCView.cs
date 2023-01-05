@@ -118,13 +118,14 @@ public class SSCView : UIState
             Height = new StyleDimension(26, 0),
             Top = new StyleDimension(80, 0)
         });
-        CharacterCreationPanel.Append(new UIDifficultyButton(Character, Language.GetText("UI.Creative"), null, PlayerDifficultyID.Creative, Main.creativeModeColor)
-        {
-            Width = new StyleDimension(-5, 0.5f),
-            Height = new StyleDimension(26, 0),
-            Top = new StyleDimension(80, 0),
-            Left = new StyleDimension(5, 0.5f)
-        });
+        CharacterCreationPanel.Append(
+            new UIDifficultyButton(Character, Language.GetText("UI.Creative"), null, PlayerDifficultyID.Creative, Main.creativeModeColor)
+            {
+                Width = new StyleDimension(-5, 0.5f),
+                Height = new StyleDimension(26, 0),
+                Top = new StyleDimension(80, 0),
+                Left = new StyleDimension(5, 0.5f)
+            });
 
         CreateButton = new UITextPanel<LocalizedText>(Language.GetText("UI.Create"), 0.7f, true)
         {
