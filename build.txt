@@ -1,9 +1,9 @@
 displayName = SSC - 云存档
 author = zzp198
-version = 2022.12.0
+version = 2023.1.0
 dllReferences = 
 modReferences = 
-weakReferences =
+weakReferences = 
 homepage = https://steamcommunity.com/sharedfiles/filedetails/?id=2862484565
 buildIgnore = 
 side = Both
