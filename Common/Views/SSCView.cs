@@ -148,8 +148,9 @@ public class SSCView : UIState
         {
             var invoke = typeof(UICharacterCreation).GetMethod("SetupPlayerStatsAndInventoryBasedOnDifficulty", (BindingFlags)36);
             invoke?.Invoke(CharacterCreation, Array.Empty<object>());
-            Character.statLife = Character.statLifeMax = ModContent.GetInstance<Configs.UnityConfig>().StartingHealth;
-            Character.statMana = Character.statManaMax = ModContent.GetInstance<Configs.UnityConfig>().StartingMana;
+            // TODO
+            // Character.statLife = Character.statLifeMax = ModContent.GetInstance<Configs.UnityConfig>().StartingHealth;
+            // Character.statMana = Character.statManaMax = ModContent.GetInstance<Configs.UnityConfig>().StartingMana;
             var data = new PlayerFileData(Path.Combine(Main.PlayerPath, "SSC.SSC"), false)
             {
                 Metadata = FileMetadata.FromCurrentSettings(FileType.Player), Player = Character
