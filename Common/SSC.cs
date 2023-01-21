@@ -6,10 +6,6 @@ namespace SSC.Common;
 
 public class SSC : Mod
 {
-    public SSC()
-    {
-    }
-
     public override void Load()
     {
         if (Main.dedServ)
@@ -42,10 +38,6 @@ public class SSC : Mod
                 SSCKit.BootPlayer(plr, $"Unexpected message id:{type}");
                 break;
         }
-    }
-
-    ~SSC()
-    {
     }
 
     public enum PID : byte
