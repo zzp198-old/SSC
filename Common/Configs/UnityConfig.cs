@@ -5,7 +5,6 @@ using Terraria.ModLoader.Config;
 
 namespace SSC.Common.Configs;
 
-[Label("SSC Main Config")]
 public class UnityConfig : ModConfig
 {
     public override ConfigScope Mode => ConfigScope.ServerSide;

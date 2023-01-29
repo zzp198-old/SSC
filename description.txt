@@ -1,1 +1,7 @@
 https://steamcommunity.com/sharedfiles/filedetails/?id=2862484565
+
+Since someone can't find or use QOS, I extracted the core SSC and simplified the config.
+Remember to add your name to the admin list in the settings, otherwise anyone can modify the config.
+
+鉴于有些人找不到或者不会用QOS,我把核心的SSC单独提取出来并且对配置做了下简化.
+初次使用记得把自己的名称添加到设置里面的管理员列表,不然任何人都可以修改配置.
